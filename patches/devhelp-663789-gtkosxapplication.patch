@@ -28,7 +28,7 @@ index 7b6ee60..94742a3 100644
     gconf_pkgconfig=
     libwnck_pkgconfig=
 -   igemacintegration_pkgconfig="ige-mac-integration >= 0.8.2"
-+   gtkmacintegration_pkgconfig="gtk-mac-integration >= 0.8.2"
++   gtkmacintegration_pkgconfig="gtk-mac-integration >= 1.0.1"
     REQUIRES_LIBWNCK=
     PLATFORM_CFLAGS=
     PLATFORM_LDFLAGS=
