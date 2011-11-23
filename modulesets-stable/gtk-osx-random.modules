@@ -162,7 +162,9 @@ Libglade itself is deprecated. This is the last release. -->
 <!-- gtksourceview-2.10.5 is the last version that supports Gtk+-2 -->
   <autotools id="gtksourceview" autogen-sh="configure">
     <branch module="gtksourceview/2.10/gtksourceview-2.10.5.tar.bz2"
-            version="2.10.5" hash="sha256:c585773743b1df8a04b1be7f7d90eecdf22681490d6810be54c81a7ae152191e"/>
+            version="2.10.5" hash="sha256:c585773743b1df8a04b1be7f7d90eecdf22681490d6810be54c81a7ae152191e">
+      <patch file="gtksourceview-664511-gtkosxapplication.patch" strip="1"/>
+    </branch>
     <after>
       <dep package="meta-gtk-osx-bootstrap"/>
       <dep package="meta-gtk-osx-core"/>
@@ -170,9 +172,13 @@ Libglade itself is deprecated. This is the last release. -->
   </autotools>
 
 
-  <autotools id="gtksourceview3" autogen-sh="configure">
+  <autotools id="gtksourceview3"
+    autogen-template="gnome-autogen.sh --prefix %(prefix)s --libdir %(libdir)s %(autogenargs)s">
     <branch module="gtksourceview/3.2/gtksourceview-3.2.0.tar.bz2"
-            version="3.2.0" hash="sha256:82b1028d69fcb24650ebc801454eb688dc3a01c6061c1d77d1cf665f048f050a"/>
+            version="3.2.0" hash="sha256:82b1028d69fcb24650ebc801454eb688dc3a01c6061c1d77d1cf665f048f050a">
+      <patch file="gtksourceview3-664679-backends.patch" strip="1"/>
+      <patch file="gtksourceview3-664511-gtkosxapplication.patch" strip="1"/>
+    </branch>
     <after>
       <dep package="meta-gtk-osx-bootstrap"/>
       <dep package="meta-gtk-osx-gtk3"/>
