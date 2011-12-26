@@ -148,6 +148,7 @@
             hash="sha256:f15deecaecf1e9dcb7db0e4947d12b5bcff112586434f8d30a5afd750747ff2b">
       <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/pangoatsui-fontname.patch" strip="1"/>
       <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/0001-Make-ATSUI-backend-compile-again.patch" strip="1"/>
+      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/pango-CoreText-fix-zero-width-space-bgo-666856.patch" strip="1"/>
     </branch>
     <dependencies>
       <dep package="cairo"/>

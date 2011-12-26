@@ -1,0 +1,47 @@
+From 6088e1430823a312b86b0ca24e34d6746206fbbb Mon Sep 17 00:00:00 2001
+From: Philip Chimento <philip.chimento@gmail.com>
+Date: Mon, 26 Dec 2011 12:23:00 +0100
+Subject: [PATCH] CoreText: fix zero-width space (bgo #666856)
+
+Pango crashes if the CoreText backend tries to render a string
+containing only a zero-width space. Fixes bgo#666856.
+---
+ modules/basic/basic-coretext.c |   21 ++++++++++++++++-----
+ 1 files changed, 16 insertions(+), 5 deletions(-)
+
+diff --git a/modules/basic/basic-coretext.c b/modules/basic/basic-coretext.c
+index 8dc3dba..39f7390 100644
+--- a/modules/basic/basic-coretext.c
++++ b/modules/basic/basic-coretext.c
+@@ -121,12 +121,23 @@ basic_engine_shape (PangoEngineShape    *engine,
+   runs = CTLineGetGlyphRuns (line);
+ 
+   /* Since Pango divides things into runs already, we assume there is
+-   * only a single run in this line.
++   * only a single run in this line, unless there are none at all.
+    */
+-  run = CFArrayGetValueAtIndex (runs, 0);
+-  run_status = CTRunGetStatus (run);
+-  glyph_count = CTRunGetGlyphCount (run);
+-  cgglyphs = CTRunGetGlyphsPtr (run);
++  if(CFArrayGetCount(runs) == 0)
++    {
++      /* This happens if text is a single zero-width space (E2 80 8B)
++       * and possibly in other cases? */
++      run_status = kCTRunStatusNoStatus;
++      glyph_count = 0;
++      cgglyphs = NULL;
++    }
++  else
++    {
++      run = CFArrayGetValueAtIndex (runs, 0);
++      run_status = CTRunGetStatus (run);
++      glyph_count = CTRunGetGlyphCount (run);
++      cgglyphs = CTRunGetGlyphsPtr (run);
++    }
+ 
+   p = text;
+   pango_glyph_string_set_size (glyphs, glyph_count);
+-- 
+1.7.3.2
+
