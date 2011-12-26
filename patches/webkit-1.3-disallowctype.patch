@@ -1,0 +1,14 @@
+diff -c /usr/local/gtk-stable/src/webkit-1.3.10/Source/WebCore/config.h\~ /usr/local/gtk-stable/src/webkit-1.3.10/Source/WebCore/config.h
+--- a/Source/WebCore/config.h	Tue Sep 22 08:29:21 2009
++++ b/Source/WebCore/config.h	Fri Oct  8 16:35:23 2010
+@@ -98,7 +98,7 @@
+ // Also generates errors on wx on Windows, presumably because these functions
+ // are used from wx headers.
+ #if !PLATFORM(QT) && !PLATFORM(WX) && !PLATFORM(CHROMIUM)
+-#include <wtf/DisallowCType.h>
++//#include <wtf/DisallowCType.h>
+ #endif
+ 
+ #if COMPILER(MSVC)
+
+Diff finished.  Fri Oct  8 16:35:49 2010

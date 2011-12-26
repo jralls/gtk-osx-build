@@ -1,0 +1,64 @@
+Index: Source/WebCore/plugins/gtk/PluginViewGtk.cpp
+===================================================================
+--- a/Source/WebCore/plugins/gtk/PluginViewGtk.cpp	2010-09-10 06:20:33.000000000 -0700
++++ b/Source/WebCore/plugins/gtk/PluginViewGtk.cpp	2010-10-06 09:45:37.000000000 -0700
+@@ -61,12 +61,15 @@
+ #include "runtime_root.h"
+ #include <runtime/JSLock.h>
+ #include <runtime/JSValue.h>
++#include "NotImplemented.h"
+ 
+ #ifdef GTK_API_VERSION_2
+ #include <gdkconfig.h>
+ #endif
+ #include <gtk/gtk.h>
+ 
++#undef XP_UNIX
++
+ #if defined(XP_UNIX)
+ #include "RefPtrCairo.h"
+ #include "gtk2xtbin.h"
+@@ -428,9 +431,9 @@
+         event->setDefaultHandled();
+ }
+ 
+-#if defined(XP_UNIX)
+ void PluginView::handleFocusInEvent()
+ {
++#if defined(XP_UNIX)
+     XEvent npEvent;
+     initXEvent(&npEvent);
+ 
+@@ -440,10 +443,12 @@
+     event.detail = NotifyDetailNone;
+ 
+     dispatchNPEvent(npEvent);
++#endif
+ }
+ 
+ void PluginView::handleFocusOutEvent()
+ {
++#if defined(XP_UNIX)
+     XEvent npEvent;
+     initXEvent(&npEvent);
+ 
+@@ -453,8 +458,8 @@
+     event.detail = NotifyDetailNone;
+ 
+     dispatchNPEvent(npEvent);
+-}
+ #endif
++}
+ 
+ void PluginView::setParent(ScrollView* parent)
+ {
+@@ -782,8 +787,8 @@
+     }
+ 
+     if (m_isWindowed) {
+-#if defined(XP_UNIX)
+         GtkWidget* pageClient = m_parentFrame->view()->hostWindow()->platformPageClient();
++#if defined(XP_UNIX)
+ 
+         if (m_needsXEmbed) {
+             // If our parent is not anchored the startup process will

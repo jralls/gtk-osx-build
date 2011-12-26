@@ -1,0 +1,22 @@
+--- a/Source/WebCore/loader/archive/ArchiveFactory.cpp	2011-12-26 20:16:57.000000000 +0100
++++ b/Source/WebCore/loader/archive/ArchiveFactory.cpp	2011-12-26 20:21:20.000000000 +0100
+@@ -32,6 +32,8 @@
+ #include "MIMETypeRegistry.h"
+ #include "PlatformString.h"
+ 
++#undef WTF_PLATFORM_CF
++
+ #if PLATFORM(CF) && !PLATFORM(QT)
+ #include "LegacyWebArchive.h"
+ #endif
+--- a/Source/WebCore/platform/SharedBuffer.cpp	2011-12-26 21:57:38.000000000 +0100
++++ b/Source/WebCore/platform/SharedBuffer.cpp	2011-12-26 22:12:05.000000000 +0100
+@@ -30,6 +30,8 @@
+ #include "PurgeableBuffer.h"
+ #include <wtf/PassOwnPtr.h>
+ 
++#undef WTF_PLATFORM_CF
++
+ using namespace std;
+ 
+ namespace WebCore {
