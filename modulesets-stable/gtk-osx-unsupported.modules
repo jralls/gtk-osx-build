@@ -79,23 +79,12 @@ This issue was closed by revision r827.
     </dependencies>
   </cmake>
 
-  <autotools id="libgnome-keyring" autogenargs="--disable-pam">
-    <branch module="libgnome-keyring/2.32/libgnome-keyring-2.32.0.tar.bz2"
-	    version="2.32.1" hash="sha256:56388c0d81ddfdb57d30e4963c83ecc1c18498aab99395420e0fff69929a0f0c">
+  <autotools id="libgnome-keyring" autogenargs="--disable-tests">
+    <branch module="libgnome-keyring/3.2/libgnome-keyring-3.2.2.tar.bz2"
+	    version="3.2.2" hash="sha256:5332e1e428aa7c1cece68fb37799681df30eeb8a73d96c354969d401fdfeddd7">
     </branch>
     <dependencies>
-      <dep package="gtk+"/>
-      <dep package="libgcrypt"/>
-      <dep package="libtasn1"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="libgnome-keyring-gtk3" autogenargs="--disable-pam">
-    <branch module="libgnome-keyring/3.2/libgnome-keyring-3.2.0.tar.bz2"
-	    version="3.2.0" hash="sha256:2829739072ec3ac0ed53593e0f0b3f754584004ff77bc3e2789c58f54699cfef">
-    </branch>
-    <dependencies>
-      <dep package="gtk+-3.0"/>
+      <dep package="glib"/>
       <dep package="libgcrypt"/>
       <dep package="libtasn1"/>
     </dependencies>
@@ -114,28 +103,23 @@ This issue was closed by revision r827.
 <!-- Libsoup's gnome-2-32 branch tags versions on 2.32, gnome-3-0 tags
      2.34, gnome-3-2 tags 2.36 -->
   <autotools id="libsoup" autogen-sh="configure" autogenargs="">
-    <branch module="libsoup/2.32/libsoup-2.32.2.tar.bz2"
-            version="2.32.2" hash="sha256:96e6973c8b7459523c0f44e7aec69528ff2fbd388e8ddc415f91bcc42f50777f" />
+    <branch module="libsoup/2.34/libsoup-2.34.3.tar.bz2"
+            version="2.34.3" hash="sha256:940fa2777542e564ba7052252ee065adc6c7982c0cae56a4c541a04329fc7dc7" />
     <dependencies>
       <dep package="glib"/>
-      <dep package="gnutls"/>
-      <dep package='gconf'/>
+      <dep package="glib-networking"/>
       <dep package="libgnome-keyring"/>
-      <dep package="libproxy"/>
       <dep package='sqlite'/>
     </dependencies>
   </autotools>
 
   <autotools id="libsoup-gtk3" autogen-sh="configure" autogenargs="">
-    <branch module="libsoup/2.36/libsoup-2.36.0.tar.bz2" version="2.32.2"
-	    hash="sha256:511501a5b64da6a44eb5e70b85fa11599e6005a56576c7dbc96c236f1bb71eb1" />
+    <branch module="libsoup/2.36/libsoup-2.36.1.tar.bz2" version="2.36.1"
+	    hash="sha256:c387eefd8214c458965b1d6e3490cea33b5bb6c81798cac90cde96136dc19401" />
     <dependencies>
       <dep package="glib-gtk3"/>
       <dep package="glib-networking"/>
-      <dep package="libgnome-keyring-gtk3"/>
-      <dep package="gnutls"/>
-      <dep package='gconf'/>
-      <dep package="libproxy"/>
+      <dep package="libgnome-keyring"/>
       <dep package='sqlite'/>
     </dependencies>
   </autotools>
