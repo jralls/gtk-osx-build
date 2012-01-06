@@ -1,0 +1,24 @@
+--- a/Source/WebCore/GNUmakefile.am	2012-01-05 19:13:38.000000000 +0100
++++ b/Source/WebCore/GNUmakefile.am	2012-01-05 19:13:40.000000000 +0100
+@@ -135,7 +135,8 @@
+ if USE_PANGO
+ webcoregtk_cppflags += \
+ 	-DWTF_USE_PANGO=1 \
+-	-I$(srcdir)/Source/WebCore/platform/graphics/pango
++	-I$(srcdir)/Source/WebCore/platform/graphics/pango \
++	$(PANGO_CFLAGS)
+ endif # END USE_PANGO
+ 
+ # ----
+--- a/GNUmakefile.in	2012-01-05 19:29:36.000000000 +0100
++++ b/GNUmakefile.in	2012-01-05 19:15:25.000000000 +0100
+@@ -1010,7 +1010,8 @@
+ # ---
+ @USE_PANGO_TRUE@am__append_42 = \
+ @USE_PANGO_TRUE@	-DWTF_USE_PANGO=1 \
+-@USE_PANGO_TRUE@	-I$(srcdir)/Source/WebCore/platform/graphics/pango
++@USE_PANGO_TRUE@	-I$(srcdir)/Source/WebCore/platform/graphics/pango \
++@USE_PANGO_TRUE@	$(PANGO_CFLAGS)
+ 
+ 
+ # ----

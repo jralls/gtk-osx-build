@@ -1,0 +1,10 @@
+--- a/Source/WebCore/platform/text/TextCodecUTF8.h	2012-01-05 22:21:07.000000000 +0100
++++ b/Source/WebCore/platform/text/TextCodecUTF8.h	2012-01-05 22:23:39.000000000 +0100
+@@ -27,6 +27,7 @@
+ #define TextCodecUTF8_h
+ 
+ #include "TextCodec.h"
++#include <icu/unicode/utf8.h>
+ 
+ namespace WebCore {
+ 

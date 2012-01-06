@@ -1,0 +1,19 @@
+Compiling with --disable-blob is broken; this fixes it.
+
+--- a/Source/WebCore/bindings/gobject/WebKitDOMCustom.cpp	2012-01-06 19:24:11.000000000 +0100
++++ b/Source/WebCore/bindings/gobject/WebKitDomCustom.cpp	2012-01-06 19:24:17.000000000 +0100
+@@ -42,12 +42,14 @@
+     return core(input)->lastChangeWasUserEdit();
+ }
+ 
++#ifdef ENABLE_BLOB
+ /* Compatibility */
+ WebKitDOMBlob*
+ webkit_dom_blob_slice(WebKitDOMBlob* self, gint64 start, gint64 end, const gchar* content_type)
+ {
+     return webkit_dom_blob_webkit_slice(self, start, end, content_type);
+ }
++#endif ENABLE_BLOB
+ 
+ void
+ webkit_dom_html_form_element_dispatch_form_change(WebKitDOMHTMLFormElement* self)

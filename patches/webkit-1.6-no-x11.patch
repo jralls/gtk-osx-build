@@ -1,0 +1,146 @@
+--- a/configure.ac	2012-01-05 19:31:13.000000000 +0100
++++ b/configure.ac	2012-01-05 19:31:46.000000000 +0100
+@@ -1015,14 +1015,6 @@
+     AC_SUBST([GEOCLUE_LIBS])
+ fi
+ 
+-# check for XRender under Linux/Unix. Some linkers require explicit
+-# linkage (like GNU Gold), so we cannot rely on GTK+ pulling XRender
+-if test "$os_win32" = "no"; then
+-   PKG_CHECK_MODULES([XRENDER], [xrender])
+-   AC_SUBST([XRENDER_CFLAGS])
+-   AC_SUBST([XRENDER_LIBS])
+-fi
+-
+ # check if gstreamer is available
+ if test "$enable_video" = "yes"; then
+    PKG_CHECK_MODULES([GSTREAMER],
+--- a/configure	2012-01-05 18:24:01.000000000 +0100
++++ b/configure	2012-01-05 18:25:43.000000000 +0100
+@@ -22001,104 +22001,6 @@
+ 
+ fi
+ 
+-# check for XRender under Linux/Unix. Some linkers require explicit
+-# linkage (like GNU Gold), so we cannot rely on GTK+ pulling XRender
+-if test "$os_win32" = "no"; then
+-
+-pkg_failed=no
+-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for XRENDER" >&5
+-$as_echo_n "checking for XRENDER... " >&6; }
+-
+-if test -n "$XRENDER_CFLAGS"; then
+-    pkg_cv_XRENDER_CFLAGS="$XRENDER_CFLAGS"
+- elif test -n "$PKG_CONFIG"; then
+-    if test -n "$PKG_CONFIG" && \
+-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"xrender\""; } >&5
+-  ($PKG_CONFIG --exists --print-errors "xrender") 2>&5
+-  ac_status=$?
+-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+-  test $ac_status = 0; }; then
+-  pkg_cv_XRENDER_CFLAGS=`$PKG_CONFIG --cflags "xrender" 2>/dev/null`
+-else
+-  pkg_failed=yes
+-fi
+- else
+-    pkg_failed=untried
+-fi
+-if test -n "$XRENDER_LIBS"; then
+-    pkg_cv_XRENDER_LIBS="$XRENDER_LIBS"
+- elif test -n "$PKG_CONFIG"; then
+-    if test -n "$PKG_CONFIG" && \
+-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"xrender\""; } >&5
+-  ($PKG_CONFIG --exists --print-errors "xrender") 2>&5
+-  ac_status=$?
+-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+-  test $ac_status = 0; }; then
+-  pkg_cv_XRENDER_LIBS=`$PKG_CONFIG --libs "xrender" 2>/dev/null`
+-else
+-  pkg_failed=yes
+-fi
+- else
+-    pkg_failed=untried
+-fi
+-
+-
+-
+-if test $pkg_failed = yes; then
+-   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+-$as_echo "no" >&6; }
+-
+-if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+-        _pkg_short_errors_supported=yes
+-else
+-        _pkg_short_errors_supported=no
+-fi
+-        if test $_pkg_short_errors_supported = yes; then
+-	        XRENDER_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "xrender" 2>&1`
+-        else
+-	        XRENDER_PKG_ERRORS=`$PKG_CONFIG --print-errors "xrender" 2>&1`
+-        fi
+-	# Put the nasty error message in config.log where it belongs
+-	echo "$XRENDER_PKG_ERRORS" >&5
+-
+-	as_fn_error $? "Package requirements (xrender) were not met:
+-
+-$XRENDER_PKG_ERRORS
+-
+-Consider adjusting the PKG_CONFIG_PATH environment variable if you
+-installed software in a non-standard prefix.
+-
+-Alternatively, you may set the environment variables XRENDER_CFLAGS
+-and XRENDER_LIBS to avoid the need to call pkg-config.
+-See the pkg-config man page for more details." "$LINENO" 5
+-
+-elif test $pkg_failed = untried; then
+-     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+-$as_echo "no" >&6; }
+-	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
+-is in your PATH or set the PKG_CONFIG environment variable to the full
+-path to pkg-config.
+-
+-Alternatively, you may set the environment variables XRENDER_CFLAGS
+-and XRENDER_LIBS to avoid the need to call pkg-config.
+-See the pkg-config man page for more details.
+-
+-To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+-See \`config.log' for more details" "$LINENO" 5; }
+-
+-else
+-	XRENDER_CFLAGS=$pkg_cv_XRENDER_CFLAGS
+-	XRENDER_LIBS=$pkg_cv_XRENDER_LIBS
+-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+-$as_echo "yes" >&6; }
+-
+-fi
+-
+-
+-fi
+-
+ # check if gstreamer is available
+ if test "$enable_video" = "yes"; then
+ 
+--- a/Source/WebCore/plugins/gtk/PluginViewGtk.cpp	2012-01-05 18:26:05.000000000 +0100
++++ b/Source/WebCore/plugins/gtk/PluginViewGtk.cpp	2012-01-05 18:26:18.000000000 +0100
+@@ -70,6 +70,8 @@
+ #endif
+ #include <gtk/gtk.h>
+ 
++#undef XP_UNIX
++
+ #if defined(XP_UNIX)
+ #include "RefPtrCairo.h"
+ #include "gtk2xtbin.h"
+--- a/Source/WebCore/platform/gtk/GtkWidgetBackingStoreX11.cpp	2012-01-05 23:27:42.000000000 +0100
++++ b/Source/WebCore/platform/gtk/GtkWidgetBackingStoreX11.cpp	2012-01-05 23:30:56.000000000 +0100
+@@ -19,6 +19,8 @@
+ #include "config.h"
+ #include "WidgetBackingStore.h"
+ 
++#undef XP_UNIX
++
+ #ifdef XP_UNIX
+ 
+ #include "GtkVersioning.h"

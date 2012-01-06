@@ -159,12 +159,13 @@ This issue was closed by revision r827.
   </autotools>
 
   <autotools id="WebKit" autogen-sh="configure"
-	     autogenargs="--with-target=quartz --disable-video --with-font-backend=pango CFLAGS='-DWTF_PLATFORM_CF=1'">
-    <branch repo="webkit.org" module="webkit-1.3.10.tar.gz" version="1.3.10">
-      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-1.3-missing-icu-files.patch" strip="1"/>
-      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-1.3-disallowctype.patch" strip="1"/>
-      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-1.3-plugins-gtk-PluginView.patch" strip="1"/>
-      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-1.3-platform-cf-stuff.patch" strip="1"/>
+	     autogenargs="--with-target=quartz --disable-video --with-font-backend=pango --with-gtk=2.0">
+    <branch repo="webkit.org" module="webkit-1.6.1.tar.gz" version="1.6.1">
+      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-1.6-no-x11.patch" strip="1"/>
+      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-1.6-pango-includes.patch" strip="1"/>
+      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-1.6-missing-icu-files.patch" strip="1"/>
+      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-1.6-missing-utf8-include.patch" strip="1"/>
+      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-1.6-enable-blob.patch" strip="1"/>
     </branch>
     <dependencies>
       <dep package="enchant"/>
@@ -174,13 +175,11 @@ This issue was closed by revision r827.
       <dep package="libsoup-gtk3"/>
       <dep package="meta-gtk-osx-core"/>
       <dep package="meta-gtk-osx-gtk3"/>
-      <dep package="libcurl"/>
-      <dep package="bison"/>
     </after>
   </autotools>
 
   <autotools id="WebKit-svn"
-	     autogenargs="--with-target=quartz --disable-video --with-font-backend=pango">
+	     autogenargs="--with-target=quartz --disable-video --with-font-backend=pango --with-gtk=3.0">
     <branch repo="svn.webkit.org" module="webkit/trunk" checkoutdir="WebKit"/>
     <dependencies>
       <dep package="libsoup-gtk3"/>
@@ -189,8 +188,7 @@ This issue was closed by revision r827.
     </dependencies>
     <after>
       <dep package="meta-gtk-osx-core"/>
-      <dep package="libcurl"/>
-      <dep package="bison"/>
+      <dep package="meta-gtk-osx-gtk3"/>
       <!--dep package="gst-plugins-base"/-->
     </after>
   </autotools>
