@@ -63,7 +63,9 @@
 
   <autotools id='readline' >
     <branch repo="ftp.gnu.org" module="readline/readline-6.2.tar.gz"
-	    version="6.2"/>
+	    version="6.2">
+      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/readline62-002.patch" strip="2" />
+    </branch>
   </autotools>
 
   <autotools id="m4" autogen-sh="configure">
