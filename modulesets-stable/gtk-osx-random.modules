@@ -267,7 +267,9 @@ Libglade itself is deprecated. This is the last release. -->
 	     autogen-template="autoreconf -fis &amp;&amp; %(srcdir)s/%(autogen-sh)s --prefix %(prefix)s --libdir %(libdir)s %(autogenargs)s"
              makeargs='LDFLAGS="-framework Carbon"'>
     <branch module="gimp/v2.6/gimp-2.6.11.tar.bz2" version="2.6.11"
-            md5sum="bb2939fe13e54fc7255cef5d097bb5dd" repo="gimp"/>
+            md5sum="bb2939fe13e54fc7255cef5d097bb5dd" repo="gimp">
+      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/patch-plug-ins-twain-tw_mac.c.diff" strip="0" />
+    </branch>
     <after>
       <dep package="meta-gtk-osx-bootstrap"/>
       <dep package="meta-gtk-osx-core"/>
