@@ -177,13 +177,15 @@
   </autotools>
 
   <autotools id="gtk+" autogen-sh="configure"
-             autogenargs="--with-gdktarget=quartz --enable-quartz-relocation"
+             autogenargs="--with-gdktarget=quartz --enable-quartz-relocation --with-included-immodules"
              autogen-template="autoreconf -fis &amp;&amp; %(srcdir)s/%(autogen-sh)s --prefix %(prefix)s --libdir %(libdir)s %(autogenargs)s">
     <branch module="gtk+/2.24/gtk+-2.24.9.tar.xz" version="2.24.9">
+      <patch file="https://raw.github.com/monaka/gtk-osx-build/master/patches/0001-Apply-http-sylpheed.sraoss.jp-sylpheed-macosx-gtk-2..patch" strip="1"/>
       <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/0004-Bug-571582-GtkSelection-implementation-for-quartz.patch" strip="1"/>
       <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/0006-Bug-658722-Drag-and-Drop-sometimes-stops-working.patch" strip="1"/>
       <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/0008-Implement-GtkDragSourceOwner-pasteboardChangedOwner.patch" strip="1"/>
       <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/gtk+-Bug-655065-autotestkeywords-ldadd.patch" strip="1"/>
+      <patch file="https://raw.github.com/monaka/gtk-osx-build/master/patches/0001-Enable-quartz-immodule.patch" strip="1"/>
     </branch>
     <dependencies>
       <dep package="glib"/>

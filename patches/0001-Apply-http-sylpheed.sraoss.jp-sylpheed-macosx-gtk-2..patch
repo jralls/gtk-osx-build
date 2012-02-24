@@ -1,0 +1,507 @@
+From 82bb31a248c0adef7fb6cc5df8cceebac65bae1e Mon Sep 17 00:00:00 2001
+From: Masaki Muranaka <monaka@monami-ya.jp>
+Date: Fri, 24 Feb 2012 12:46:07 +0900
+Subject: [PATCH] Apply
+ http://sylpheed.sraoss.jp/sylpheed/macosx/gtk+-2.24.0-macosx-textinputclient_ja-test1.patch
+
+---
+ configure.in                  |    4 +
+ gdk/quartz/GdkQuartzView.c    |  105 +++++++++++++++
+ gdk/quartz/GdkQuartzView.h    |    2 +-
+ gdk/quartz/gdkevents-quartz.c |    1 +
+ modules/input/Makefile.am     |   13 ++
+ modules/input/imquartz.c      |  279 +++++++++++++++++++++++++++++++++++++++++
+ 6 files changed, 403 insertions(+), 1 deletions(-)
+ create mode 100644 modules/input/imquartz.c
+
+diff --git a/configure.in b/configure.in
+index 9577c54..593369a 100644
+--- a/configure.in
++++ b/configure.in
+@@ -824,6 +824,9 @@ all_immodules="am-et,cedilla,cyrillic-translit"
+ if test "$gdktarget" = "win32"; then
+    all_immodules="${all_immodules},ime"
+ fi
++if test "$gdktarget" = "quartz"; then
++   all_immodules="${all_immodules},quartz"
++fi
+ all_immodules="${all_immodules},inuktitut,ipa,multipress,thai,ti-er,ti-et,viqr"
+ if test "$gdktarget" = "x11"; then
+    all_immodules="${all_immodules},xim"
+@@ -867,6 +870,7 @@ AM_CONDITIONAL(INCLUDE_IM_IME, [test x"$INCLUDE_ime" = xyes])
+ AM_CONDITIONAL(INCLUDE_IM_INUKTITUT, [test x"$INCLUDE_inuktitut" = xyes])
+ AM_CONDITIONAL(INCLUDE_IM_IPA, [test x"$INCLUDE_ipa" = xyes])
+ AM_CONDITIONAL(INCLUDE_IM_MULTIPRESS, [test x"$INCLUDE_multipress" = xyes])
++AM_CONDITIONAL(INCLUDE_IM_QUARTZ, [test x"$INCLUDE_quartz" = xyes])
+ AM_CONDITIONAL(INCLUDE_IM_THAI, [test x"$INCLUDE_thai" = xyes])
+ AM_CONDITIONAL(INCLUDE_IM_TI_ER, [test x"$INCLUDE_ti_er" = xyes])
+ AM_CONDITIONAL(INCLUDE_IM_TI_ET, [test x"$INCLUDE_ti_et" = xyes])
+diff --git a/gdk/quartz/GdkQuartzView.c b/gdk/quartz/GdkQuartzView.c
+index 2c897fb..6504f02 100644
+--- a/gdk/quartz/GdkQuartzView.c
++++ b/gdk/quartz/GdkQuartzView.c
+@@ -25,8 +25,113 @@
+ #include "gdkprivate-quartz.h"
+ #include "gdkquartz.h"
+ 
++#define TIC_MARKED_TEXT "tic-marked-text"
++#define TIC_INSERT_TEXT "tic-insert-text"
++
+ @implementation GdkQuartzView
+ 
++- (BOOL)acceptsFirstResponder {
++  g_message("acceptsFirstResponder");
++  return YES;
++}
++
++- (BOOL)becomeFirstResponder {
++  g_message("becomeFirstResponder");
++  return YES;
++}
++
++- (BOOL)resignFirstResponder {
++  g_message("resignFirstResponder");
++  return YES;
++}
++
++- (void) keyDown: (NSEvent *) theEvent {
++  g_message("keyDown");
++  [[self inputContext] handleEvent:theEvent];
++}
++
++- (NSUInteger)characterIndexForPoint:(NSPoint)aPoint {
++  g_message("characterIndexForPoint");
++  return 0;
++}
++
++- (NSRect)firstRectForCharacterRange:(NSRange)aRange actualRange:(NSRangePointer)actualRange {
++  g_message("firstRectForCharacterRange");
++  return NSMakeRect(0, 0, 0, 0);
++}
++
++- (NSArray *)validAttributesForMarkedText {
++  g_message("validAttributesForMarkedText");
++  return NULL;
++}
++
++- (NSAttributedString *)attributedSubstringForProposedRange:(NSRange)aRange actualRange:(NSRangePointer)actualRange {
++  g_message("attributedSubstringForProposedRange");
++  return NULL;
++}
++
++- (BOOL)hasMarkedText {
++  g_message("hasMarkedText");
++  return NO;
++}
++
++- (NSRange)markedRange {
++  g_message("markedRange");
++  return NSMakeRange(0, 0);
++}
++
++- (NSRange)selectedRange {
++  g_message("selectedRange");
++  return NSMakeRange(0, 0);
++}
++
++- (void)unmarkText {
++  g_message("unmarkText");
++}
++
++- (void)setMarkedText:(id)aString selectedRange:(NSRange)newSelection replacementRange:(NSRange)replacementRange {
++  const char *str;
++  char *prev_str;
++
++  if ([aString isKindOfClass:[NSAttributedString class]]) {
++    str = [[aString string] UTF8String];
++  } else {
++    str = [aString UTF8String];
++  }
++
++  prev_str = g_object_get_data(G_OBJECT(gdk_window), TIC_MARKED_TEXT);
++  if (prev_str)
++    g_free(prev_str);
++  g_object_set_data(G_OBJECT(gdk_window), TIC_MARKED_TEXT, g_strdup(str));
++  str = g_object_get_data(G_OBJECT(gdk_window), TIC_MARKED_TEXT);
++  g_print("setMarkedText: set %s (%p, nsview %p): %s\n", TIC_MARKED_TEXT, gdk_window, self, str ? str : "(empty)");
++}
++
++- (void)doCommandBySelector:(SEL)aSelector {
++  g_message("doCommandBySelector");
++  [super doCommandBySelector:aSelector];
++}
++
++- (void)insertText:(id)aString replacementRange:(NSRange)replacementRange {
++  const char *str;
++  char *prev_str;
++
++  if ([aString isKindOfClass:[NSAttributedString class]]) {
++    str = [[aString string] UTF8String];
++  } else {
++    str = [aString UTF8String];
++  }
++
++  prev_str = g_object_get_data(G_OBJECT(gdk_window), TIC_INSERT_TEXT);
++  if (prev_str)
++    g_free(prev_str);
++  g_object_set_data(G_OBJECT(gdk_window), TIC_INSERT_TEXT, g_strdup(str));
++  str = g_object_get_data(G_OBJECT(gdk_window), TIC_INSERT_TEXT);
++  g_print("insertText: set %s (%p, nsview %p): %s\n", TIC_INSERT_TEXT, gdk_window, self, str ? str : "(empty)");
++}
++
++/* --------------------------------------------------------------- */
++
+ -(void)dealloc
+ {
+   if (trackingRect)
+diff --git a/gdk/quartz/GdkQuartzView.h b/gdk/quartz/GdkQuartzView.h
+index f9c9a9c..913450b 100644
+--- a/gdk/quartz/GdkQuartzView.h
++++ b/gdk/quartz/GdkQuartzView.h
+@@ -21,7 +21,7 @@
+ #import <AppKit/AppKit.h>
+ #include "gdkwindow.h"
+ 
+-@interface GdkQuartzView : NSView {
++@interface GdkQuartzView : NSView <NSTextInputClient> {
+   GdkWindow *gdk_window;
+   NSTrackingRectTag trackingRect;
+   BOOL needsInvalidateShadow;
+diff --git a/gdk/quartz/gdkevents-quartz.c b/gdk/quartz/gdkevents-quartz.c
+index a8800f7..ae4ea2a 100644
+--- a/gdk/quartz/gdkevents-quartz.c
++++ b/gdk/quartz/gdkevents-quartz.c
+@@ -1009,6 +1009,7 @@ fill_key_event (GdkWindow    *window,
+ 	  event->key.window,
+ 	  event->key.keyval ? gdk_keyval_name (event->key.keyval) : "(none)",
+ 	  event->key.keyval));
++  g_message("hardware_keycode: %d", event->key.hardware_keycode);
+ }
+ 
+ static gboolean
+diff --git a/modules/input/Makefile.am b/modules/input/Makefile.am
+index 155b60e..2a457f3 100644
+--- a/modules/input/Makefile.am
++++ b/modules/input/Makefile.am
+@@ -154,6 +154,17 @@ IME_MODULE=im-ime.la
+ endif
+ endif
+ 
++im_quartz_la_CPPFLAGS = -xobjective-c
++im_quartz_la_LDFLAGS = -rpath $(moduledir) -avoid-version -module $(no_undefined)
++im_quartz_la_SOURCES = imquartz.c
++libstatic_im_quartz_la_SOURCES = $(im_quartz_la_SOURCES)
++im_quartz_la_LIBADD = $(LDADDS)
++if INCLUDE_IM_QUARTZ
++STATIC_QUARTZ_MODULE = libstatic-im-quartz.la
++else
++QUARTZ_MODULE = im-quartz.la
++endif
++
+ multipress_defs = -DMULTIPRESS_LOCALEDIR=\""$(mplocaledir)"\" -DMULTIPRESS_CONFDIR=\""$(sysconfdir)/gtk-2.0"\"
+ im_multipress_la_CPPFLAGS = $(multipress_defs)
+ libstatic_im_multipress_la_CPPFLAGS = $(im_multipress_la_CPPFLAGS)
+@@ -213,6 +224,7 @@ module_LTLIBRARIES =			\
+ 	$(INUKTITUT_MODULE)		\
+ 	$(IPA_MODULE)			\
+ 	$(MULTIPRESS_MODULE)		\
++	$(QUARTZ_MODULE)		\
+ 	$(THAI_MODULE)			\
+ 	$(TI_ER_MODULE)			\
+ 	$(TI_ET_MODULE)			\
+@@ -229,6 +241,7 @@ noinst_LTLIBRARIES =				\
+ 	$(STATIC_INUKTITUT_MODULE)		\
+ 	$(STATIC_IPA_MODULE)			\
+ 	$(STATIC_MULTIPRESS_MODULE)		\
++	$(STATIC_QUARTZ_MODULE)			\
+ 	$(STATIC_THAI_MODULE)			\
+ 	$(STATIC_TI_ER_MODULE)			\
+ 	$(STATIC_TI_ET_MODULE)			\
+diff --git a/modules/input/imquartz.c b/modules/input/imquartz.c
+new file mode 100644
+index 0000000..fabb14c
+--- /dev/null
++++ b/modules/input/imquartz.c
+@@ -0,0 +1,279 @@
++/*
++ * gtkimmodulequartz
++ * Copyright (C) 2011 Hiroyuki Yamamoto
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public
++ * License as published by the Free Software Foundation; either
++ * version 2 of the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public
++ * License along with this library; if not, write to the
++ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
++ * Boston, MA 02111-1307, USA.
++ *
++ * $Id:$
++ */
++
++#include "config.h"
++#include <string.h>
++
++//#import <Cocoa/Cocoa.h>
++
++#include <gtk/gtk.h>
++#include "gtk/gtkintl.h"
++#include "gtk/gtkimmodule.h"
++
++#include "gdk/quartz/gdkquartz.h"
++
++#define GTK_IM_CONTEXT_TYPE_QUARTZ (type_quartz)
++#define GTK_IM_CONTEXT_QUARTZ(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), GTK_IM_CONTEXT_TYPE_QUARTZ, GtkIMContextQuartz))
++#define GTK_IM_CONTEXT_QUARTZ_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS((obj), GTK_IM_CONTEXT_TYPE_QUARTZ, GtkIMContextQuartzClass))
++
++typedef struct _GtkIMContextQuartz {
++  GtkIMContext parent;
++  GdkWindow *client_window;
++  gchar *preedit_str;
++} GtkIMContextQuartz;
++
++typedef struct _GtkIMContextQuartzClass {
++  GtkIMContextClass parent_class;
++} GtkIMContextQuartzClass;
++
++GType type_quartz = 0;
++static GObjectClass *parent_class;
++
++static const GtkIMContextInfo imquartz_info = {
++  "quartz",
++  "Mac OS X Quartz",
++  GETTEXT_PACKAGE,
++  GTK_LOCALEDIR,
++  "ja",
++};
++
++static const GtkIMContextInfo *info_list[] = {
++  &imquartz_info,
++};
++
++#ifndef INCLUDE_IM_quartz
++#define MODULE_ENTRY(type,function) G_MODULE_EXPORT type im_module_ ## function
++#else
++#define MODULE_ENTRY(type, function) type _gtk_immodule_quartz_ ## function
++#endif
++
++static void
++quartz_get_preedit_string (GtkIMContext *context,
++			   gchar **str,
++			   PangoAttrList **attrs,
++			   gint *cursor_pos)
++{
++  GtkIMContextQuartz *qc = GTK_IM_CONTEXT_QUARTZ(context);
++
++  g_message("quartz_get_preedit_string");
++
++  if (str)
++    *str = qc->preedit_str ? g_strdup (qc->preedit_str) : g_strdup ("");
++  if (attrs)
++    *attrs = pango_attr_list_new ();
++  if (cursor_pos)
++    *cursor_pos = 0;
++}
++
++static gboolean
++quartz_filter_keypress (GtkIMContext *context,
++			GdkEventKey *event)
++{
++  GtkIMContextQuartz *qc = GTK_IM_CONTEXT_QUARTZ(context);
++  gboolean retval = FALSE;
++  guint32 c;
++  NSView *nsview;
++  GdkWindow *win;
++  gchar *str;
++
++  g_message("quartz_filter_keypress");
++
++  if (event->type == GDK_KEY_RELEASE)
++    return FALSE;
++
++  if (event->state & (GDK_CONTROL_MASK|GDK_MOD1_MASK))
++    return FALSE;
++
++  if (!qc->client_window)
++    return FALSE;
++
++  nsview = gdk_quartz_window_get_nsview(qc->client_window);
++  win = (GdkWindow *)[nsview gdkWindow];
++  g_message("client_window: %p, win: %p, nsview: %p", qc->client_window, win, nsview);
++
++  if (event->hardware_keycode == 55)
++    return FALSE;
++
++  [nsview keyDown: gdk_quartz_event_get_nsevent((GdkEvent *)event)];
++
++  if (event->hardware_keycode == 102 || event->hardware_keycode == 104)
++    return FALSE;
++
++  g_message("quartz_filter_keypress: getting tic-insert-text");
++  str = g_object_get_data(G_OBJECT(win), "tic-insert-text");
++  if (str)
++    {
++      g_message("tic-insert-text: %s", str);
++      g_free(qc->preedit_str);
++      qc->preedit_str = NULL;
++      g_object_set_data(G_OBJECT(win), "tic-insert-text", NULL);
++      g_object_set_data(G_OBJECT(win), "tic-marked-text", NULL);
++      g_signal_emit_by_name (context, "commit", str);
++      g_signal_emit_by_name (context, "preedit_changed");
++      g_free(str);
++      retval = TRUE;
++    }
++  else
++    {
++      str = g_object_get_data(G_OBJECT(win), "tic-marked-text");
++      if (str)
++        {
++          g_message("tic-marked-text: %s", str);
++          g_free(qc->preedit_str);
++          qc->preedit_str = g_strdup(str);
++          g_object_set_data(G_OBJECT(win), "tic-marked-text", NULL);
++          g_signal_emit_by_name (context, "preedit_changed");
++          retval = TRUE;
++        }
++    }
++
++#if 0
++  c = gdk_keyval_to_unicode (event->keyval);
++  if (c)
++    {
++      gchar utf8[10];
++      int len = g_unichar_to_utf8 (c, utf8);
++      utf8[len] = 0;
++
++      g_signal_emit_by_name (context, "commit", utf8);
++      g_signal_emit_by_name (context, "preedit_changed");
++      retval = TRUE;
++    }
++#endif
++
++  g_message("quartz_filter_keypress done");
++  return retval;
++}
++
++static void
++quartz_reset (GtkIMContext *context)
++{
++  g_message("quartz_reset");
++}
++
++static void
++quartz_set_client_window (GtkIMContext *context, GdkWindow *window)
++{
++  GtkIMContextQuartz *qc = GTK_IM_CONTEXT_QUARTZ(context);
++
++  g_message("quartz_set_client_window: %p", window);
++
++  qc->client_window = window;
++}
++
++static void
++quartz_focus_in (GtkIMContext *context)
++{
++  g_message("quartz_focus_in");
++}
++
++static void
++quartz_focus_out (GtkIMContext *context)
++{
++  g_message("quartz_focus_out");
++}
++
++static void
++quartz_set_cursor_location (GtkIMContext *context, GdkRectangle *area)
++{
++  g_message("quartz_set_cursor_location");
++}
++
++static void
++quartz_set_use_preedit (GtkIMContext *context, gboolean use_preedit)
++{
++  g_message("quartz_set_use_preedit: %d", use_preedit);
++}
++
++static void
++gtk_im_context_quartz_class_init (GtkIMContextClass *klass)
++{
++  g_message("gtk_im_context_quartz_class_init");
++
++  parent_class = g_type_class_peek_parent (klass);
++
++  klass->get_preedit_string = quartz_get_preedit_string;
++  klass->filter_keypress = quartz_filter_keypress;
++  klass->reset = quartz_reset;
++  klass->set_client_window = quartz_set_client_window;
++  klass->focus_in = quartz_focus_in;
++  klass->focus_out = quartz_focus_out;
++  klass->set_cursor_location = quartz_set_cursor_location;
++  klass->set_use_preedit = quartz_set_use_preedit;
++}
++
++static void
++gtk_im_context_quartz_init (GtkIMContext *im_context)
++{
++  g_message("gtk_im_context_quartz_init");
++}
++
++static void
++gtk_im_context_quartz_register_type (GTypeModule *module)
++{
++  const GTypeInfo object_info =
++  {
++    sizeof (GtkIMContextClass),
++    (GBaseInitFunc) NULL,
++    (GBaseFinalizeFunc) NULL,
++    (GClassInitFunc) gtk_im_context_quartz_class_init,
++    NULL,           /* class_finalize */
++    NULL,           /* class_data */
++    sizeof (GtkIMContext),
++    0,
++    (GInstanceInitFunc) gtk_im_context_quartz_init,
++  };
++
++  type_quartz =
++    g_type_module_register_type (module,
++                                 GTK_TYPE_IM_CONTEXT,
++                                 "GtkIMContextQuartz",
++                                 &object_info, 0);
++}
++
++MODULE_ENTRY (void, init) (GTypeModule * module)
++{
++  gtk_im_context_quartz_register_type (module);
++}
++
++MODULE_ENTRY (void, exit) (void)
++{
++}
++
++MODULE_ENTRY (void, list) (const GtkIMContextInfo *** contexts, int *n_contexts)
++{
++  *contexts = info_list;
++  *n_contexts = G_N_ELEMENTS (info_list);
++}
++
++MODULE_ENTRY (GtkIMContext *, create) (const gchar * context_id)
++{
++  g_return_val_if_fail (context_id, NULL);
++
++  if (!strcmp (context_id, "quartz"))
++  {
++    g_message("immodule_quartz create");
++    return g_object_new (type_quartz, NULL);
++  }
++  else
++    return NULL;
++}
+-- 
+1.7.8.3
+

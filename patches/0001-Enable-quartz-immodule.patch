@@ -1,0 +1,1035 @@
+From a56dcb95e2ba35bfa410252faf1d5a368ac917d0 Mon Sep 17 00:00:00 2001
+From: Masaki Muranaka <monaka@monami-ya.jp>
+Date: Fri, 24 Feb 2012 18:30:21 +0900
+Subject: [PATCH] Enable quartz-immodule
+
+---
+ aclocal.m4                |   42 +++--------
+ configure                 |   90 +++++++--------------
+ gtk/Makefile.in           |  192 +++++++++++++++++++++++++--------------------
+ modules/input/Makefile.in |   75 +++++++++++++----
+ tests/Makefile.in         |    9 +-
+ 5 files changed, 211 insertions(+), 197 deletions(-)
+
+diff --git a/aclocal.m4 b/aclocal.m4
+index 881f777..9196d55 100644
+--- a/aclocal.m4
++++ b/aclocal.m4
+@@ -3189,7 +3189,6 @@ gnu*)
+   library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}${major} ${libname}${shared_ext}'
+   soname_spec='${libname}${release}${shared_ext}$major'
+   shlibpath_var=LD_LIBRARY_PATH
+-  shlibpath_overrides_runpath=no
+   hardcode_into_libs=yes
+   ;;
+ 
+@@ -3354,18 +3353,6 @@ linux* | k*bsd*-gnu | kopensolaris*-gnu)
+   dynamic_linker='GNU/Linux ld.so'
+   ;;
+ 
+-netbsdelf*-gnu)
+-  version_type=linux
+-  need_lib_prefix=no
+-  need_version=no
+-  library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major ${libname}${shared_ext}'
+-  soname_spec='${libname}${release}${shared_ext}$major'
+-  shlibpath_var=LD_LIBRARY_PATH
+-  shlibpath_overrides_runpath=no
+-  hardcode_into_libs=yes
+-  dynamic_linker='NetBSD ld.elf_so'
+-  ;;
+-
+ netbsd*)
+   version_type=sunos
+   need_lib_prefix=no
+@@ -3971,7 +3958,7 @@ linux* | k*bsd*-gnu | kopensolaris*-gnu)
+   lt_cv_deplibs_check_method=pass_all
+   ;;
+ 
+-netbsd* | netbsdelf*-gnu)
++netbsd*)
+   if echo __ELF__ | $CC -E - | $GREP __ELF__ > /dev/null; then
+     lt_cv_deplibs_check_method='match_pattern /lib[[^/]]+(\.so\.[[0-9]]+\.[[0-9]]+|_pic\.a)$'
+   else
+@@ -4782,7 +4769,7 @@ m4_if([$1], [CXX], [
+ 	    ;;
+ 	esac
+ 	;;
+-      netbsd* | netbsdelf*-gnu)
++      netbsd*)
+ 	;;
+       *qnx* | *nto*)
+         # QNX uses GNU C++, but need to define -shared option too, otherwise
+@@ -5240,9 +5227,6 @@ m4_if([$1], [CXX], [
+       ;;
+     esac
+     ;;
+-  linux* | k*bsd*-gnu | gnu*)
+-    _LT_TAGVAR(link_all_deplibs, $1)=no
+-    ;;
+   *)
+     _LT_TAGVAR(export_symbols_cmds, $1)='$NM $libobjs $convenience | $global_symbol_pipe | $SED '\''s/.* //'\'' | sort | uniq > $export_symbols'
+     ;;
+@@ -5306,9 +5290,6 @@ dnl Note also adjust exclude_expsyms for C++ above.
+   openbsd*)
+     with_gnu_ld=no
+     ;;
+-  linux* | k*bsd*-gnu | gnu*)
+-    _LT_TAGVAR(link_all_deplibs, $1)=no
+-    ;;
+   esac
+ 
+   _LT_TAGVAR(ld_shlibs, $1)=yes
+@@ -5531,7 +5512,7 @@ _LT_EOF
+       fi
+       ;;
+ 
+-    netbsd* | netbsdelf*-gnu)
++    netbsd*)
+       if echo __ELF__ | $CC -E - | $GREP __ELF__ >/dev/null; then
+ 	_LT_TAGVAR(archive_cmds, $1)='$LD -Bshareable $libobjs $deplibs $linker_flags -o $lib'
+ 	wlarc=
+@@ -5708,7 +5689,6 @@ _LT_EOF
+ 	if test "$aix_use_runtimelinking" = yes; then
+ 	  shared_flag="$shared_flag "'${wl}-G'
+ 	fi
+-	_LT_TAGVAR(link_all_deplibs, $1)=no
+       else
+ 	# not using gcc
+ 	if test "$host_cpu" = ia64; then
+@@ -6017,7 +5997,7 @@ _LT_EOF
+       _LT_TAGVAR(link_all_deplibs, $1)=yes
+       ;;
+ 
+-    netbsd* | netbsdelf*-gnu)
++    netbsd*)
+       if echo __ELF__ | $CC -E - | $GREP __ELF__ >/dev/null; then
+ 	_LT_TAGVAR(archive_cmds, $1)='$LD -Bshareable -o $lib $libobjs $deplibs $linker_flags'  # a.out
+       else
+@@ -9207,8 +9187,7 @@ m4_ifndef([_LT_PROG_CXX],		[AC_DEFUN([_LT_PROG_CXX])])
+ # ----------------------------------
+ AC_DEFUN([PKG_PROG_PKG_CONFIG],
+ [m4_pattern_forbid([^_?PKG_[A-Z_]+$])
+-m4_pattern_allow([^PKG_CONFIG(_(PATH|LIBDIR|SYSROOT_DIR|ALLOW_SYSTEM_(CFLAGS|LIBS)))?$])
+-m4_pattern_allow([^PKG_CONFIG_(DISABLE_UNINSTALLED|TOP_BUILD_DIR|DEBUG_SPEW)$])
++m4_pattern_allow([^PKG_CONFIG(_PATH)?$])
+ AC_ARG_VAR([PKG_CONFIG], [path to pkg-config utility])
+ AC_ARG_VAR([PKG_CONFIG_PATH], [directories to add to pkg-config's search path])
+ AC_ARG_VAR([PKG_CONFIG_LIBDIR], [path overriding pkg-config's built-in search path])
+@@ -9254,8 +9233,7 @@ m4_define([_PKG_CONFIG],
+     pkg_cv_[]$1="$$1"
+  elif test -n "$PKG_CONFIG"; then
+     PKG_CHECK_EXISTS([$3],
+-                     [pkg_cv_[]$1=`$PKG_CONFIG --[]$2 "$3" 2>/dev/null`
+-		      test "x$?" != "x0" && pkg_failed=yes ],
++                     [pkg_cv_[]$1=`$PKG_CONFIG --[]$2 "$3" 2>/dev/null`],
+ 		     [pkg_failed=yes])
+  else
+     pkg_failed=untried
+@@ -9303,9 +9281,9 @@ if test $pkg_failed = yes; then
+    	AC_MSG_RESULT([no])
+         _PKG_SHORT_ERRORS_SUPPORTED
+         if test $_pkg_short_errors_supported = yes; then
+-	        $1[]_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "$2" 2>&1`
++	        $1[]_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "$2" 2>&1`
+         else 
+-	        $1[]_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "$2" 2>&1`
++	        $1[]_PKG_ERRORS=`$PKG_CONFIG --print-errors "$2" 2>&1`
+         fi
+ 	# Put the nasty error message in config.log where it belongs
+ 	echo "$$1[]_PKG_ERRORS" >&AS_MESSAGE_LOG_FD
+@@ -9318,7 +9296,7 @@ $$1_PKG_ERRORS
+ Consider adjusting the PKG_CONFIG_PATH environment variable if you
+ installed software in a non-standard prefix.
+ 
+-_PKG_TEXT])[]dnl
++_PKG_TEXT])dnl
+         ])
+ elif test $pkg_failed = untried; then
+      	AC_MSG_RESULT([no])
+@@ -9329,7 +9307,7 @@ path to pkg-config.
+ 
+ _PKG_TEXT
+ 
+-To get pkg-config, see <http://pkg-config.freedesktop.org/>.])[]dnl
++To get pkg-config, see <http://pkg-config.freedesktop.org/>.])dnl
+         ])
+ else
+ 	$1[]_CFLAGS=$pkg_cv_[]$1[]_CFLAGS
+diff --git a/configure b/configure
+index be1a387..d2eca4b 100755
+--- a/configure
++++ b/configure
+@@ -721,6 +721,8 @@ INCLUDE_IM_TI_ER_FALSE
+ INCLUDE_IM_TI_ER_TRUE
+ INCLUDE_IM_THAI_FALSE
+ INCLUDE_IM_THAI_TRUE
++INCLUDE_IM_QUARTZ_FALSE
++INCLUDE_IM_QUARTZ_TRUE
+ INCLUDE_IM_MULTIPRESS_FALSE
+ INCLUDE_IM_MULTIPRESS_TRUE
+ INCLUDE_IM_IPA_FALSE
+@@ -6574,7 +6576,7 @@ linux* | k*bsd*-gnu | kopensolaris*-gnu)
+   lt_cv_deplibs_check_method=pass_all
+   ;;
+ 
+-netbsd* | netbsdelf*-gnu)
++netbsd*)
+   if echo __ELF__ | $CC -E - | $GREP __ELF__ > /dev/null; then
+     lt_cv_deplibs_check_method='match_pattern /lib[^/]+(\.so\.[0-9]+\.[0-9]+|_pic\.a)$'
+   else
+@@ -9887,9 +9889,6 @@ $as_echo_n "checking whether the $compiler linker ($LD) supports shared librarie
+   openbsd*)
+     with_gnu_ld=no
+     ;;
+-  linux* | k*bsd*-gnu | gnu*)
+-    link_all_deplibs=no
+-    ;;
+   esac
+ 
+   ld_shlibs=yes
+@@ -10112,7 +10111,7 @@ _LT_EOF
+       fi
+       ;;
+ 
+-    netbsd* | netbsdelf*-gnu)
++    netbsd*)
+       if echo __ELF__ | $CC -E - | $GREP __ELF__ >/dev/null; then
+ 	archive_cmds='$LD -Bshareable $libobjs $deplibs $linker_flags -o $lib'
+ 	wlarc=
+@@ -10289,7 +10288,6 @@ _LT_EOF
+ 	if test "$aix_use_runtimelinking" = yes; then
+ 	  shared_flag="$shared_flag "'${wl}-G'
+ 	fi
+-	link_all_deplibs=no
+       else
+ 	# not using gcc
+ 	if test "$host_cpu" = ia64; then
+@@ -10746,7 +10744,7 @@ $as_echo "$lt_cv_irix_exported_symbol" >&6; }
+       link_all_deplibs=yes
+       ;;
+ 
+-    netbsd* | netbsdelf*-gnu)
++    netbsd*)
+       if echo __ELF__ | $CC -E - | $GREP __ELF__ >/dev/null; then
+ 	archive_cmds='$LD -Bshareable -o $lib $libobjs $deplibs $linker_flags'  # a.out
+       else
+@@ -11599,7 +11597,6 @@ gnu*)
+   library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}${major} ${libname}${shared_ext}'
+   soname_spec='${libname}${release}${shared_ext}$major'
+   shlibpath_var=LD_LIBRARY_PATH
+-  shlibpath_overrides_runpath=no
+   hardcode_into_libs=yes
+   ;;
+ 
+@@ -11783,18 +11780,6 @@ fi
+   dynamic_linker='GNU/Linux ld.so'
+   ;;
+ 
+-netbsdelf*-gnu)
+-  version_type=linux
+-  need_lib_prefix=no
+-  need_version=no
+-  library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major ${libname}${shared_ext}'
+-  soname_spec='${libname}${release}${shared_ext}$major'
+-  shlibpath_var=LD_LIBRARY_PATH
+-  shlibpath_overrides_runpath=no
+-  hardcode_into_libs=yes
+-  dynamic_linker='NetBSD ld.elf_so'
+-  ;;
+-
+ netbsd*)
+   version_type=sunos
+   need_lib_prefix=no
+@@ -14629,7 +14614,7 @@ lt_prog_compiler_static_CXX=
+ 	    ;;
+ 	esac
+ 	;;
+-      netbsd* | netbsdelf*-gnu)
++      netbsd*)
+ 	;;
+       *qnx* | *nto*)
+         # QNX uses GNU C++, but need to define -shared option too, otherwise
+@@ -14998,9 +14983,6 @@ $as_echo_n "checking whether the $compiler linker ($LD) supports shared librarie
+       ;;
+     esac
+     ;;
+-  linux* | k*bsd*-gnu | gnu*)
+-    link_all_deplibs_CXX=no
+-    ;;
+   *)
+     export_symbols_cmds_CXX='$NM $libobjs $convenience | $global_symbol_pipe | $SED '\''s/.* //'\'' | sort | uniq > $export_symbols'
+     ;;
+@@ -15448,7 +15430,6 @@ gnu*)
+   library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}${major} ${libname}${shared_ext}'
+   soname_spec='${libname}${release}${shared_ext}$major'
+   shlibpath_var=LD_LIBRARY_PATH
+-  shlibpath_overrides_runpath=no
+   hardcode_into_libs=yes
+   ;;
+ 
+@@ -15632,18 +15613,6 @@ fi
+   dynamic_linker='GNU/Linux ld.so'
+   ;;
+ 
+-netbsdelf*-gnu)
+-  version_type=linux
+-  need_lib_prefix=no
+-  need_version=no
+-  library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major ${libname}${shared_ext}'
+-  soname_spec='${libname}${release}${shared_ext}$major'
+-  shlibpath_var=LD_LIBRARY_PATH
+-  shlibpath_overrides_runpath=no
+-  hardcode_into_libs=yes
+-  dynamic_linker='NetBSD ld.elf_so'
+-  ;;
+-
+ netbsd*)
+   version_type=sunos
+   need_lib_prefix=no
+@@ -19332,7 +19301,6 @@ ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
+ 
+ 
+ 
+-
+ if test "x$ac_cv_env_PKG_CONFIG_set" != "xset"; then
+ 	if test -n "$ac_tool_prefix"; then
+   # Extract the first word of "${ac_tool_prefix}pkg-config", so it can be a program name with args.
+@@ -19461,7 +19429,6 @@ if test -n "$BASE_DEPENDENCIES_CFLAGS"; then
+   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+   test $ac_status = 0; }; then
+   pkg_cv_BASE_DEPENDENCIES_CFLAGS=`$PKG_CONFIG --cflags "glib-2.0 >= 2.27.3    atk >= 1.29.2    pango >= 1.20    cairo >= 1.6    gdk-pixbuf-2.0 >= 2.21.0" 2>/dev/null`
+-		      test "x$?" != "x0" && pkg_failed=yes
+ else
+   pkg_failed=yes
+ fi
+@@ -19478,7 +19445,6 @@ if test -n "$BASE_DEPENDENCIES_LIBS"; then
+   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+   test $ac_status = 0; }; then
+   pkg_cv_BASE_DEPENDENCIES_LIBS=`$PKG_CONFIG --libs "glib-2.0 >= 2.27.3    atk >= 1.29.2    pango >= 1.20    cairo >= 1.6    gdk-pixbuf-2.0 >= 2.21.0" 2>/dev/null`
+-		      test "x$?" != "x0" && pkg_failed=yes
+ else
+   pkg_failed=yes
+ fi
+@@ -19498,9 +19464,9 @@ else
+         _pkg_short_errors_supported=no
+ fi
+         if test $_pkg_short_errors_supported = yes; then
+-	        BASE_DEPENDENCIES_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "glib-2.0 >= 2.27.3    atk >= 1.29.2    pango >= 1.20    cairo >= 1.6    gdk-pixbuf-2.0 >= 2.21.0" 2>&1`
++	        BASE_DEPENDENCIES_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "glib-2.0 >= 2.27.3    atk >= 1.29.2    pango >= 1.20    cairo >= 1.6    gdk-pixbuf-2.0 >= 2.21.0" 2>&1`
+         else
+-	        BASE_DEPENDENCIES_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "glib-2.0 >= 2.27.3    atk >= 1.29.2    pango >= 1.20    cairo >= 1.6    gdk-pixbuf-2.0 >= 2.21.0" 2>&1`
++	        BASE_DEPENDENCIES_PKG_ERRORS=`$PKG_CONFIG --print-errors "glib-2.0 >= 2.27.3    atk >= 1.29.2    pango >= 1.20    cairo >= 1.6    gdk-pixbuf-2.0 >= 2.21.0" 2>&1`
+         fi
+ 	# Put the nasty error message in config.log where it belongs
+ 	echo "$BASE_DEPENDENCIES_PKG_ERRORS" >&5
+@@ -19563,7 +19529,6 @@ if test -n "$CAIRO_BACKEND_CFLAGS"; then
+   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+   test $ac_status = 0; }; then
+   pkg_cv_CAIRO_BACKEND_CFLAGS=`$PKG_CONFIG --cflags "cairo-$cairo_backend >= 1.6" 2>/dev/null`
+-		      test "x$?" != "x0" && pkg_failed=yes
+ else
+   pkg_failed=yes
+ fi
+@@ -19580,7 +19545,6 @@ if test -n "$CAIRO_BACKEND_LIBS"; then
+   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+   test $ac_status = 0; }; then
+   pkg_cv_CAIRO_BACKEND_LIBS=`$PKG_CONFIG --libs "cairo-$cairo_backend >= 1.6" 2>/dev/null`
+-		      test "x$?" != "x0" && pkg_failed=yes
+ else
+   pkg_failed=yes
+ fi
+@@ -19600,9 +19564,9 @@ else
+         _pkg_short_errors_supported=no
+ fi
+         if test $_pkg_short_errors_supported = yes; then
+-	        CAIRO_BACKEND_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "cairo-$cairo_backend >= 1.6" 2>&1`
++	        CAIRO_BACKEND_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "cairo-$cairo_backend >= 1.6" 2>&1`
+         else
+-	        CAIRO_BACKEND_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "cairo-$cairo_backend >= 1.6" 2>&1`
++	        CAIRO_BACKEND_PKG_ERRORS=`$PKG_CONFIG --print-errors "cairo-$cairo_backend >= 1.6" 2>&1`
+         fi
+ 	# Put the nasty error message in config.log where it belongs
+ 	echo "$CAIRO_BACKEND_PKG_ERRORS" >&5
+@@ -19655,7 +19619,6 @@ if test -n "$GMODULE_CFLAGS"; then
+   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+   test $ac_status = 0; }; then
+   pkg_cv_GMODULE_CFLAGS=`$PKG_CONFIG --cflags "gmodule-2.0" 2>/dev/null`
+-		      test "x$?" != "x0" && pkg_failed=yes
+ else
+   pkg_failed=yes
+ fi
+@@ -19672,7 +19635,6 @@ if test -n "$GMODULE_LIBS"; then
+   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+   test $ac_status = 0; }; then
+   pkg_cv_GMODULE_LIBS=`$PKG_CONFIG --libs "gmodule-2.0" 2>/dev/null`
+-		      test "x$?" != "x0" && pkg_failed=yes
+ else
+   pkg_failed=yes
+ fi
+@@ -19692,9 +19654,9 @@ else
+         _pkg_short_errors_supported=no
+ fi
+         if test $_pkg_short_errors_supported = yes; then
+-	        GMODULE_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "gmodule-2.0" 2>&1`
++	        GMODULE_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "gmodule-2.0" 2>&1`
+         else
+-	        GMODULE_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "gmodule-2.0" 2>&1`
++	        GMODULE_PKG_ERRORS=`$PKG_CONFIG --print-errors "gmodule-2.0" 2>&1`
+         fi
+ 	# Put the nasty error message in config.log where it belongs
+ 	echo "$GMODULE_PKG_ERRORS" >&5
+@@ -20974,7 +20936,6 @@ fi
+ 
+ 
+ 
+-
+ if test "x$ac_cv_env_PKG_CONFIG_set" != "xset"; then
+ 	if test -n "$ac_tool_prefix"; then
+   # Extract the first word of "${ac_tool_prefix}pkg-config", so it can be a program name with args.
+@@ -22216,6 +22177,9 @@ all_immodules="am-et,cedilla,cyrillic-translit"
+ if test "$gdktarget" = "win32"; then
+    all_immodules="${all_immodules},ime"
+ fi
++if test "$gdktarget" = "quartz"; then
++   all_immodules="${all_immodules},quartz"
++fi
+ all_immodules="${all_immodules},inuktitut,ipa,multipress,thai,ti-er,ti-et,viqr"
+ if test "$gdktarget" = "x11"; then
+    all_immodules="${all_immodules},xim"
+@@ -22316,6 +22280,14 @@ else
+   INCLUDE_IM_MULTIPRESS_FALSE=
+ fi
+ 
++ if test x"$INCLUDE_quartz" = xyes; then
++  INCLUDE_IM_QUARTZ_TRUE=
++  INCLUDE_IM_QUARTZ_FALSE='#'
++else
++  INCLUDE_IM_QUARTZ_TRUE='#'
++  INCLUDE_IM_QUARTZ_FALSE=
++fi
++
+  if test x"$INCLUDE_thai" = xyes; then
+   INCLUDE_IM_THAI_TRUE=
+   INCLUDE_IM_THAI_FALSE='#'
+@@ -24043,7 +24015,6 @@ if test -n "$DIRECTFB_CFLAGS"; then
+   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+   test $ac_status = 0; }; then
+   pkg_cv_DIRECTFB_CFLAGS=`$PKG_CONFIG --cflags "directfb >= $DIRECTFB_REQUIRED_VERSION" 2>/dev/null`
+-		      test "x$?" != "x0" && pkg_failed=yes
+ else
+   pkg_failed=yes
+ fi
+@@ -24060,7 +24031,6 @@ if test -n "$DIRECTFB_LIBS"; then
+   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+   test $ac_status = 0; }; then
+   pkg_cv_DIRECTFB_LIBS=`$PKG_CONFIG --libs "directfb >= $DIRECTFB_REQUIRED_VERSION" 2>/dev/null`
+-		      test "x$?" != "x0" && pkg_failed=yes
+ else
+   pkg_failed=yes
+ fi
+@@ -24080,9 +24050,9 @@ else
+         _pkg_short_errors_supported=no
+ fi
+         if test $_pkg_short_errors_supported = yes; then
+-	        DIRECTFB_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "directfb >= $DIRECTFB_REQUIRED_VERSION" 2>&1`
++	        DIRECTFB_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "directfb >= $DIRECTFB_REQUIRED_VERSION" 2>&1`
+         else
+-	        DIRECTFB_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "directfb >= $DIRECTFB_REQUIRED_VERSION" 2>&1`
++	        DIRECTFB_PKG_ERRORS=`$PKG_CONFIG --print-errors "directfb >= $DIRECTFB_REQUIRED_VERSION" 2>&1`
+         fi
+ 	# Put the nasty error message in config.log where it belongs
+ 	echo "$DIRECTFB_PKG_ERRORS" >&5
+@@ -25137,7 +25107,6 @@ if test -n "$GTKDOC_DEPS_CFLAGS"; then
+   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+   test $ac_status = 0; }; then
+   pkg_cv_GTKDOC_DEPS_CFLAGS=`$PKG_CONFIG --cflags "glib-2.0 >= 2.10.0 gobject-2.0  >= 2.10.0" 2>/dev/null`
+-		      test "x$?" != "x0" && pkg_failed=yes
+ else
+   pkg_failed=yes
+ fi
+@@ -25154,7 +25123,6 @@ if test -n "$GTKDOC_DEPS_LIBS"; then
+   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+   test $ac_status = 0; }; then
+   pkg_cv_GTKDOC_DEPS_LIBS=`$PKG_CONFIG --libs "glib-2.0 >= 2.10.0 gobject-2.0  >= 2.10.0" 2>/dev/null`
+-		      test "x$?" != "x0" && pkg_failed=yes
+ else
+   pkg_failed=yes
+ fi
+@@ -25174,9 +25142,9 @@ else
+         _pkg_short_errors_supported=no
+ fi
+         if test $_pkg_short_errors_supported = yes; then
+-	        GTKDOC_DEPS_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "glib-2.0 >= 2.10.0 gobject-2.0  >= 2.10.0" 2>&1`
++	        GTKDOC_DEPS_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "glib-2.0 >= 2.10.0 gobject-2.0  >= 2.10.0" 2>&1`
+         else
+-	        GTKDOC_DEPS_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "glib-2.0 >= 2.10.0 gobject-2.0  >= 2.10.0" 2>&1`
++	        GTKDOC_DEPS_PKG_ERRORS=`$PKG_CONFIG --print-errors "glib-2.0 >= 2.10.0 gobject-2.0  >= 2.10.0" 2>&1`
+         fi
+ 	# Put the nasty error message in config.log where it belongs
+ 	echo "$GTKDOC_DEPS_PKG_ERRORS" >&5
+@@ -25724,6 +25692,10 @@ if test -z "${INCLUDE_IM_MULTIPRESS_TRUE}" && test -z "${INCLUDE_IM_MULTIPRESS_F
+   as_fn_error $? "conditional \"INCLUDE_IM_MULTIPRESS\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
++if test -z "${INCLUDE_IM_QUARTZ_TRUE}" && test -z "${INCLUDE_IM_QUARTZ_FALSE}"; then
++  as_fn_error $? "conditional \"INCLUDE_IM_QUARTZ\" was never defined.
++Usually this means the macro was only invoked conditionally." "$LINENO" 5
++fi
+ if test -z "${INCLUDE_IM_THAI_TRUE}" && test -z "${INCLUDE_IM_THAI_FALSE}"; then
+   as_fn_error $? "conditional \"INCLUDE_IM_THAI\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+diff --git a/gtk/Makefile.in b/gtk/Makefile.in
+index 145e5eb..7fc99a5 100644
+--- a/gtk/Makefile.in
++++ b/gtk/Makefile.in
+@@ -163,12 +163,12 @@ am__libgtk_directfb_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
+ 	gtkrecentchooserwidget.c gtkrecentchooserutils.c \
+ 	gtkrecentchooser.c gtkrecentfilter.c gtkrecentmanager.c \
+ 	gtkruler.c gtkscale.c gtkscalebutton.c gtkscrollbar.c \
+-	gtkscrolledwindow.c gtkselection.c gtkseparator.c \
+-	gtkseparatormenuitem.c gtkseparatortoolitem.c gtksettings.c \
+-	gtksizegroup.c gtkshow.c gtksocket.c gtkspinbutton.c \
+-	gtkspinner.c gtkstatusbar.c gtkstatusicon.c gtkstock.c \
+-	gtkstyle.c gtktable.c gtktearoffmenuitem.c gtktestutils.c \
+-	gtktextbtree.c gtktextbuffer.c gtktextbufferrichtext.c \
++	gtkscrolledwindow.c gtkseparator.c gtkseparatormenuitem.c \
++	gtkseparatortoolitem.c gtksettings.c gtksizegroup.c gtkshow.c \
++	gtksocket.c gtkspinbutton.c gtkspinner.c gtkstatusbar.c \
++	gtkstatusicon.c gtkstock.c gtkstyle.c gtktable.c \
++	gtktearoffmenuitem.c gtktestutils.c gtktextbtree.c \
++	gtktextbuffer.c gtktextbufferrichtext.c \
+ 	gtktextbufferserialize.c gtktextchild.c gtktextdisplay.c \
+ 	gtktextiter.c gtktextlayout.c gtktextmark.c gtktextsegment.c \
+ 	gtktexttag.c gtktexttagtable.c gtktexttypes.c gtktextutil.c \
+@@ -182,15 +182,16 @@ am__libgtk_directfb_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
+ 	gtktypeutils.c gtkuimanager.c gtkvbbox.c gtkvbox.c \
+ 	gtkvolumebutton.c gtkviewport.c gtkvpaned.c gtkvruler.c \
+ 	gtkvscale.c gtkvscrollbar.c gtkvseparator.c gtkwidget.c \
+-	gtkwindow-decorate.c gtkwindow.c gtkclipboard.c gtkdnd.c \
+-	gtkclipboard-quartz.c gtkdnd-quartz.c gtkquartz.c gtktext.c \
+-	gtktree.c gtktreeitem.c gtkclist.c gtkcombo.c gtkctree.c \
+-	gtkcurve.c gtkfilesel.c gtkgamma.c gtkitemfactory.c gtklist.c \
+-	gtklistitem.c gtkoldeditable.c gtkoptionmenu.c gtkpixmap.c \
+-	gtkpreview.c gtkprogress.c gtksignal.c gtktipsquery.c \
+-	gtktooltips.c gtkcustompaperunixdialog.c \
+-	gtkpagesetupunixdialog.c gtkprinter.c gtkprinteroption.c \
+-	gtkprinteroptionset.c gtkprinteroptionwidget.c gtkprintjob.c \
++	gtkwindow-decorate.c gtkwindow.c gtkselection.c gtkclipboard.c \
++	gtkdnd.c gtkselection-quartz.c gtkclipboard-quartz.c \
++	gtkdnd-quartz.c gtkquartz.c gtktext.c gtktree.c gtktreeitem.c \
++	gtkclist.c gtkcombo.c gtkctree.c gtkcurve.c gtkfilesel.c \
++	gtkgamma.c gtkitemfactory.c gtklist.c gtklistitem.c \
++	gtkoldeditable.c gtkoptionmenu.c gtkpixmap.c gtkpreview.c \
++	gtkprogress.c gtksignal.c gtktipsquery.c gtktooltips.c \
++	gtkcustompaperunixdialog.c gtkpagesetupunixdialog.c \
++	gtkprinter.c gtkprinteroption.c gtkprinteroptionset.c \
++	gtkprinteroptionwidget.c gtkprintjob.c \
+ 	gtkprintoperation-unix.c gtkprintunixdialog.c \
+ 	gtkprintbackend.c gtksearchenginebeagle.c \
+ 	gtksearchenginetracker.c gtkprint-win32.c \
+@@ -199,8 +200,10 @@ am__libgtk_directfb_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
+ 	gtkplug-win32.c gtksocket-win32.c gtkwin32embed.c \
+ 	gtkwin32embedwidget.c gtkmountoperation-stub.c \
+ 	gtksearchenginequartz.c gtkplug-stub.c gtksocket-stub.c
+-@USE_QUARTZ_FALSE@am__objects_1 = gtkclipboard.lo gtkdnd.lo
+-@USE_QUARTZ_TRUE@am__objects_1 = gtkclipboard-quartz.lo \
++@USE_QUARTZ_FALSE@am__objects_1 = gtkselection.lo gtkclipboard.lo \
++@USE_QUARTZ_FALSE@	gtkdnd.lo
++@USE_QUARTZ_TRUE@am__objects_1 = gtkselection.lo \
++@USE_QUARTZ_TRUE@	gtkselection-quartz.lo gtkclipboard-quartz.lo \
+ @USE_QUARTZ_TRUE@	gtkdnd-quartz.lo gtkquartz.lo
+ am__objects_2 = gtkquery.lo gtksearchengine.lo \
+ 	gtksearchenginesimple.lo fnmatch.lo gtkaboutdialog.lo \
+@@ -250,11 +253,11 @@ am__objects_2 = gtkquery.lo gtksearchengine.lo \
+ 	gtkrecentchooserwidget.lo gtkrecentchooserutils.lo \
+ 	gtkrecentchooser.lo gtkrecentfilter.lo gtkrecentmanager.lo \
+ 	gtkruler.lo gtkscale.lo gtkscalebutton.lo gtkscrollbar.lo \
+-	gtkscrolledwindow.lo gtkselection.lo gtkseparator.lo \
+-	gtkseparatormenuitem.lo gtkseparatortoolitem.lo gtksettings.lo \
+-	gtksizegroup.lo gtkshow.lo gtksocket.lo gtkspinbutton.lo \
+-	gtkspinner.lo gtkstatusbar.lo gtkstatusicon.lo gtkstock.lo \
+-	gtkstyle.lo gtktable.lo gtktearoffmenuitem.lo gtktestutils.lo \
++	gtkscrolledwindow.lo gtkseparator.lo gtkseparatormenuitem.lo \
++	gtkseparatortoolitem.lo gtksettings.lo gtksizegroup.lo \
++	gtkshow.lo gtksocket.lo gtkspinbutton.lo gtkspinner.lo \
++	gtkstatusbar.lo gtkstatusicon.lo gtkstock.lo gtkstyle.lo \
++	gtktable.lo gtktearoffmenuitem.lo gtktestutils.lo \
+ 	gtktextbtree.lo gtktextbuffer.lo gtktextbufferrichtext.lo \
+ 	gtktextbufferserialize.lo gtktextchild.lo gtktextdisplay.lo \
+ 	gtktextiter.lo gtktextlayout.lo gtktextmark.lo \
+@@ -355,12 +358,12 @@ am__libgtk_quartz_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
+ 	gtkrecentchooserwidget.c gtkrecentchooserutils.c \
+ 	gtkrecentchooser.c gtkrecentfilter.c gtkrecentmanager.c \
+ 	gtkruler.c gtkscale.c gtkscalebutton.c gtkscrollbar.c \
+-	gtkscrolledwindow.c gtkselection.c gtkseparator.c \
+-	gtkseparatormenuitem.c gtkseparatortoolitem.c gtksettings.c \
+-	gtksizegroup.c gtkshow.c gtksocket.c gtkspinbutton.c \
+-	gtkspinner.c gtkstatusbar.c gtkstatusicon.c gtkstock.c \
+-	gtkstyle.c gtktable.c gtktearoffmenuitem.c gtktestutils.c \
+-	gtktextbtree.c gtktextbuffer.c gtktextbufferrichtext.c \
++	gtkscrolledwindow.c gtkseparator.c gtkseparatormenuitem.c \
++	gtkseparatortoolitem.c gtksettings.c gtksizegroup.c gtkshow.c \
++	gtksocket.c gtkspinbutton.c gtkspinner.c gtkstatusbar.c \
++	gtkstatusicon.c gtkstock.c gtkstyle.c gtktable.c \
++	gtktearoffmenuitem.c gtktestutils.c gtktextbtree.c \
++	gtktextbuffer.c gtktextbufferrichtext.c \
+ 	gtktextbufferserialize.c gtktextchild.c gtktextdisplay.c \
+ 	gtktextiter.c gtktextlayout.c gtktextmark.c gtktextsegment.c \
+ 	gtktexttag.c gtktexttagtable.c gtktexttypes.c gtktextutil.c \
+@@ -374,15 +377,16 @@ am__libgtk_quartz_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
+ 	gtktypeutils.c gtkuimanager.c gtkvbbox.c gtkvbox.c \
+ 	gtkvolumebutton.c gtkviewport.c gtkvpaned.c gtkvruler.c \
+ 	gtkvscale.c gtkvscrollbar.c gtkvseparator.c gtkwidget.c \
+-	gtkwindow-decorate.c gtkwindow.c gtkclipboard.c gtkdnd.c \
+-	gtkclipboard-quartz.c gtkdnd-quartz.c gtkquartz.c gtktext.c \
+-	gtktree.c gtktreeitem.c gtkclist.c gtkcombo.c gtkctree.c \
+-	gtkcurve.c gtkfilesel.c gtkgamma.c gtkitemfactory.c gtklist.c \
+-	gtklistitem.c gtkoldeditable.c gtkoptionmenu.c gtkpixmap.c \
+-	gtkpreview.c gtkprogress.c gtksignal.c gtktipsquery.c \
+-	gtktooltips.c gtkcustompaperunixdialog.c \
+-	gtkpagesetupunixdialog.c gtkprinter.c gtkprinteroption.c \
+-	gtkprinteroptionset.c gtkprinteroptionwidget.c gtkprintjob.c \
++	gtkwindow-decorate.c gtkwindow.c gtkselection.c gtkclipboard.c \
++	gtkdnd.c gtkselection-quartz.c gtkclipboard-quartz.c \
++	gtkdnd-quartz.c gtkquartz.c gtktext.c gtktree.c gtktreeitem.c \
++	gtkclist.c gtkcombo.c gtkctree.c gtkcurve.c gtkfilesel.c \
++	gtkgamma.c gtkitemfactory.c gtklist.c gtklistitem.c \
++	gtkoldeditable.c gtkoptionmenu.c gtkpixmap.c gtkpreview.c \
++	gtkprogress.c gtksignal.c gtktipsquery.c gtktooltips.c \
++	gtkcustompaperunixdialog.c gtkpagesetupunixdialog.c \
++	gtkprinter.c gtkprinteroption.c gtkprinteroptionset.c \
++	gtkprinteroptionwidget.c gtkprintjob.c \
+ 	gtkprintoperation-unix.c gtkprintunixdialog.c \
+ 	gtkprintbackend.c gtksearchenginebeagle.c \
+ 	gtksearchenginetracker.c gtkprint-win32.c \
+@@ -392,9 +396,12 @@ am__libgtk_quartz_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
+ 	gtkwin32embedwidget.c gtkmountoperation-stub.c \
+ 	gtksearchenginequartz.c gtkplug-stub.c gtksocket-stub.c
+ @USE_QUARTZ_FALSE@am__objects_16 =  \
++@USE_QUARTZ_FALSE@	libgtk_quartz_2_0_la-gtkselection.lo \
+ @USE_QUARTZ_FALSE@	libgtk_quartz_2_0_la-gtkclipboard.lo \
+ @USE_QUARTZ_FALSE@	libgtk_quartz_2_0_la-gtkdnd.lo
+ @USE_QUARTZ_TRUE@am__objects_16 =  \
++@USE_QUARTZ_TRUE@	libgtk_quartz_2_0_la-gtkselection.lo \
++@USE_QUARTZ_TRUE@	libgtk_quartz_2_0_la-gtkselection-quartz.lo \
+ @USE_QUARTZ_TRUE@	libgtk_quartz_2_0_la-gtkclipboard-quartz.lo \
+ @USE_QUARTZ_TRUE@	libgtk_quartz_2_0_la-gtkdnd-quartz.lo \
+ @USE_QUARTZ_TRUE@	libgtk_quartz_2_0_la-gtkquartz.lo
+@@ -547,7 +554,6 @@ am__objects_17 = libgtk_quartz_2_0_la-gtkquery.lo \
+ 	libgtk_quartz_2_0_la-gtkscalebutton.lo \
+ 	libgtk_quartz_2_0_la-gtkscrollbar.lo \
+ 	libgtk_quartz_2_0_la-gtkscrolledwindow.lo \
+-	libgtk_quartz_2_0_la-gtkselection.lo \
+ 	libgtk_quartz_2_0_la-gtkseparator.lo \
+ 	libgtk_quartz_2_0_la-gtkseparatormenuitem.lo \
+ 	libgtk_quartz_2_0_la-gtkseparatortoolitem.lo \
+@@ -727,12 +733,12 @@ am__libgtk_win32_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
+ 	gtkrecentchooserwidget.c gtkrecentchooserutils.c \
+ 	gtkrecentchooser.c gtkrecentfilter.c gtkrecentmanager.c \
+ 	gtkruler.c gtkscale.c gtkscalebutton.c gtkscrollbar.c \
+-	gtkscrolledwindow.c gtkselection.c gtkseparator.c \
+-	gtkseparatormenuitem.c gtkseparatortoolitem.c gtksettings.c \
+-	gtksizegroup.c gtkshow.c gtksocket.c gtkspinbutton.c \
+-	gtkspinner.c gtkstatusbar.c gtkstatusicon.c gtkstock.c \
+-	gtkstyle.c gtktable.c gtktearoffmenuitem.c gtktestutils.c \
+-	gtktextbtree.c gtktextbuffer.c gtktextbufferrichtext.c \
++	gtkscrolledwindow.c gtkseparator.c gtkseparatormenuitem.c \
++	gtkseparatortoolitem.c gtksettings.c gtksizegroup.c gtkshow.c \
++	gtksocket.c gtkspinbutton.c gtkspinner.c gtkstatusbar.c \
++	gtkstatusicon.c gtkstock.c gtkstyle.c gtktable.c \
++	gtktearoffmenuitem.c gtktestutils.c gtktextbtree.c \
++	gtktextbuffer.c gtktextbufferrichtext.c \
+ 	gtktextbufferserialize.c gtktextchild.c gtktextdisplay.c \
+ 	gtktextiter.c gtktextlayout.c gtktextmark.c gtktextsegment.c \
+ 	gtktexttag.c gtktexttagtable.c gtktexttypes.c gtktextutil.c \
+@@ -746,15 +752,16 @@ am__libgtk_win32_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
+ 	gtktypeutils.c gtkuimanager.c gtkvbbox.c gtkvbox.c \
+ 	gtkvolumebutton.c gtkviewport.c gtkvpaned.c gtkvruler.c \
+ 	gtkvscale.c gtkvscrollbar.c gtkvseparator.c gtkwidget.c \
+-	gtkwindow-decorate.c gtkwindow.c gtkclipboard.c gtkdnd.c \
+-	gtkclipboard-quartz.c gtkdnd-quartz.c gtkquartz.c gtktext.c \
+-	gtktree.c gtktreeitem.c gtkclist.c gtkcombo.c gtkctree.c \
+-	gtkcurve.c gtkfilesel.c gtkgamma.c gtkitemfactory.c gtklist.c \
+-	gtklistitem.c gtkoldeditable.c gtkoptionmenu.c gtkpixmap.c \
+-	gtkpreview.c gtkprogress.c gtksignal.c gtktipsquery.c \
+-	gtktooltips.c gtkcustompaperunixdialog.c \
+-	gtkpagesetupunixdialog.c gtkprinter.c gtkprinteroption.c \
+-	gtkprinteroptionset.c gtkprinteroptionwidget.c gtkprintjob.c \
++	gtkwindow-decorate.c gtkwindow.c gtkselection.c gtkclipboard.c \
++	gtkdnd.c gtkselection-quartz.c gtkclipboard-quartz.c \
++	gtkdnd-quartz.c gtkquartz.c gtktext.c gtktree.c gtktreeitem.c \
++	gtkclist.c gtkcombo.c gtkctree.c gtkcurve.c gtkfilesel.c \
++	gtkgamma.c gtkitemfactory.c gtklist.c gtklistitem.c \
++	gtkoldeditable.c gtkoptionmenu.c gtkpixmap.c gtkpreview.c \
++	gtkprogress.c gtksignal.c gtktipsquery.c gtktooltips.c \
++	gtkcustompaperunixdialog.c gtkpagesetupunixdialog.c \
++	gtkprinter.c gtkprinteroption.c gtkprinteroptionset.c \
++	gtkprinteroptionwidget.c gtkprintjob.c \
+ 	gtkprintoperation-unix.c gtkprintunixdialog.c \
+ 	gtkprintbackend.c gtksearchenginebeagle.c \
+ 	gtksearchenginetracker.c gtkprint-win32.c \
+@@ -815,12 +822,12 @@ am__libgtk_x11_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
+ 	gtkrecentchooserwidget.c gtkrecentchooserutils.c \
+ 	gtkrecentchooser.c gtkrecentfilter.c gtkrecentmanager.c \
+ 	gtkruler.c gtkscale.c gtkscalebutton.c gtkscrollbar.c \
+-	gtkscrolledwindow.c gtkselection.c gtkseparator.c \
+-	gtkseparatormenuitem.c gtkseparatortoolitem.c gtksettings.c \
+-	gtksizegroup.c gtkshow.c gtksocket.c gtkspinbutton.c \
+-	gtkspinner.c gtkstatusbar.c gtkstatusicon.c gtkstock.c \
+-	gtkstyle.c gtktable.c gtktearoffmenuitem.c gtktestutils.c \
+-	gtktextbtree.c gtktextbuffer.c gtktextbufferrichtext.c \
++	gtkscrolledwindow.c gtkseparator.c gtkseparatormenuitem.c \
++	gtkseparatortoolitem.c gtksettings.c gtksizegroup.c gtkshow.c \
++	gtksocket.c gtkspinbutton.c gtkspinner.c gtkstatusbar.c \
++	gtkstatusicon.c gtkstock.c gtkstyle.c gtktable.c \
++	gtktearoffmenuitem.c gtktestutils.c gtktextbtree.c \
++	gtktextbuffer.c gtktextbufferrichtext.c \
+ 	gtktextbufferserialize.c gtktextchild.c gtktextdisplay.c \
+ 	gtktextiter.c gtktextlayout.c gtktextmark.c gtktextsegment.c \
+ 	gtktexttag.c gtktexttagtable.c gtktexttypes.c gtktextutil.c \
+@@ -834,15 +841,16 @@ am__libgtk_x11_2_0_la_SOURCES_DIST = gtkquery.c gtksearchengine.c \
+ 	gtktypeutils.c gtkuimanager.c gtkvbbox.c gtkvbox.c \
+ 	gtkvolumebutton.c gtkviewport.c gtkvpaned.c gtkvruler.c \
+ 	gtkvscale.c gtkvscrollbar.c gtkvseparator.c gtkwidget.c \
+-	gtkwindow-decorate.c gtkwindow.c gtkclipboard.c gtkdnd.c \
+-	gtkclipboard-quartz.c gtkdnd-quartz.c gtkquartz.c gtktext.c \
+-	gtktree.c gtktreeitem.c gtkclist.c gtkcombo.c gtkctree.c \
+-	gtkcurve.c gtkfilesel.c gtkgamma.c gtkitemfactory.c gtklist.c \
+-	gtklistitem.c gtkoldeditable.c gtkoptionmenu.c gtkpixmap.c \
+-	gtkpreview.c gtkprogress.c gtksignal.c gtktipsquery.c \
+-	gtktooltips.c gtkcustompaperunixdialog.c \
+-	gtkpagesetupunixdialog.c gtkprinter.c gtkprinteroption.c \
+-	gtkprinteroptionset.c gtkprinteroptionwidget.c gtkprintjob.c \
++	gtkwindow-decorate.c gtkwindow.c gtkselection.c gtkclipboard.c \
++	gtkdnd.c gtkselection-quartz.c gtkclipboard-quartz.c \
++	gtkdnd-quartz.c gtkquartz.c gtktext.c gtktree.c gtktreeitem.c \
++	gtkclist.c gtkcombo.c gtkctree.c gtkcurve.c gtkfilesel.c \
++	gtkgamma.c gtkitemfactory.c gtklist.c gtklistitem.c \
++	gtkoldeditable.c gtkoptionmenu.c gtkpixmap.c gtkpreview.c \
++	gtkprogress.c gtksignal.c gtktipsquery.c gtktooltips.c \
++	gtkcustompaperunixdialog.c gtkpagesetupunixdialog.c \
++	gtkprinter.c gtkprinteroption.c gtkprinteroptionset.c \
++	gtkprinteroptionwidget.c gtkprintjob.c \
+ 	gtkprintoperation-unix.c gtkprintunixdialog.c \
+ 	gtkprintbackend.c gtksearchenginebeagle.c \
+ 	gtksearchenginetracker.c gtkprint-win32.c \
+@@ -1439,12 +1447,12 @@ gtk_base_c_sources = gtkquery.c gtksearchengine.c \
+ 	gtkrecentchooserwidget.c gtkrecentchooserutils.c \
+ 	gtkrecentchooser.c gtkrecentfilter.c gtkrecentmanager.c \
+ 	gtkruler.c gtkscale.c gtkscalebutton.c gtkscrollbar.c \
+-	gtkscrolledwindow.c gtkselection.c gtkseparator.c \
+-	gtkseparatormenuitem.c gtkseparatortoolitem.c gtksettings.c \
+-	gtksizegroup.c gtkshow.c gtksocket.c gtkspinbutton.c \
+-	gtkspinner.c gtkstatusbar.c gtkstatusicon.c gtkstock.c \
+-	gtkstyle.c gtktable.c gtktearoffmenuitem.c gtktestutils.c \
+-	gtktextbtree.c gtktextbuffer.c gtktextbufferrichtext.c \
++	gtkscrolledwindow.c gtkseparator.c gtkseparatormenuitem.c \
++	gtkseparatortoolitem.c gtksettings.c gtksizegroup.c gtkshow.c \
++	gtksocket.c gtkspinbutton.c gtkspinner.c gtkstatusbar.c \
++	gtkstatusicon.c gtkstock.c gtkstyle.c gtktable.c \
++	gtktearoffmenuitem.c gtktestutils.c gtktextbtree.c \
++	gtktextbuffer.c gtktextbufferrichtext.c \
+ 	gtktextbufferserialize.c gtktextchild.c gtktextdisplay.c \
+ 	gtktextiter.c gtktextlayout.c gtktextmark.c gtktextsegment.c \
+ 	gtktexttag.c gtktexttagtable.c gtktexttypes.c gtktextutil.c \
+@@ -1515,8 +1523,14 @@ gtk_use_stub_c_sources = \
+ 	gtkmountoperation-stub.c
+ 
+ @USE_QUARTZ_TRUE@@USE_WIN32_FALSE@@USE_X11_FALSE@libgtk_quartz_2_0_la_CFLAGS = "-xobjective-c"
+-@USE_QUARTZ_FALSE@gtk_clipboard_dnd_c_sources = gtkclipboard.c gtkdnd.c
+-@USE_QUARTZ_TRUE@gtk_clipboard_dnd_c_sources = gtkclipboard-quartz.c gtkdnd-quartz.c gtkquartz.c
++@USE_QUARTZ_FALSE@gtk_clipboard_dnd_c_sources = gtkselection.c gtkclipboard.c gtkdnd.c
++@USE_QUARTZ_TRUE@gtk_clipboard_dnd_c_sources = \
++@USE_QUARTZ_TRUE@	gtkselection.c \
++@USE_QUARTZ_TRUE@	gtkselection-quartz.c \
++@USE_QUARTZ_TRUE@	gtkclipboard-quartz.c \
++@USE_QUARTZ_TRUE@	gtkdnd-quartz.c \
++@USE_QUARTZ_TRUE@	gtkquartz.c
++
+ @USE_QUARTZ_TRUE@gtk_clipboard_dnd_h_sources = gtkquartz.h
+ 
+ # we use our own built_sources variable rules to avoid automake's
+@@ -2264,6 +2278,7 @@ distclean-compile:
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtksearchenginequartz.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtksearchenginesimple.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtksearchenginetracker.Plo@am__quote@
++@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkselection-quartz.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkselection.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkseparator.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkseparatormenuitem.Plo@am__quote@
+@@ -2535,6 +2550,7 @@ distclean-compile:
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgtk_quartz_2_0_la-gtksearchenginequartz.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgtk_quartz_2_0_la-gtksearchenginesimple.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgtk_quartz_2_0_la-gtksearchenginetracker.Plo@am__quote@
++@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgtk_quartz_2_0_la-gtkselection-quartz.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgtk_quartz_2_0_la-gtkselection.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgtk_quartz_2_0_la-gtkseparator.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgtk_quartz_2_0_la-gtkseparatormenuitem.Plo@am__quote@
+@@ -3851,14 +3867,6 @@ libgtk_quartz_2_0_la-gtkscrolledwindow.lo: gtkscrolledwindow.c
+ @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+ @am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgtk_quartz_2_0_la_CFLAGS) $(CFLAGS) -c -o libgtk_quartz_2_0_la-gtkscrolledwindow.lo `test -f 'gtkscrolledwindow.c' || echo '$(srcdir)/'`gtkscrolledwindow.c
+ 
+-libgtk_quartz_2_0_la-gtkselection.lo: gtkselection.c
+-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgtk_quartz_2_0_la_CFLAGS) $(CFLAGS) -MT libgtk_quartz_2_0_la-gtkselection.lo -MD -MP -MF $(DEPDIR)/libgtk_quartz_2_0_la-gtkselection.Tpo -c -o libgtk_quartz_2_0_la-gtkselection.lo `test -f 'gtkselection.c' || echo '$(srcdir)/'`gtkselection.c
+-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgtk_quartz_2_0_la-gtkselection.Tpo $(DEPDIR)/libgtk_quartz_2_0_la-gtkselection.Plo
+-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='gtkselection.c' object='libgtk_quartz_2_0_la-gtkselection.lo' libtool=yes @AMDEPBACKSLASH@
+-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+-@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgtk_quartz_2_0_la_CFLAGS) $(CFLAGS) -c -o libgtk_quartz_2_0_la-gtkselection.lo `test -f 'gtkselection.c' || echo '$(srcdir)/'`gtkselection.c
+-
+ libgtk_quartz_2_0_la-gtkseparator.lo: gtkseparator.c
+ @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgtk_quartz_2_0_la_CFLAGS) $(CFLAGS) -MT libgtk_quartz_2_0_la-gtkseparator.lo -MD -MP -MF $(DEPDIR)/libgtk_quartz_2_0_la-gtkseparator.Tpo -c -o libgtk_quartz_2_0_la-gtkseparator.lo `test -f 'gtkseparator.c' || echo '$(srcdir)/'`gtkseparator.c
+ @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgtk_quartz_2_0_la-gtkseparator.Tpo $(DEPDIR)/libgtk_quartz_2_0_la-gtkseparator.Plo
+@@ -4395,6 +4403,14 @@ libgtk_quartz_2_0_la-gtkwindow.lo: gtkwindow.c
+ @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+ @am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgtk_quartz_2_0_la_CFLAGS) $(CFLAGS) -c -o libgtk_quartz_2_0_la-gtkwindow.lo `test -f 'gtkwindow.c' || echo '$(srcdir)/'`gtkwindow.c
+ 
++libgtk_quartz_2_0_la-gtkselection.lo: gtkselection.c
++@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgtk_quartz_2_0_la_CFLAGS) $(CFLAGS) -MT libgtk_quartz_2_0_la-gtkselection.lo -MD -MP -MF $(DEPDIR)/libgtk_quartz_2_0_la-gtkselection.Tpo -c -o libgtk_quartz_2_0_la-gtkselection.lo `test -f 'gtkselection.c' || echo '$(srcdir)/'`gtkselection.c
++@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgtk_quartz_2_0_la-gtkselection.Tpo $(DEPDIR)/libgtk_quartz_2_0_la-gtkselection.Plo
++@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
++@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='gtkselection.c' object='libgtk_quartz_2_0_la-gtkselection.lo' libtool=yes @AMDEPBACKSLASH@
++@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
++@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgtk_quartz_2_0_la_CFLAGS) $(CFLAGS) -c -o libgtk_quartz_2_0_la-gtkselection.lo `test -f 'gtkselection.c' || echo '$(srcdir)/'`gtkselection.c
++
+ libgtk_quartz_2_0_la-gtkclipboard.lo: gtkclipboard.c
+ @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgtk_quartz_2_0_la_CFLAGS) $(CFLAGS) -MT libgtk_quartz_2_0_la-gtkclipboard.lo -MD -MP -MF $(DEPDIR)/libgtk_quartz_2_0_la-gtkclipboard.Tpo -c -o libgtk_quartz_2_0_la-gtkclipboard.lo `test -f 'gtkclipboard.c' || echo '$(srcdir)/'`gtkclipboard.c
+ @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgtk_quartz_2_0_la-gtkclipboard.Tpo $(DEPDIR)/libgtk_quartz_2_0_la-gtkclipboard.Plo
+@@ -4411,6 +4427,14 @@ libgtk_quartz_2_0_la-gtkdnd.lo: gtkdnd.c
+ @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+ @am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgtk_quartz_2_0_la_CFLAGS) $(CFLAGS) -c -o libgtk_quartz_2_0_la-gtkdnd.lo `test -f 'gtkdnd.c' || echo '$(srcdir)/'`gtkdnd.c
+ 
++libgtk_quartz_2_0_la-gtkselection-quartz.lo: gtkselection-quartz.c
++@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgtk_quartz_2_0_la_CFLAGS) $(CFLAGS) -MT libgtk_quartz_2_0_la-gtkselection-quartz.lo -MD -MP -MF $(DEPDIR)/libgtk_quartz_2_0_la-gtkselection-quartz.Tpo -c -o libgtk_quartz_2_0_la-gtkselection-quartz.lo `test -f 'gtkselection-quartz.c' || echo '$(srcdir)/'`gtkselection-quartz.c
++@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgtk_quartz_2_0_la-gtkselection-quartz.Tpo $(DEPDIR)/libgtk_quartz_2_0_la-gtkselection-quartz.Plo
++@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
++@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='gtkselection-quartz.c' object='libgtk_quartz_2_0_la-gtkselection-quartz.lo' libtool=yes @AMDEPBACKSLASH@
++@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
++@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgtk_quartz_2_0_la_CFLAGS) $(CFLAGS) -c -o libgtk_quartz_2_0_la-gtkselection-quartz.lo `test -f 'gtkselection-quartz.c' || echo '$(srcdir)/'`gtkselection-quartz.c
++
+ libgtk_quartz_2_0_la-gtkclipboard-quartz.lo: gtkclipboard-quartz.c
+ @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgtk_quartz_2_0_la_CFLAGS) $(CFLAGS) -MT libgtk_quartz_2_0_la-gtkclipboard-quartz.lo -MD -MP -MF $(DEPDIR)/libgtk_quartz_2_0_la-gtkclipboard-quartz.Tpo -c -o libgtk_quartz_2_0_la-gtkclipboard-quartz.lo `test -f 'gtkclipboard-quartz.c' || echo '$(srcdir)/'`gtkclipboard-quartz.c
+ @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgtk_quartz_2_0_la-gtkclipboard-quartz.Tpo $(DEPDIR)/libgtk_quartz_2_0_la-gtkclipboard-quartz.Plo
+diff --git a/modules/input/Makefile.in b/modules/input/Makefile.in
+index 9d15c01..21d3b20 100644
+--- a/modules/input/Makefile.in
++++ b/modules/input/Makefile.in
+@@ -144,6 +144,15 @@ im_multipress_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+ 	-o $@
+ @BUILD_DYNAMIC_MODULES_TRUE@@INCLUDE_IM_MULTIPRESS_FALSE@am_im_multipress_la_rpath = -rpath \
+ @BUILD_DYNAMIC_MODULES_TRUE@@INCLUDE_IM_MULTIPRESS_FALSE@	$(moduledir)
++im_quartz_la_DEPENDENCIES = $(am__DEPENDENCIES_2)
++am_im_quartz_la_OBJECTS = im_quartz_la-imquartz.lo
++im_quartz_la_OBJECTS = $(am_im_quartz_la_OBJECTS)
++im_quartz_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
++	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
++	$(im_quartz_la_LDFLAGS) $(LDFLAGS) -o $@
++@BUILD_DYNAMIC_MODULES_TRUE@@INCLUDE_IM_QUARTZ_FALSE@am_im_quartz_la_rpath =  \
++@BUILD_DYNAMIC_MODULES_TRUE@@INCLUDE_IM_QUARTZ_FALSE@	-rpath \
++@BUILD_DYNAMIC_MODULES_TRUE@@INCLUDE_IM_QUARTZ_FALSE@	$(moduledir)
+ im_thai_la_DEPENDENCIES = $(am__DEPENDENCIES_2)
+ am_im_thai_la_OBJECTS = thai-charprop.lo gtkimcontextthai.lo imthai.lo
+ im_thai_la_OBJECTS = $(am_im_thai_la_OBJECTS)
+@@ -228,29 +237,34 @@ am_libstatic_im_multipress_la_OBJECTS = $(am__objects_7)
+ libstatic_im_multipress_la_OBJECTS =  \
+ 	$(am_libstatic_im_multipress_la_OBJECTS)
+ @INCLUDE_IM_MULTIPRESS_TRUE@am_libstatic_im_multipress_la_rpath =
++libstatic_im_quartz_la_LIBADD =
++am__objects_8 = imquartz.lo
++am_libstatic_im_quartz_la_OBJECTS = $(am__objects_8)
++libstatic_im_quartz_la_OBJECTS = $(am_libstatic_im_quartz_la_OBJECTS)
++@INCLUDE_IM_QUARTZ_TRUE@am_libstatic_im_quartz_la_rpath =
+ libstatic_im_thai_la_LIBADD =
+-am__objects_8 = thai-charprop.lo gtkimcontextthai.lo imthai.lo
+-am_libstatic_im_thai_la_OBJECTS = $(am__objects_8)
++am__objects_9 = thai-charprop.lo gtkimcontextthai.lo imthai.lo
++am_libstatic_im_thai_la_OBJECTS = $(am__objects_9)
+ libstatic_im_thai_la_OBJECTS = $(am_libstatic_im_thai_la_OBJECTS)
+ @INCLUDE_IM_THAI_TRUE@am_libstatic_im_thai_la_rpath =
+ libstatic_im_ti_er_la_LIBADD =
+-am__objects_9 = imti-er.lo
+-am_libstatic_im_ti_er_la_OBJECTS = $(am__objects_9)
++am__objects_10 = imti-er.lo
++am_libstatic_im_ti_er_la_OBJECTS = $(am__objects_10)
+ libstatic_im_ti_er_la_OBJECTS = $(am_libstatic_im_ti_er_la_OBJECTS)
+ @INCLUDE_IM_TI_ER_TRUE@am_libstatic_im_ti_er_la_rpath =
+ libstatic_im_ti_et_la_LIBADD =
+-am__objects_10 = imti-et.lo
+-am_libstatic_im_ti_et_la_OBJECTS = $(am__objects_10)
++am__objects_11 = imti-et.lo
++am_libstatic_im_ti_et_la_OBJECTS = $(am__objects_11)
+ libstatic_im_ti_et_la_OBJECTS = $(am_libstatic_im_ti_et_la_OBJECTS)
+ @INCLUDE_IM_TI_ET_TRUE@am_libstatic_im_ti_et_la_rpath =
+ libstatic_im_viqr_la_LIBADD =
+-am__objects_11 = imviqr.lo
+-am_libstatic_im_viqr_la_OBJECTS = $(am__objects_11)
++am__objects_12 = imviqr.lo
++am_libstatic_im_viqr_la_OBJECTS = $(am__objects_12)
+ libstatic_im_viqr_la_OBJECTS = $(am_libstatic_im_viqr_la_OBJECTS)
+ @INCLUDE_IM_VIQR_TRUE@am_libstatic_im_viqr_la_rpath =
+ libstatic_im_xim_la_LIBADD =
+-am__objects_12 = gtkimcontextxim.lo imxim.lo
+-am_libstatic_im_xim_la_OBJECTS = $(am__objects_12)
++am__objects_13 = gtkimcontextxim.lo imxim.lo
++am_libstatic_im_xim_la_OBJECTS = $(am__objects_13)
+ libstatic_im_xim_la_OBJECTS = $(am_libstatic_im_xim_la_OBJECTS)
+ @HAVE_X11R6_TRUE@@INCLUDE_IM_XIM_TRUE@am_libstatic_im_xim_la_rpath =
+ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
+@@ -282,16 +296,17 @@ am__v_GEN_0 = @echo "  GEN   " $@;
+ SOURCES = $(im_am_et_la_SOURCES) $(im_cedilla_la_SOURCES) \
+ 	$(im_cyrillic_translit_la_SOURCES) $(im_ime_la_SOURCES) \
+ 	$(im_inuktitut_la_SOURCES) $(im_ipa_la_SOURCES) \
+-	$(im_multipress_la_SOURCES) $(im_thai_la_SOURCES) \
+-	$(im_ti_er_la_SOURCES) $(im_ti_et_la_SOURCES) \
+-	$(im_viqr_la_SOURCES) $(im_xim_la_SOURCES) \
+-	$(libstatic_im_am_et_la_SOURCES) \
++	$(im_multipress_la_SOURCES) $(im_quartz_la_SOURCES) \
++	$(im_thai_la_SOURCES) $(im_ti_er_la_SOURCES) \
++	$(im_ti_et_la_SOURCES) $(im_viqr_la_SOURCES) \
++	$(im_xim_la_SOURCES) $(libstatic_im_am_et_la_SOURCES) \
+ 	$(libstatic_im_cedilla_la_SOURCES) \
+ 	$(libstatic_im_cyrillic_translit_la_SOURCES) \
+ 	$(libstatic_im_ime_la_SOURCES) \
+ 	$(libstatic_im_inuktitut_la_SOURCES) \
+ 	$(libstatic_im_ipa_la_SOURCES) \
+ 	$(libstatic_im_multipress_la_SOURCES) \
++	$(libstatic_im_quartz_la_SOURCES) \
+ 	$(libstatic_im_thai_la_SOURCES) \
+ 	$(libstatic_im_ti_er_la_SOURCES) \
+ 	$(libstatic_im_ti_et_la_SOURCES) \
+@@ -299,16 +314,17 @@ SOURCES = $(im_am_et_la_SOURCES) $(im_cedilla_la_SOURCES) \
+ DIST_SOURCES = $(im_am_et_la_SOURCES) $(im_cedilla_la_SOURCES) \
+ 	$(im_cyrillic_translit_la_SOURCES) $(im_ime_la_SOURCES) \
+ 	$(im_inuktitut_la_SOURCES) $(im_ipa_la_SOURCES) \
+-	$(im_multipress_la_SOURCES) $(im_thai_la_SOURCES) \
+-	$(im_ti_er_la_SOURCES) $(im_ti_et_la_SOURCES) \
+-	$(im_viqr_la_SOURCES) $(im_xim_la_SOURCES) \
+-	$(libstatic_im_am_et_la_SOURCES) \
++	$(im_multipress_la_SOURCES) $(im_quartz_la_SOURCES) \
++	$(im_thai_la_SOURCES) $(im_ti_er_la_SOURCES) \
++	$(im_ti_et_la_SOURCES) $(im_viqr_la_SOURCES) \
++	$(im_xim_la_SOURCES) $(libstatic_im_am_et_la_SOURCES) \
+ 	$(libstatic_im_cedilla_la_SOURCES) \
+ 	$(libstatic_im_cyrillic_translit_la_SOURCES) \
+ 	$(libstatic_im_ime_la_SOURCES) \
+ 	$(libstatic_im_inuktitut_la_SOURCES) \
+ 	$(libstatic_im_ipa_la_SOURCES) \
+ 	$(libstatic_im_multipress_la_SOURCES) \
++	$(libstatic_im_quartz_la_SOURCES) \
+ 	$(libstatic_im_thai_la_SOURCES) \
+ 	$(libstatic_im_ti_er_la_SOURCES) \
+ 	$(libstatic_im_ti_et_la_SOURCES) \
+@@ -684,6 +700,13 @@ im_ime_la_LIBADD = -limm32 $(LDADDS)
+ libstatic_im_ime_la_LIBADD = -limm32
+ @INCLUDE_IM_IME_TRUE@@USE_WIN32_TRUE@STATIC_IME_MODULE = libstatic-im-ime.la
+ @INCLUDE_IM_IME_FALSE@@USE_WIN32_TRUE@IME_MODULE = im-ime.la 
++im_quartz_la_CPPFLAGS = -xobjective-c
++im_quartz_la_LDFLAGS = -rpath $(moduledir) -avoid-version -module $(no_undefined)
++im_quartz_la_SOURCES = imquartz.c
++libstatic_im_quartz_la_SOURCES = $(im_quartz_la_SOURCES)
++im_quartz_la_LIBADD = $(LDADDS)
++@INCLUDE_IM_QUARTZ_TRUE@STATIC_QUARTZ_MODULE = libstatic-im-quartz.la
++@INCLUDE_IM_QUARTZ_FALSE@QUARTZ_MODULE = im-quartz.la
+ multipress_defs = -DMULTIPRESS_LOCALEDIR=\""$(mplocaledir)"\" -DMULTIPRESS_CONFDIR=\""$(sysconfdir)/gtk-2.0"\"
+ im_multipress_la_CPPFLAGS = $(multipress_defs)
+ libstatic_im_multipress_la_CPPFLAGS = $(im_multipress_la_CPPFLAGS)
+@@ -709,6 +732,7 @@ dist_imconffile_DATA = im-multipress.conf
+ @BUILD_DYNAMIC_MODULES_TRUE@	$(INUKTITUT_MODULE)		\
+ @BUILD_DYNAMIC_MODULES_TRUE@	$(IPA_MODULE)			\
+ @BUILD_DYNAMIC_MODULES_TRUE@	$(MULTIPRESS_MODULE)		\
++@BUILD_DYNAMIC_MODULES_TRUE@	$(QUARTZ_MODULE)		\
+ @BUILD_DYNAMIC_MODULES_TRUE@	$(THAI_MODULE)			\
+ @BUILD_DYNAMIC_MODULES_TRUE@	$(TI_ER_MODULE)			\
+ @BUILD_DYNAMIC_MODULES_TRUE@	$(TI_ET_MODULE)			\
+@@ -723,6 +747,7 @@ noinst_LTLIBRARIES = \
+ 	$(STATIC_INUKTITUT_MODULE)		\
+ 	$(STATIC_IPA_MODULE)			\
+ 	$(STATIC_MULTIPRESS_MODULE)		\
++	$(STATIC_QUARTZ_MODULE)			\
+ 	$(STATIC_THAI_MODULE)			\
+ 	$(STATIC_TI_ER_MODULE)			\
+ 	$(STATIC_TI_ET_MODULE)			\
+@@ -818,6 +843,8 @@ im-ipa.la: $(im_ipa_la_OBJECTS) $(im_ipa_la_DEPENDENCIES)
+ 	$(AM_V_CCLD)$(im_ipa_la_LINK) $(am_im_ipa_la_rpath) $(im_ipa_la_OBJECTS) $(im_ipa_la_LIBADD) $(LIBS)
+ im-multipress.la: $(im_multipress_la_OBJECTS) $(im_multipress_la_DEPENDENCIES) 
+ 	$(AM_V_CCLD)$(im_multipress_la_LINK) $(am_im_multipress_la_rpath) $(im_multipress_la_OBJECTS) $(im_multipress_la_LIBADD) $(LIBS)
++im-quartz.la: $(im_quartz_la_OBJECTS) $(im_quartz_la_DEPENDENCIES) 
++	$(AM_V_CCLD)$(im_quartz_la_LINK) $(am_im_quartz_la_rpath) $(im_quartz_la_OBJECTS) $(im_quartz_la_LIBADD) $(LIBS)
+ im-thai.la: $(im_thai_la_OBJECTS) $(im_thai_la_DEPENDENCIES) 
+ 	$(AM_V_CCLD)$(im_thai_la_LINK) $(am_im_thai_la_rpath) $(im_thai_la_OBJECTS) $(im_thai_la_LIBADD) $(LIBS)
+ im-ti-er.la: $(im_ti_er_la_OBJECTS) $(im_ti_er_la_DEPENDENCIES) 
+@@ -842,6 +869,8 @@ libstatic-im-ipa.la: $(libstatic_im_ipa_la_OBJECTS) $(libstatic_im_ipa_la_DEPEND
+ 	$(AM_V_CCLD)$(LINK) $(am_libstatic_im_ipa_la_rpath) $(libstatic_im_ipa_la_OBJECTS) $(libstatic_im_ipa_la_LIBADD) $(LIBS)
+ libstatic-im-multipress.la: $(libstatic_im_multipress_la_OBJECTS) $(libstatic_im_multipress_la_DEPENDENCIES) 
+ 	$(AM_V_CCLD)$(LINK) $(am_libstatic_im_multipress_la_rpath) $(libstatic_im_multipress_la_OBJECTS) $(libstatic_im_multipress_la_LIBADD) $(LIBS)
++libstatic-im-quartz.la: $(libstatic_im_quartz_la_OBJECTS) $(libstatic_im_quartz_la_DEPENDENCIES) 
++	$(AM_V_CCLD)$(LINK) $(am_libstatic_im_quartz_la_rpath) $(libstatic_im_quartz_la_OBJECTS) $(libstatic_im_quartz_la_LIBADD) $(LIBS)
+ libstatic-im-thai.la: $(libstatic_im_thai_la_OBJECTS) $(libstatic_im_thai_la_DEPENDENCIES) 
+ 	$(AM_V_CCLD)$(LINK) $(am_libstatic_im_thai_la_rpath) $(libstatic_im_thai_la_OBJECTS) $(libstatic_im_thai_la_LIBADD) $(LIBS)
+ libstatic-im-ti-er.la: $(libstatic_im_ti_er_la_OBJECTS) $(libstatic_im_ti_er_la_DEPENDENCIES) 
+@@ -864,12 +893,14 @@ distclean-compile:
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkimcontextxim.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/im_multipress_la-gtkimcontextmultipress.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/im_multipress_la-immultipress.Plo@am__quote@
++@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/im_quartz_la-imquartz.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imam-et.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imcedilla.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imcyrillic-translit.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imime.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/iminuktitut.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imipa.Plo@am__quote@
++@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imquartz.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imthai.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imti-er.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imti-et.Plo@am__quote@
+@@ -919,6 +950,14 @@ im_multipress_la-immultipress.lo: immultipress.c
+ @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+ @am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(im_multipress_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o im_multipress_la-immultipress.lo `test -f 'immultipress.c' || echo '$(srcdir)/'`immultipress.c
+ 
++im_quartz_la-imquartz.lo: imquartz.c
++@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(im_quartz_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT im_quartz_la-imquartz.lo -MD -MP -MF $(DEPDIR)/im_quartz_la-imquartz.Tpo -c -o im_quartz_la-imquartz.lo `test -f 'imquartz.c' || echo '$(srcdir)/'`imquartz.c
++@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/im_quartz_la-imquartz.Tpo $(DEPDIR)/im_quartz_la-imquartz.Plo
++@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
++@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='imquartz.c' object='im_quartz_la-imquartz.lo' libtool=yes @AMDEPBACKSLASH@
++@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
++@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(im_quartz_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o im_quartz_la-imquartz.lo `test -f 'imquartz.c' || echo '$(srcdir)/'`imquartz.c
++
+ libstatic_im_multipress_la-gtkimcontextmultipress.lo: gtkimcontextmultipress.c
+ @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstatic_im_multipress_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libstatic_im_multipress_la-gtkimcontextmultipress.lo -MD -MP -MF $(DEPDIR)/libstatic_im_multipress_la-gtkimcontextmultipress.Tpo -c -o libstatic_im_multipress_la-gtkimcontextmultipress.lo `test -f 'gtkimcontextmultipress.c' || echo '$(srcdir)/'`gtkimcontextmultipress.c
+ @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libstatic_im_multipress_la-gtkimcontextmultipress.Tpo $(DEPDIR)/libstatic_im_multipress_la-gtkimcontextmultipress.Plo
+diff --git a/tests/Makefile.in b/tests/Makefile.in
+index 0a6f7dc..0d3e2a8 100644
+--- a/tests/Makefile.in
++++ b/tests/Makefile.in
+@@ -89,15 +89,15 @@ am__autotestkeywords_SOURCES_DIST = autotestkeywords.cc
+ @HAVE_CXX_TRUE@am_autotestkeywords_OBJECTS =  \
+ @HAVE_CXX_TRUE@	autotestkeywords-autotestkeywords.$(OBJEXT)
+ autotestkeywords_OBJECTS = $(am_autotestkeywords_OBJECTS)
+-autotestkeywords_LDADD = $(LDADD)
++am__DEPENDENCIES_1 =
++am__DEPENDENCIES_2 = $(top_builddir)/gdk/$(gdktargetlib) \
++	$(top_builddir)/gtk/$(gtktargetlib) $(am__DEPENDENCIES_1)
++@HAVE_CXX_TRUE@autotestkeywords_DEPENDENCIES = $(am__DEPENDENCIES_2)
+ AM_V_lt = $(am__v_lt_$(V))
+ am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
+ am__v_lt_0 = --silent
+ flicker_SOURCES = flicker.c
+ flicker_OBJECTS = flicker.$(OBJEXT)
+-am__DEPENDENCIES_1 =
+-am__DEPENDENCIES_2 = $(top_builddir)/gdk/$(gdktargetlib) \
+-	$(top_builddir)/gtk/$(gtktargetlib) $(am__DEPENDENCIES_1)
+ print_editor_SOURCES = print-editor.c
+ print_editor_OBJECTS = print-editor.$(OBJEXT)
+ simple_SOURCES = simple.c
+@@ -627,6 +627,7 @@ LDADDS = \
+ @HAVE_CXX_TRUE@autotestkeywords_SOURCES = autotestkeywords.cc
+ @HAVE_CXX_TRUE@autotestkeywords_CPPFLAGS = -I$(srcdir)/dummy-headers \
+ @HAVE_CXX_TRUE@	$(am__append_2)
++@HAVE_CXX_TRUE@autotestkeywords_LDADD = $(LDADDS)
+ flicker_DEPENDENCIES = $(TEST_DEPS)
+ simple_DEPENDENCIES = $(TEST_DEPS)
+ print_editor_DEPENDENCIES = $(TEST_DEPS)
+-- 
+1.7.8.3
+

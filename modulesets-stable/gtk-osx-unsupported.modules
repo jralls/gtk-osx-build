@@ -58,7 +58,7 @@
   </autotools>
 
   <autotools id="iso-codes" autogen-sh="configure">
-    <branch module="iso-codes_3.32.orig.tar.bz2" version="3.32" repo="iso-codes" checkoutdir="iso-codes-3.28"/>
+    <branch module="iso-codes_3.32.2.orig.tar.bz2" version="3.32.2" repo="iso-codes" checkoutdir="iso-codes-3.28"/>
   </autotools>
 
   <autotools id="zlib">
