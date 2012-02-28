@@ -109,14 +109,14 @@ elif _jhb == "FW":
 #  Set up a particular target and SDK: For default operation, set the
 # architecture and SDK for the native machine:
 _target = None;
-if _osx_version.startswith("8"):
-   _target = "10.4"
-elif _osx_version.startswith("9"):
-    _target = "10.5"
-elif _osx_version.startswith("10"):
-    _target = "10.6"
-elif _osx_version.startswith("11"):
+if _osx_version >= 7.0:
     _target = "10.7"
+elif _osx_version >= 6.0:
+    _target = "10.6"
+elif _osx_version >= 5.0:
+    _target = "10.5"
+elif _osx_version >= 4.0:
+   _target = "10.4"
 
 setup_sdk(target=_target, sdk_version="native", architectures=[_default_arch])
 #
