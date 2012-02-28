@@ -267,7 +267,9 @@ Libglade itself is deprecated. This is the last release. -->
 	     autogen-template="autoreconf -fis &amp;&amp; %(srcdir)s/%(autogen-sh)s --prefix %(prefix)s --libdir %(libdir)s %(autogenargs)s"
              makeargs='LDFLAGS="-framework Carbon"'>
     <branch module="gimp/v2.6/gimp-2.6.11.tar.bz2" version="2.6.11"
-            md5sum="bb2939fe13e54fc7255cef5d097bb5dd" repo="gimp"/>
+            md5sum="bb2939fe13e54fc7255cef5d097bb5dd" repo="gimp">
+      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/patch-plug-ins-twain-tw_mac.c.diff" strip="0" />
+    </branch>
     <after>
       <dep package="meta-gtk-osx-bootstrap"/>
       <dep package="meta-gtk-osx-core"/>
@@ -281,17 +283,19 @@ Libglade itself is deprecated. This is the last release. -->
 
     <autotools id='readline' >
     <branch repo="ftp.gnu.org" module="readline/readline-6.2.tar.gz"
-	    version="6.2"/>
+	    version="6.2">
+      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/readline62-002.patch" strip="2" />
+    </branch>
   </autotools>
 
 <autotools id="babl" >
-    <branch repo="ftp.gtk.org" version="0.1.2"
-            module="babl/0.1/babl-0.1.2.tar.bz2"/>
+    <branch repo="ftp.gtk.org" version="0.1.6"
+            module="babl/0.1/babl-0.1.6.tar.bz2"/>
   </autotools>
 
   <autotools id="gegl" autogen-sh="configure" autogenargs="--disable-docs">
-    <branch repo="ftp.gtk.org" version="0.1.2"
-            module="gegl/0.1/gegl-0.1.2.tar.bz2"/>
+    <branch repo="ftp.gtk.org" version="0.1.8"
+            module="gegl/0.1/gegl-0.1.8.tar.bz2"/>
     <dependencies>
       <dep package="babl"/>
     </dependencies>
