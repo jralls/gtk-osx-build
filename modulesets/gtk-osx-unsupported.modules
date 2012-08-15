@@ -153,7 +153,7 @@
     <!-- Git repository is missing files required to build libtasn1
     <branch repo="git.gnu.org" tag="libtasn1_2_2"  module="libtasn1"/> -->
     <branch repo="ftp.gnu.org" version='2.9'
-	    module="gnutls/libtasn1-2.9.tar.gz"/>
+	    module="libtasn1/libtasn1-2.9.tar.gz"/>
   </autotools>
 
   <autotools id="WebKit"
