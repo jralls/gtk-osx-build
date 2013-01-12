@@ -93,7 +93,7 @@
   </autotools>
 
   <autotools id="pango">
-    <branch tag="1.32.4"/>
+    <branch tag="1.32.6"/>
     <dependencies>
       <dep package="glib"/>
       <dep package="cairo"/>
@@ -123,9 +123,8 @@
     </after>
   </autotools>
 
-
   <autotools id="gdk-pixbuf-gtk3">
-    <branch tag="2.26.4"/>
+    <branch module="gdk-pixbuf" checkoutdir="gdk-pixbuf-gtk3" tag="2.26.4"/>
     <after>
       <dep package="pango"/>
     </after>
@@ -151,7 +150,7 @@
       <dep package="glib"/>
       <dep package="pango"/>
       <dep package="atk"/>
-      <dep package="gdk-pixbuf"/>
+      <dep package="gdk-pixbuf-gtk3"/>
       <dep package="gobject-introspection"/>
     </dependencies>
     <after>
