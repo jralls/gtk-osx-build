@@ -76,7 +76,7 @@
 -->
 
 <!-- Vala-bootstrap is the current stable vala precompiled to C. -->
-  <autotools id="vala">
+  <autotools id="vala" autogen-sh="configure">
     <branch module="vala-bootstrap"/>
   </autotools>
 
