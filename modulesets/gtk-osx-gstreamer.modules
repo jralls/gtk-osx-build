@@ -25,21 +25,10 @@
     <branch repo="faac.sourceforge.net" module="faad2" tag="FAAD2_2_7" />
   </autotools>
 
-  <autotools id="gstreamer-common">
-    <branch module="common" revision="0.10"/>
-  </autotools>
-
-  <autotools id="gstreamer-common-1.0">
-    <branch module="common" revision="1.0"/>
-  </autotools>
-
   <autotools id="gstreamer" autogenargs="--disable-tests"
              supports-non-srcdir-builds="no"
 	     makeargs="ERROR_CFLAGS=" >
     <branch revision="0.10"/>
-    <dependencies>
-      <dep package="gstreamer-common"/>
-    </dependencies>
     <after>
       <dep package="glib"/>
       <dep package="libxml2"/>
@@ -50,9 +39,6 @@
              supports-non-srcdir-builds="no"
 	     makeargs="ERROR_CFLAGS=" >
     <branch module="gstreamer" revision="1.0"/>
-    <dependencies>
-      <dep package="gstreamer-common-1.0"/>
-    </dependencies>
     <after>
       <dep package="glib"/>
       <dep package="libxml2"/>
@@ -137,7 +123,7 @@
 	     supports-non-srcdir-builds="no" makeargs="ERROR_CFLAGS=" >
     <branch module="gst-plugins-bad" revision="1.0"/>
     <dependencies>
-      <dep package="gstreame-1.0r"/>
+      <dep package="gstreamer-1.0"/>
       <dep package="gst-plugins-base-1.0"/>
       <dep package="faad2"/>
     </dependencies>
