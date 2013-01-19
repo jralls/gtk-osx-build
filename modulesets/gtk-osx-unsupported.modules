@@ -76,7 +76,7 @@
   </autotools>
 
   <cmake id='libproxy' cmakeargs="-DWITH_PYTHON=OFF">
-    <branch revision="libproxy-0.4.10"
+    <branch tag="libproxy-0.4.10"
             repo='libproxy.google.com'/>
     <dependencies>
       <dep package="cmake"/>
