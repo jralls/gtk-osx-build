@@ -12,7 +12,7 @@
 	      href="http://code.entropywave.com/download/"/>
 
   <autotools id="liboil" autogen-template="autoreconf -fis &amp;&amp; %(srcdir)s/configure --prefix %(prefix)s --libdir %(libdir)s %(autogenargs)s"
-	     makeargs=" CFLAGS=-DHAVE_SYMBOL_UNDERSCORE">
+	     makeargs=' CFLAGS="$CFLAGS -DHAVE_SYMBOL_UNDERSCORE"'>
     <branch repo="liboil" module="liboil-0.3.17.tar.gz" version="0.3.17" />
   </autotools>
 

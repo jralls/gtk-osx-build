@@ -16,7 +16,7 @@
        git://anongit.freedesktop.org/gstreamer/jhbuild/. The modules
        are unversioned and haven't been tested for gtk-osx
        compatibility. -->
-  <autotools id="liboil" makeargs=" CFLAGS=-DHAVE_SYMBOL_UNDERSCORE">
+  <autotools id="liboil" makeargs=' CFLAGS="$CFLAGS -DHAVE_SYMBOL_UNDERSCORE"'>
     <branch repo="liboil" tag="liboil-0.3.17" />
   </autotools>
 
