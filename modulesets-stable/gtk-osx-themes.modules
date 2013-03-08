@@ -26,7 +26,8 @@
 
   <autotools id="icon-naming-utils" autogen-sh="configure">
     <branch repo="tango.freedesktop.org"  version="0.8.90"
-            module="icon-naming-utils-0.8.90.tar.gz"/>
+            module="icon-naming-utils-0.8.90.tar.gz"
+            hash="md5:dd8108b56130b9eedc4042df634efa66"/>
     <after>
       <dep package="meta-gtk-osx-bootstrap"/>
     </after>
@@ -35,7 +36,8 @@
   <autotools id="tango-icon-theme" autogenargs="--disable-icon-framing"
              autogen-sh="configure">
     <branch repo="tango.freedesktop.org" version="0.8.90"
-            module="tango-icon-theme-0.8.90.tar.gz"/>
+            module="tango-icon-theme-0.8.90.tar.gz"
+            hash="md5:0795895d2f20eddcbd2bffe94ed431a6"/>
     <dependencies>
       <dep package="icon-naming-utils"/>
       <dep package="hicolor-icon-theme"/>

@@ -25,7 +25,7 @@
 #
 
 SOURCE=$HOME/Source
-BASEURL="http://git.gnome.org/browse/gtk-osx/plain/"
+BASEURL="https://git.gnome.org/browse/gtk-osx/plain/"
 
 do_exit()
 {
