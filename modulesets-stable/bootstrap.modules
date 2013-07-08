@@ -78,7 +78,7 @@
 
   <autotools id="libtool" autogen-sh="configure">
     <branch repo="ftp.gnu.org"
-            module="libtool/libtool-2.4.tar.gz" version="2.4"/>
+            module="libtool/libtool-2.4.2.tar.gz" version="2.4.2"/>
   </autotools>
 
   <autotools id="automake-1.10" autogen-sh="configure">
