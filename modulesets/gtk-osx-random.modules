@@ -178,7 +178,7 @@
 
   <autotools id="dbus-glib" autogenargs="--disable-selinux">
     <branch repo="git.freedesktop.org" module="dbus/dbus-glib"
-            tag="dbus-glib-0.100"/>
+            tag="dbus-glib_0.100"/>
     <dependencies>
       <dep package="dbus"/>
     </dependencies>
