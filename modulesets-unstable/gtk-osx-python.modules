@@ -44,7 +44,6 @@
 	     autogen-sh="configure">
     <branch repo="python"
 	    module="2.7.4/Python-2.7.4.tar.xz" version="2.7.4">
-      <patch file="https://github.com/narkoleptik/os-x-berkeleydb-patch/raw/master/atomic.patch" strip='1'/>
     </branch>
     <dependencies>
     </dependencies>
