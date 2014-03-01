@@ -133,7 +133,7 @@
 
 
   <autotools id="freetype" skip-autogen="never"
-	     autogen-template="%(srcdir)s/%(autogen-sh)s &amp;&amp; %(srcdir)s/configure --prefix %(prefix)s --libdir %(libdir)s %(autogenargs)s"
+	     autogen-template="%(srcdir)s/%(autogen-sh)s &amp;&amp; %(srcdir)s/configure --prefix %(prefix)s --libdir %(libdir)s %(autogenargs)s --without-bzip2"
 	     supports-non-srcdir-builds="no">
     <branch module="freetype/freetype2" repo="nongnu"/>
     <dependencies>
