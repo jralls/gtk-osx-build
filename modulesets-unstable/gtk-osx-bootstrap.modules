@@ -103,7 +103,7 @@
     </dependencies>
   </autotools>
 
-  <autotools id="freetype-no-harfbuzz" skip-sutogen="never" autogenargs="--without-bzip2 --without-harfbuzz"
+  <autotools id="freetype-no-harfbuzz" skip-autogen="never" autogenargs="--without-bzip2 --without-harfbuzz"
 	     autogen-template="%(srcdir)s/%(autogen-sh)s &amp;&amp; %(srcdir)s/configure --prefix %(prefix)s --libdir %(libdir)s %(autogenargs)s"
 	     supports-non-srcdir-builds="no">
     <branch module="freetype/freetype2" repo="nongnu"/>
