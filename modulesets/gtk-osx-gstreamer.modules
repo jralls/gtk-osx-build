@@ -5,12 +5,9 @@
  <repository type="git" name="gstreamer" default="yes"
               href="git://anongit.freedesktop.org/gstreamer/"/>
   <repository type="tarball" name="sourceforge"
-              href="http://downloads.sourceforge.net/sourceforge/" />
+              href="http://downloads.sf.net/p/"/>
   <repository type="git" name="liboil"
               href="git://anongit.freedesktop.org/"/>
-  <repository type="cvs" name="faac.sourceforge.net"
-              cvsroot=":pserver:anonymous@faac.cvs.sourceforge.net:/cvsroot/faac/"
-	       password=""/>
 
   <!-- The GStreamer project maintains its own moduleset at
        git://anongit.freedesktop.org/gstreamer/jhbuild/. The modules
@@ -22,7 +19,10 @@
 
   <autotools id="faad2" autogen-sh="autoreconf"
              autogenargs="-without-bmp --without-xmms --without-drm --without-mpeg4ip">
-    <branch repo="faac.sourceforge.net" module="faad2" tag="FAAD2_2_7" />
+    <branch repo="sourceforge" version="2.7"
+            module="faac/faad2-src/faad2-2.7/faad2-2.7.tar.bz2">
+      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/faad2-2.7-ac-config-headers.patch" strip="1"/>
+    </branch>
   </autotools>
 
   <autotools id="gstreamer" autogenargs="--disable-tests"

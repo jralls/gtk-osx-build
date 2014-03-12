@@ -58,3 +58,7 @@ dbus:		dbus-install.patch
 		dbus-msg-nosignal.patch
 
 gjs:		gjs-Fix-uint-type-in-variable.patch Bug 712242, fixed in master.
+
+faad2:		faad2-2.7-ac-config-headers.patch
+		Reported at https://sourceforge.net/p/faac/bugs/190/ but there hasn't
+		been much activity in the last few years
