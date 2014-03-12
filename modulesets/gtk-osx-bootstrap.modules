@@ -102,7 +102,7 @@
     <branch repo="freedesktop" tag="0.9.26"/>
     <dependencies>
       <dep package="freetype-no-harfbuzz"/>
-      <dep package="fontconfig"/>
+      <dep package="ragel"/>
       <dep package="glib"/>
     </dependencies>
   </autotools>

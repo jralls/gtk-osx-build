@@ -7,6 +7,7 @@
   <repository type="git" name="github" href="git://github.com/"/>
   <repository type="git" name="cairographics"
               href="git://anongit.freedesktop.org/git/"/>
+  <repository type="tarball" name="complang" href="http://www.complang.org/"/>
 
   <!-- This module set works a bit differently than for example the
        GNOME ones do. It's split up in seperate pieces:
@@ -174,6 +175,13 @@
       <dep package="fontconfig"/>
       <dep package="freetype"/>
     </after>
+  </autotools>
+
+  <!-- Ragel, like Vala, isn't bootstrappable from git, so we might as well just use the tarball. -->
+  <autotools id="ragel" autogen-sh='autoreconf'>
+    <branch repo="complang" module="ragel/ragel-6.8.tar.gz" version="6.8">
+      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/ragel-6.8-setiosflags.patch" strip="1"/>
+    </branch>
   </autotools>
 
   <autotools id="gtk-mac-integration" autogenargs="--disable-python">
