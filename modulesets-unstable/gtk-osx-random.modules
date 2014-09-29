@@ -76,8 +76,14 @@
     </dependencies>
   </autotools>
 <!-- Vala-bootstrap is the current stable vala precompiled to C. -->
-  <autotools id="vala" autogen-sh="configure">
+  <!--<autotools id="vala" autogen-sh="configure">
     <branch module="vala-bootstrap"/>
+  </autotools>-->
+  <!-- vala-bootstrap is stuck at 0.16, so use a tarball for the time being.-->
+  <autotools id="vala" autogen-sh="configure">
+    <branch repo="ftp.gnome.org" version="0.26.0"
+            module="vala/0.26/vala-0.26.0.tar.xz"
+            hash="sha256:c1d0a6a485d5cbfbe027483adfc5f7c80c2404b692375be80d75193d915dcd2f"/>
   </autotools>
 <!-- Vala is written in vala, so you need vala to build it. If you
      want to work on vala itself or need the bleeding edge for some
