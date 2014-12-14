@@ -25,6 +25,8 @@
   <repository type="tarball" name="cups"
 	      href="http://ftp.easysw.com/pub/"/>
   <repository type="git" name="gitorious" href="https://gitorious.org/"/>
+  <repository type="tarball" name="icu"
+              href="http://download.icu-project.org/files/"/>
 
   <autotools id='readline' autogen-sh="configure">
     <branch repo="ftp.gnu.org" module="readline/readline-6.3.tar.gz"
@@ -119,6 +121,12 @@
       <dep package="itstool"/>
       <dep package="yelp-tools"/>
     </dependencies>
+  </autotools>
+
+  <autotools id="icu" autogen-sh="source/configure"
+             makeargs='CFLAGS="$CFLAGS -DU_CHARSET_IS_UTF8=1 -DU_USING_ICU_NAMESPACE=0"'>
+    <branch repo="icu" version="54.1" checkoutdir="icu"
+            module="icu4c/54.1/icu4c-54_1-src.tgz"/>
   </autotools>
 
   <autotools id="harfbuzz"

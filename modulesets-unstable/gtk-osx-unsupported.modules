@@ -30,9 +30,7 @@
 	      href="git://anongit.freedesktop.org"/>
   <repository type="git" name="lysator"
 	      href="https://git.lysator.liu.se/"/>
-  <repository type="tarball" name="icu"
-	      href="http://download.icu-project.org/files/"/>
- 
+
   <metamodule id="meta-gtk-osx-unsupported">
     <dependencies>
       <dep package="gnome-mime-data"/>
@@ -169,12 +167,6 @@
     <dependencies>
     </dependencies>
   </cmake>
-
-  <autotools id='icu' autogen-sh='source/configure'
-	     makeargs='CFLAGS="$CFLAGS -DU_CHARSET_IS_UTF8=1 -DU_USING_ICU_NAMESPACE=0"'>
-    <branch repo='icu' version='54.1' checkoutdir='icu'
-            module='icu4c/54.1/icu4c-54_1-src.tgz'/>
-  </autotools>
 
   <!-- This is WebKitGTK 1.x, for GTK 2.x.
     disable-geolocation: Requires geoclue. No module for this yet.
