@@ -128,12 +128,13 @@
   </autotools>
 
  
-  <autotools id="harfbuzz" autogenargs="--with-coretext">
+  <autotools id="harfbuzz" autogenargs="--with-coretext --with-icu">
     <branch repo="freedesktop" module="harfbuzz"/>
     <dependencies>
       <dep package="freetype-no-harfbuzz"/>
       <dep package="ragel"/>
       <dep package="glib"/>
+      <dep package="icu"/>
     </dependencies>
   </autotools>
 

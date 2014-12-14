@@ -121,12 +121,14 @@
     </dependencies>
   </autotools>
 
-  <autotools id="harfbuzz" autogenargs="--with-coretext --with-freetype">
+  <autotools id="harfbuzz"
+             autogenargs="--with-coretext --with-freetype --with-icu">
     <branch repo="freedesktop" tag="0.9.35"/>
     <dependencies>
       <dep package="freetype-no-harfbuzz"/>
       <dep package="ragel"/>
       <dep package="glib"/>
+      <dep package="icu"/>
     </dependencies>
   </autotools>
 
