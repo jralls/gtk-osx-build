@@ -21,6 +21,8 @@
               href="http://curl.haxx.se/download/"/>
   <repository type="tarball" name="webkit.org"
               href="http://www.webkitgtk.org/releases/"/>
+  <repository type="tarball" name="webm"
+              href="http://downloads.webmproject.org/releases/"/>
 
   <metamodule id="meta-gtk-osx-unsupported">
     <dependencies>
@@ -152,6 +154,10 @@
    <!-- 10.5 has 7.16.3, which is too old for some things. Otherwise can be skipped. -->
   <autotools id="libcurl" autogen-sh="configure">
     <branch repo="curl.haxx.se" module="curl-7.28.0.tar.bz2" version="7.28.0" />
+  </autotools>
+
+  <autotools id="libwebp" autogen-sh="configure">
+    <branch repo="webm" module="webp/libwebp-0.4.2.tar.gz" version="0.4.2"/>
   </autotools>
 
   <!-- This is WebKitGTK 1.x, for GTK 2.x.

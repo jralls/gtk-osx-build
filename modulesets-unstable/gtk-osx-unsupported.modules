@@ -30,6 +30,8 @@
 	      href="git://anongit.freedesktop.org"/>
   <repository type="git" name="lysator"
 	      href="https://git.lysator.liu.se/"/>
+  <repository type="git" name="chromium"
+              href="https://chromium.googlesource.com/"/>
 
   <metamodule id="meta-gtk-osx-unsupported">
     <dependencies>
@@ -167,6 +169,10 @@
     <dependencies>
     </dependencies>
   </cmake>
+
+  <autotools id="libwebp">
+    <branch repo="chromium" module="webm/libwebp"/>
+  </autotools>
 
   <!-- This is WebKitGTK 1.x, for GTK 2.x.
     disable-geolocation: Requires geoclue. No module for this yet.

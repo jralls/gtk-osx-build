@@ -18,6 +18,8 @@
   <repository type='svn' name='libproxy.google.com'
               href='http://libproxy.googlecode.com/svn/'
               tags-template="tags/%(tag)s"/>
+  <repository type="git" name="chromium"
+              href="https://chromium.googlesource.com/"/>
   <repository type="tarball" name="webkit.org"
               href="http://www.webkitgtk.org/releases/"/>
 
@@ -143,6 +145,10 @@
     <branch repo="git.gnu.org" tag="libtasn1_2_14"  module="libtasn1"/> -->
     <branch repo="ftp.gnu.org" version='2.14'
 	    module="libtasn1/libtasn1-2.14.tar.gz"/>
+  </autotools>
+
+  <autotools id="libwebp">
+    <branch repo="chromium" module="webm/libwebp" revision="0.4.2"/>
   </autotools>
 
   <!-- This is WebKitGTK 1.x, for GTK 2.x.
