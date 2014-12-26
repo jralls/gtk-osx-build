@@ -51,10 +51,9 @@
 
   </autotools>
 
-  <autotools id="zlib" autogen-sh="configure" skip-autogen="never"
-	     supports-non-srcdir-builds="no">
-    <branch repo="sourceforge" version="1.2.7"
-	    module="libpng/zlib-1.2.7.tar.gz"/>
+  <autotools id="zlib" autogen-sh="configure" skip-autogen="never">
+    <branch repo="sourceforge" version="1.2.8"
+	    module="libpng/zlib-1.2.8.tar.xz"/>
   </autotools>
 
   <autotools id="p11-kit">

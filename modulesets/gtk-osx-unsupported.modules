@@ -58,8 +58,8 @@
   </autotools>
 
   <autotools id="zlib" autogen-sh="configure" skip-autogen="never">
-    <branch repo="sourceforge" version="1.2.7"
-	    module="libpng/zlib-1.2.7.tar.gz"/>
+    <branch repo="sourceforge" version="1.2.8"
+	    module="libpng/zlib-1.2.8.tar.gz"/>
   </autotools>
 
   <autotools id="gnutls" autogen-sh="configure"
