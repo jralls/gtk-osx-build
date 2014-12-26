@@ -64,9 +64,12 @@
 
   <autotools id="gnutls" autogen-sh="configure"
 	     autogenargs="--with-libgcrypt --without-p11-kit">
-    <branch repo='git.gnu.org' tag='gnutls_2_12_x'/>
-    <!--branch repo='ftp.gnu.org' version='2.12.11'
-            module="gnutls/gnutls-2.12.11.tar.bz2"/-->
+    <!-- This is the last version of gnutls that will support libgcrypt;
+    subsequent ones require nettle and gmp. Building from git does not work with
+    Autoamke >1.12.-->
+    <!--branch repo='git.gnu.org' revision='gnutls_2_12_20'/-->
+    <branch repo='ftp.gnu.org' version='2.12.20'
+            module="gnutls/gnutls-2.12.20.tar.bz2"/>
     <dependencies>
       <dep package="libgcrypt" />
       <dep package="libtasn1" />

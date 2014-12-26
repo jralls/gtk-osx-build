@@ -65,6 +65,8 @@
             module="libpng/zlib-1.2.8.tar.xz"/>
   </autotools>
 
+  <!-- This is the last version of gnutls that will support libgcrypt;
+  subsequent ones require nettle and gmp -->
   <autotools id="gnutls" autogen-sh="configure"
 	     autogenargs="--with-libgcrypt --without-p11-kit">
     <branch repo='ftp.gnu.org' version='2.12.20'

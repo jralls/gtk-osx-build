@@ -67,19 +67,19 @@
     <branch repo="lysator" module="nettle/nettle.git"/>
   </autotools>
 
-  <autotools id="gnutls" autogen-sh="autoreconf"
-	     autogenargs="--disable-gtk-doc-html"
-	     autogen-template="autoreconf -fis &amp;&amp; %(srcdir)s/configure --prefix %(prefix)s  %(autogenargs)s">
-    <branch repo='git.gnu.org' tag='gnutls_2_12_20' module="gnutls"/>
-    <!--<branch repo='ftp.gnu.org' version='2.8.1'
-            module="gnutls/gnutls-2.8.1.tar.bz2"/ -->
+  <autotools id="gnutls" autogen-sh="configure"
+             autogenargs="--with-libgcrypt --disable-gtk-doc-html">
+    <!-- This is the last version of gnutls that will support libgcrypt;
+    subsequent ones require nettle and gmp. Building from git does not work with
+    Automake >1.12. -->
+    <!--branch repo="git.gnu.org" module="gnutls"/-->
+    <branch repo="ftp.gnu.org" version="2.12.20"
+            module="gnutls/gnutls-2.12.20.tar.bz2"/>
     <dependencies>
       <dep package="p11-kit"/>
       <dep package="libgcrypt" />
       <dep package="libtasn1" />
-      <dep package="libnettle" />
       <dep package="zlib"/>
-      <dep package="gmp"/>
     </dependencies>
   </autotools>
 
