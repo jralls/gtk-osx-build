@@ -104,8 +104,8 @@
   <autotools id="libtasn1" supports-non-srcdir-builds="no" >
     <!-- Git repository is missing files required to build libtasn1
     <branch repo="git.gnu.org" /> -->
-    <branch repo="ftp.gnu.org" version='2.9'
-	    module="libtasn1/libtasn1-2.9.tar.gz"/>
+    <branch repo="ftp.gnu.org" version="2.14"
+            module="libtasn1/libtasn1-2.14.tar.gz"/>
   </autotools>
 
   <autotools id="libgnome-keyring" autogenargs="--disable-pam --without-root-certs">
