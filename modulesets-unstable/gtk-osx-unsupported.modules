@@ -84,18 +84,18 @@
   </autotools>
 
   <autotools id="libgpg-error" autogen-sh="autogen.sh"
-             autogen-template="%(srcdir)s/%(autogen-sh)s &amp;&amp; %(srcdir)s/configure --prefix %(prefix)s  %(autogenargs)s"
-	     supports-non-srcdir-builds='no'>
+             autogenargs="--disable-doc"
+             autogen-template="%(srcdir)s/%(autogen-sh)s &amp;&amp; %(srcdir)s/configure --prefix %(prefix)s  %(autogenargs)s">
     <branch repo='git.gnupg.org' module="libgpg-error" />
   </autotools>
 
   <autotools id="libgcrypt" autogen-sh="configure" autogenargs="--disable-asm">
-<!-- CVS version requires fig2dev, an X11 utility.
-     <branch repo='cvs.gnupg.org'  module='libgcrypt'/> -->
-    <branch repo='ftp.gnupg.org' version='1.5.3'
-	    module='gcrypt/libgcrypt/libgcrypt-1.5.3.tar.bz2'>
-      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/libgcrypt-build-clang.patch" strip="1"/>
-    </branch>
+    <!-- Git version requires fig2dev, an X11 utility, until disable-doc option
+    is available, currently only on master. Master does not work with the
+    version of gnutls used, 2.12.20.
+    <branch repo="git.gnupg.org" module="libgcrypt"/> -->
+    <branch repo="ftp.gnupg.org" version="1.5.4"
+            module="gcrypt/libgcrypt/libgcrypt-1.5.4.tar.bz2"/>
     <dependencies>
       <dep package="libgpg-error" />
     </dependencies>
