@@ -99,13 +99,14 @@
     </dependencies>
   </autotools>
 
+  <!-- 2.42 requires gnutls 3.0 -->
   <autotools id="glib-networking" autogen-sh="configure"
 	     autogenargs="--without-ca-certificates set_more_warnings=no">
-    <branch module="glib-networking/2.34/glib-networking-2.34.0.tar.xz"
-	    version="2.34.0" hash="sha256:c56eb4161671bff9568f3a92a88531ca01217eb7ee8514bb6255730400f877f1"/>
+    <branch module="glib-networking/2.40/glib-networking-2.40.1.tar.xz"
+            hash="sha256:9fb3e54d049a480afdb814ff7452e7ab67e5d5f607ade230d7713f19922b5a28"
+            version="2.40.1"/>
     <dependencies>
       <dep package="gnutls"/>
-      <dep package="libgcrypt"/>
     </dependencies>
   </autotools>
 

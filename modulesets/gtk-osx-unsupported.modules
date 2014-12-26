@@ -93,13 +93,12 @@
     </dependencies>
   </autotools>
 
+  <!-- 2.42 requires gnutls 3.0 -->
   <autotools id="glib-networking"
 	     autogenargs="--without-ca-certificates set_more_warnings=no">
-    <branch revision="glib-2-34"/>
+    <branch revision="glib-2-40"/>
     <dependencies>
-      <dep package="glib"/>
       <dep package="gnutls"/>
-      <dep package='libproxy'/>
     </dependencies>
   </autotools>
 
