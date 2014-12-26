@@ -138,20 +138,13 @@
     </dependencies>
   </autotools>
 
- <autotools id="libsoup-gnome">
+ <autotools id="libsoup" autogenargs="set_more_warnings=no">
     <branch />
     <dependencies>
       <dep package='sqlite'/>
-      <dep package="libgnome-keyring"/>
+      <dep package="glib"/>
       <dep package="glib-networking"/>
     </dependencies>
-  </autotools>
-
- <autotools id="libsoup" autogenargs="--without-gnome --disable-tls-check set_more_warnings=no">
-    <branch />
-    <after>
-      <dep package="glib-networking"/>
-    </after>
  </autotools>
 
  <autotools id="enchant" >

@@ -103,11 +103,10 @@
   </autotools>
 
   <autotools id="libsoup" autogenargs="set_more_warnings=no">
-    <branch revision="gnome-3-6"/>
+    <branch revision="gnome-3-14"/>
     <dependencies>
       <dep package="glib"/>
       <dep package="glib-networking"/>
-      <dep package="libgnome-keyring"/>
       <dep package='sqlite'/>
     </dependencies>
   </autotools>
