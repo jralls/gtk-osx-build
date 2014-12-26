@@ -18,8 +18,6 @@
   <repository type='svn' name='libproxy.google.com'
               href='http://libproxy.googlecode.com/svn/'
               tags-template="tags/%(tag)s"/>
-  <repository type="svn" name="svn.webkit.org"
-	      href="http://svn.webkit.org/repository/"/>
   <repository type='tarball' name='icu'
 	      href='http://download.icu-project.org/files/'/>
 
@@ -151,21 +149,4 @@
     <branch repo='icu' version='54.1' checkoutdir='icu'
             module='icu4c/54.1/icu4c-54_1-src.tgz'/>
   </autotools>
-
-  <autotools id="WebKit"
-	     autogenargs="--with-target=quartz --disable-video">
-    <!-- Tags are for Safari versions, not much help to us. -->
-    <branch repo="svn.webkit.org" module="webkit/trunk" checkoutdir="WebKit"/>
-    <dependencies>
-      <dep package="libsoup"/>
-      <dep package="enchant"/>
-    </dependencies>
-    <after>
-      <dep package="meta-gtk-osx-core"/>
-      <dep package="libcurl"/>
-      <dep package="bison"/>
-    </after>
-  </autotools>
-
-
 </moduleset>

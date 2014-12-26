@@ -181,22 +181,21 @@
             module='icu4c/54.1/icu4c-54_1-src.tgz'/>
   </autotools>
 
-  <autotools id="WebKit"
+  <autotools id="WebKit-git"
 	     autogenargs="--enable-quartz-target --disable-x11-target --disable-video --with-font-backend=pango --with-gtk=2.0 --disable-geolocation --disable-webkit2 --disable-credential-storage --disable-svg-fonts --disable-web-audio --disable-fast-malloc --disable-gtk-doc-html">
-    <!--branch repo="svn.webkit.org" module="webkit/trunk" checkoutdir="WebKit"/-->
-    <branch repo="git.webkit.org" module="WebKit"/>
+    <!--branch repo="svn.webkit.org" module="webkit/trunk" checkoutdir="WebKit-svn"/-->
+    <branch repo="git.webkit.org" module="WebKit" checkoutdir="WebKit-git"/>
     <dependencies>
       <dep package="libsoup"/>
       <dep package="enchant"/>
-      <dep package="meta-gtk-osx-core"/>
       <dep package="meta-gtk-osx-freetype"/>
-      <dep package="zlib"/>
       <dep package="icu"/>
     </dependencies>
     <after>
       <dep package="libcurl"/>
       <dep package="bison"/>
       <!--dep package="gst-plugins-base"/-->
+      <dep package="meta-gtk-osx-gtk3"/>
     </after>
   </autotools>
 

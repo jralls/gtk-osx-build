@@ -21,8 +21,6 @@
               href="http://curl.haxx.se/download/"/>
   <repository type="tarball" name="webkit.org"
               href="http://www.webkitgtk.org/releases/"/>
-  <repository type="svn" name="svn.webkit.org"
-	      href="http://svn.webkit.org/repository/"/>
   <repository type='tarball' name='icu'
 	      href='http://download.icu-project.org/files/'/>
 
@@ -187,20 +185,4 @@
     <branch repo='icu' version='54.1' checkoutdir='icu'
             module='icu4c/54.1/icu4c-54_1-src.tgz'/>
   </autotools>
-
-  <autotools id="WebKit-svn"
-	     autogenargs="--with-target=quartz --disable-video --with-font-backend=pango --with-gtk=3.0">
-    <branch repo="svn.webkit.org" module="webkit/trunk" checkoutdir="WebKit"/>
-    <dependencies>
-      <dep package="libsoup"/>
-      <dep package="enchant"/>
-      <!--dep package="libgail"/-->
-    </dependencies>
-    <after>
-      <dep package="meta-gtk-osx-core"/>
-      <dep package="meta-gtk-osx-gtk3"/>
-      <!--dep package="gst-plugins-base"/-->
-    </after>
-  </autotools>
-
 </moduleset>
