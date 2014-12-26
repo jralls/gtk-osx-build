@@ -164,7 +164,6 @@
     <branch repo="webkit.org" module="webkit-1.6.1.tar.gz" version="1.6.1">
       <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-1.6-no-x11.patch" strip="1"/>
       <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-1.6-pango-includes.patch" strip="1"/>
-      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-1.6-missing-icu-files.patch" strip="1"/>
       <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-1.6-missing-utf8-include.patch" strip="1"/>
       <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-1.6-enable-blob.patch" strip="1"/>
       <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-1.6-gnome-3.6-fixup.patch" strip="1"/>
@@ -173,6 +172,7 @@
     </branch>
     <dependencies>
       <dep package="enchant"/>
+      <dep package="icu"/>
       <dep package="libsoup"/>
       <dep package="meta-gtk-osx-freetype"/>
     </dependencies>

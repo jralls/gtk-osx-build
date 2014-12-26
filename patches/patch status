@@ -29,7 +29,6 @@ pygtk:		pygtk-libtool.patch: The PyGtk-2.24.0 tarball uses an argument
 		export-symbols-regex, which llvm-gcc doesn't seem to like.
 
 Webkit:		Webkit-1.6-enable-blob.patch
-		webkit-1.6-missing-icu-files.patch
 		webkit-1.6-missing-utf8-include.patch
 		webkit-1.6-no-x11.patch
 		webkit-1.6-pango-includes.patch
