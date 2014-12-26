@@ -56,8 +56,11 @@
 	    module="libpng/zlib-1.2.8.tar.xz"/>
   </autotools>
 
-  <autotools id="p11-kit">
+  <autotools id="p11-kit" autogenargs="--without-trust-paths">
     <branch repo="freedesktop" module="p11-glue/p11-kit"/>
+    <dependencies>
+      <dep package="libtasn1"/>
+    </dependencies>
   </autotools>
 
 <!-- Rudely demands TeX to build documentation -->
