@@ -28,10 +28,16 @@ libunique:	libunique-663913-sockaddr-un.patch No Love from maintainer
 pygtk:		pygtk-libtool.patch: The PyGtk-2.24.0 tarball uses an argument
 		export-symbols-regex, which llvm-gcc doesn't seem to like.
 
-Webkit:		Webkit-1.6-enable-blob.patch
-		webkit-1.6-missing-utf8-include.patch
-		webkit-1.6-no-x11.patch
-		webkit-1.6-pango-includes.patch
+Webkit:		webkit-1.10-no-x11.patch
+		webkit-88407-portable-echo-n.patch
+			Remove a few uses of "echo -n" that sh can't handle. This
+			is a slightly different patch than the one at the bug, because
+			that one doesn't apply.
+			https://bugs.webkit.org/show_bug.cgi?id=88407
+		webkit-1.10-platform-fixes.patch
+			some combinations of PLATFORM(GTK) and non-X11 not anticipated
+			See also https://bugs.webkit.org/show_bug.cgi?id=58737
+		webkit-1.10-pango-includes.patch
 
 GConf:		GConf-characters.patch Bug 161209. Unlikely ever to be fixed.
 

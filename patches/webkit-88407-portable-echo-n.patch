@@ -1,0 +1,13 @@
+--- a/Source/WebCore/GNUmakefile.am	2012-11-27 05:30:01.000000000 -0700
++++ b/Source/WebCore/GNUmakefile.am	2014-12-22 20:30:57.000000000 -0700
+@@ -953,8 +953,8 @@
+ .SECONDARY:
+ $(supplemental_dependency_file): $(SCRIPTS_FOR_PREPROCESS_IDLS) $(dom_binding_idls) $(idl_attributes_file)
+ 	$(AM_V_GEN)
+-	$(AM_V_at)echo -n > $(idl_files_list)
+-	$(AM_V_at)($(foreach idl, $(dom_binding_idls), echo $(idl) &&) echo -n) >> $(idl_files_list)
++	$(AM_V_at)> $(idl_files_list)
++	$(AM_V_at)($(foreach idl, $(dom_binding_idls), echo $(idl) &&) :) >> $(idl_files_list)
+ 	$(AM_V_at)$(PERL) -I$(WebCore)/bindings/scripts $(WebCore)/bindings/scripts/preprocess-idls.pl --defines "LANGUAGE_JAVASCRIPT=1 $(FEATURE_DEFINES)" --idlFilesList $(idl_files_list) --supplementalDependencyFile $@ --idlAttributesFile $(idl_attributes_file)
+ 
+ # This does not appear to work correctly with gnumake unless

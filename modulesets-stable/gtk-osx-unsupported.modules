@@ -156,16 +156,25 @@
     <branch repo="curl.haxx.se" module="curl-7.28.0.tar.bz2" version="7.28.0" />
   </autotools>
 
-  <autotools id="WebKit" autogen-sh="configure"
-	     autogenargs="--with-target=quartz --disable-video --with-font-backend=pango --with-gtk=2.0">
-    <branch repo="webkit.org" module="webkit-1.6.1.tar.gz" version="1.6.1">
-      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-1.6-no-x11.patch" strip="1"/>
-      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-1.6-pango-includes.patch" strip="1"/>
-      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-1.6-missing-utf8-include.patch" strip="1"/>
-      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-1.6-enable-blob.patch" strip="1"/>
-      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-1.6-gnome-3.6-fixup.patch" strip="1"/>
-      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-1.6-clang-fixup.patch" strip="1"/>
-      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-1.6-out-of-source-fixup.patch" strip="1"/>
+  <!-- This is WebKitGTK 1.x, for GTK 2.x.
+    disable-geolocation: Requires geoclue. No module for this yet.
+    disable-video: Requires gstreamer. If you want video, add to .jhbuildrc:
+      append_autogenargs('WebKit', '&#45;-enable-video')
+    Wno-c++11-extensions: Suppresses clang warning that makes output
+      inconvenient to read.
+    std=c99: Required for inline keyword in C.
+  -->
+  <autotools id="WebKit" autogen-sh="autoreconf"
+             autogenargs='--with-target=quartz --disable-video --with-font-backend=pango --with-gtk=2.0 --disable-geolocation --disable-webkit2 CXXFLAGS="$CXXFLAGS -Wno-c++11-extensions" CFLAGS="$CFLAGS -std=c99"'>
+    <branch repo="webkit.org" module="webkitgtk-1.10.2.tar.xz" version="1.10.2">
+      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-1.10-no-x11.patch"
+             strip="1"/>
+      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-88407-portable-echo-n.patch"
+             strip="1"/>
+      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-1.10-platform-fixes.patch"
+             strip="1"/>
+      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-1.10-pango-includes.patch"
+             strip="1"/>
     </branch>
     <dependencies>
       <dep package="enchant"/>
@@ -175,7 +184,6 @@
     </dependencies>
     <after>
       <dep package="meta-gtk-osx-core"/>
-      <dep package="meta-gtk-osx-gtk3"/>
     </after>
   </autotools>
 

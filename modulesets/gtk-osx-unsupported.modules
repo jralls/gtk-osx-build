@@ -18,6 +18,8 @@
   <repository type='svn' name='libproxy.google.com'
               href='http://libproxy.googlecode.com/svn/'
               tags-template="tags/%(tag)s"/>
+  <repository type="tarball" name="webkit.org"
+              href="http://www.webkitgtk.org/releases/"/>
   <repository type='tarball' name='icu'
 	      href='http://download.icu-project.org/files/'/>
 
@@ -148,5 +150,36 @@
 	     makeargs='CFLAGS="$CFLAGS -DU_CHARSET_IS_UTF8=1 -DU_USING_ICU_NAMESPACE=0"'>
     <branch repo='icu' version='54.1' checkoutdir='icu'
             module='icu4c/54.1/icu4c-54_1-src.tgz'/>
+  </autotools>
+
+  <!-- This is WebKitGTK 1.x, for GTK 2.x.
+    disable-geolocation: Requires geoclue. No module for this yet.
+    disable-video: Requires gstreamer. If you want video, add to .jhbuildrc:
+      append_autogenargs('WebKit', '&#45;-enable-video')
+    Wno-c++11-extensions: Suppresses clang warning that makes output
+      inconvenient to read.
+    std=c99: Required for inline keyword in C.
+  -->
+  <autotools id="WebKit" autogen-sh="autoreconf"
+             autogenargs='--with-target=quartz --disable-video --with-font-backend=pango --with-gtk=2.0 --disable-geolocation --disable-webkit2 CXXFLAGS="$CXXFLAGS -Wno-c++11-extensions" CFLAGS="$CFLAGS -std=c99"'>
+    <branch repo="webkit.org" module="webkitgtk-1.10.2.tar.xz" version="1.10.2">
+      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-1.10-no-x11.patch"
+             strip="1"/>
+      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-88407-portable-echo-n.patch"
+             strip="1"/>
+      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-1.10-platform-fixes.patch"
+             strip="1"/>
+      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-1.10-pango-includes.patch"
+             strip="1"/>
+    </branch>
+    <dependencies>
+      <dep package="libsoup"/>
+      <dep package="enchant"/>
+      <dep package="icu"/>
+      <dep package="meta-gtk-osx-freetype"/>
+    </dependencies>
+    <after>
+      <dep package="meta-gtk-osx-core"/>
+    </after>
   </autotools>
 </moduleset>

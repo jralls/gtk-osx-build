@@ -1,0 +1,39 @@
+--- a/Source/WebCore/GNUmakefile.list.am	2012-11-27 05:41:20.000000000 -0700
++++ b/Source/WebCore/GNUmakefile.list.am	2014-12-22 19:28:28.000000000 -0700
+@@ -5949,6 +5949,8 @@
+ webcore_sources += \
+ 	Source/WebCore/plugins/PluginPackageNone.cpp \
+ 	Source/WebCore/plugins/PluginViewNone.cpp
++webcoregtk_sources += \
++	Source/WebCore/platform/cairo/WidgetBackingStoreCairo.cpp
+ endif # END TARGET_WIN32
+ endif # END TARGET_X11
+ 
+--- a/configure.ac	2012-12-09 11:01:04.000000000 -0700
++++ b/configure.ac	2014-12-22 19:18:14.000000000 -0700
+@@ -1278,14 +1278,6 @@
+     AC_SUBST([GEOCLUE_LIBS])
+ fi
+ 
+-# check for XRender under Linux/Unix. Some linkers require explicit
+-# linkage (like GNU Gold), so we cannot rely on GTK+ pulling XRender
+-if test "$os_win32" = "no"; then
+-   PKG_CHECK_MODULES([XRENDER], [xrender])
+-   AC_SUBST([XRENDER_CFLAGS])
+-   AC_SUBST([XRENDER_LIBS])
+-fi
+-
+ # check if gstreamer is available
+ if test "$enable_video" = "yes" || test "$enable_web_audio" = "yes"; then
+     gstreamer_modules="gstreamer-$GST_API_VERSION >= $GSTREAMER_REQUIRED_VERSION
+--- a/Source/WebCore/bridge/npruntime_internal.h	2012-05-12 13:43:45.000000000 -0600
++++ b/Source/WebCore/bridge/npruntime_internal.h	2014-12-22 22:07:02.000000000 -0700
+@@ -29,6 +29,8 @@
+ #include "npfunctions.h"
+ #include "npruntime.h"
+ 
++#undef XP_UNIX
++
+ #ifdef XP_UNIX
+     #include <X11/Xresource.h>
+ 
