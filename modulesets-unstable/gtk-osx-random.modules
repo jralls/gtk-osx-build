@@ -240,10 +240,12 @@
     </after>
   </autotools>
 
+  <!-- SQLite3 is provided by MacOSX in /usr/lib/libsqlite.3.dylib -->
   <autotools id="sqlite" autogenargs="--disable-tcl --enable-threadsafe" >
     <!-- Another package with a non-standard repository structure. Tarballs
     are easier.-->
-    <branch module="sqlite-3.6.15.tar.gz" version='3.6.15' repo="sqlite"/>
+    <branch module="sqlite-autoconf-3071401.tar.gz" version="3.7.14"
+            repo="sqlite"/>
   </autotools>
 
   <autotools id="goocanvas">
