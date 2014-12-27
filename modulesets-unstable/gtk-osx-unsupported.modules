@@ -27,7 +27,7 @@
   <repository type="git" name="freedesktop"
 	      href="git://anongit.freedesktop.org"/>
   <repository type="git" name="lysator"
-	      href="git://git.lysator.liu.se/"/>
+	      href="https://git.lysator.liu.se/"/>
   <repository type="tarball" name="icu"
 	      href="http://download.icu-project.org/files/"/>
  
@@ -62,10 +62,16 @@
   </autotools>
 
 <!-- Rudely demands TeX to build documentation -->
+  <!-- Assembler files are missing md5-compress.asm for x86_64 -->
   <autotools id="libnettle"
-	     autogenargs="--disable-documentation"
+	     autogenargs="--disable-documentation --disable-assembler"
 	     autogen-template="autoreconf -fis &amp;&amp; %(srcdir)s/configure --prefix %(prefix)s  %(autogenargs)s">
-    <branch repo="lysator" module="nettle/nettle.git"/>
+    <!-- gnutls does not support nettle 3.0 yet -->
+    <branch repo="lysator" module="nettle/nettle.git"
+            tag="nettle_2.7_release_20130424"/>
+    <dependencies>
+      <dep package="gmp"/>
+    </dependencies>
   </autotools>
 
   <autotools id="gnutls" autogen-sh="autoreconf"
