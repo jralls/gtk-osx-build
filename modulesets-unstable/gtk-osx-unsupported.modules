@@ -115,6 +115,7 @@
       <dep package="libgcrypt"/>
       <dep package="libtasn1"/>
       <dep package="glib"/>
+      <dep package="dbus"/>
     </dependencies>
   </autotools>
 
