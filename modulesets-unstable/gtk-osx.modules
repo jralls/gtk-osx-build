@@ -67,9 +67,11 @@
   <autotools id="glib" autogenargs="--disable-dtrace">
     <branch />
     <dependencies>
-      <dep package="meta-gtk-osx-bootstrap"/>
       <dep package="libffi"/>
     </dependencies>
+    <after>
+      <dep package="meta-gtk-osx-bootstrap"/>
+    </after>
   </autotools>
 
   <autotools id="libffi" autogenargs="--disable-builddir"
