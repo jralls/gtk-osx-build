@@ -206,6 +206,41 @@
     </after>
   </autotools>
 
+  <!-- This is WebKitGTK 2.4.x, the last version that had the WebKit1 API.
+    disable-webkit2: Requires both GTK2 and 3. Currently not supported.
+    disable-credential-storage: Requires libsecret. No module for this yet.
+    disable-geolocation: Requires geoclue 1 or 2. No module for this yet.
+    disable-video, disable-web-audio: Requires gstreamer. If you want video and
+      audio, add this to your .jhbuildrc:
+      append_autogenargs('WebKit', '&#45;-enable-video')
+      append_autogenargs('WebKit', '&#45;-enable-web-audio')
+    -j1: Workaround for https://bugs.webkit.org/show_bug.cgi?id=140171
+  -->
+  <autotools id="webkit1gtk3" autogen-sh="autoreconf" makeargs="-j1"
+             autogenargs="--enable-quartz-target --with-gtk=3.0 --disable-webkit2 --disable-credential-storage --disable-geolocation --disable-video --disable-web-audio CXXFLAGS='-std=gnu++11'">
+    <branch repo="webkit.org" module="webkitgtk-2.4.8.tar.xz" version="2.4.8">
+      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-126324-clang-check.patch"
+             strip="1"/>
+      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-140167-disable-netscape-api.patch"
+             strip="1"/>
+      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-133293-cfi-clang-failure.patch"
+             strip="1"/>
+      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-126433-check-platform-gtk.patch"
+             strip="1"/>
+    </branch>
+    <dependencies>
+      <dep package="libwebp"/>
+      <dep package="enchant"/>
+      <dep package="icu"/>
+      <dep package="libsoup"/>
+      <dep package="meta-gtk-osx-freetype"/>
+    </dependencies>
+    <after>
+      <dep package="meta-gtk-osx-gtk3"/>
+      <dep package="meta-gstreamer-1.0"/>
+    </after>
+  </autotools>
+
   <autotools id="WebKit-git"
 	     autogenargs="--enable-quartz-target --disable-x11-target --disable-video --with-font-backend=pango --with-gtk=2.0 --disable-geolocation --disable-webkit2 --disable-credential-storage --disable-svg-fonts --disable-web-audio --disable-fast-malloc --disable-gtk-doc-html">
     <!--branch repo="svn.webkit.org" module="webkit/trunk" checkoutdir="WebKit-svn"/-->

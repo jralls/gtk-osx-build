@@ -1,0 +1,16 @@
+Index: Source/JavaScriptCore/API/WebKitAvailability.h
+===================================================================
+diff --git a/JavaScriptCore/API/WebKitAvailability.h b/Source/JavaScriptCore/API/WebKitAvailability.h
+--- a/Source/JavaScriptCore/API/WebKitAvailability.h	(revision 174258)
++++ b/Source/JavaScriptCore/API/WebKitAvailability.h	(working copy)
+@@ -26,7 +26,9 @@
+ #ifndef __WebKitAvailability__
+ #define __WebKitAvailability__
+ 
+-#ifdef __APPLE__
++#include <wtf/Platform.h>
++
++#if defined(__APPLE__) && !PLATFORM(GTK)
+ #include <AvailabilityMacros.h>
+ #include <CoreFoundation/CoreFoundation.h>
+ #else
