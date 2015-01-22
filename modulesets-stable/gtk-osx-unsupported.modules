@@ -21,8 +21,8 @@
               href="http://curl.haxx.se/download/"/>
   <repository type="tarball" name="webkit.org"
               href="http://www.webkitgtk.org/releases/"/>
-  <repository type='tarball' name='icu'
-	      href='http://download.icu-project.org/files/'/>
+  <repository type="tarball" name="webm"
+              href="http://downloads.webmproject.org/releases/"/>
 
   <metamodule id="meta-gtk-osx-unsupported">
     <dependencies>
@@ -156,6 +156,10 @@
     <branch repo="curl.haxx.se" module="curl-7.28.0.tar.bz2" version="7.28.0" />
   </autotools>
 
+  <autotools id="libwebp" autogen-sh="configure">
+    <branch repo="webm" module="webp/libwebp-0.4.2.tar.gz" version="0.4.2"/>
+  </autotools>
+
   <!-- This is WebKitGTK 1.x, for GTK 2.x.
     disable-geolocation: Requires geoclue. No module for this yet.
     disable-video: Requires gstreamer. If you want video, add to .jhbuildrc:
@@ -184,12 +188,42 @@
     </dependencies>
     <after>
       <dep package="meta-gtk-osx-core"/>
+      <dep package="meta-gstreamer-1.0"/>
     </after>
   </autotools>
 
-  <autotools id='icu' autogen-sh='source/configure'
-	     makeargs='CFLAGS="$CFLAGS -DU_CHARSET_IS_UTF8=1 -DU_USING_ICU_NAMESPACE=0"'>
-    <branch repo='icu' version='54.1' checkoutdir='icu'
-            module='icu4c/54.1/icu4c-54_1-src.tgz'/>
+  <!-- This is WebKitGTK 2.4.x, the last version that had the WebKit1 API.
+    disable-webkit2: Requires both GTK2 and 3. Currently not supported.
+    disable-credential-storage: Requires libsecret. No module for this yet.
+    disable-geolocation: Requires geoclue 1 or 2. No module for this yet.
+    disable-video, disable-web-audio: Requires gstreamer. If you want video and
+      audio, add this to your .jhbuildrc:
+      append_autogenargs('WebKit', '&#45;-enable-video')
+      append_autogenargs('WebKit', '&#45;-enable-web-audio')
+    -j1: Workaround for https://bugs.webkit.org/show_bug.cgi?id=140171
+  -->
+  <autotools id="webkit1gtk3" autogen-sh="autoreconf" makeargs="-j1"
+             autogenargs="--enable-quartz-target --with-gtk=3.0 --disable-webkit2 --disable-credential-storage --disable-geolocation --disable-video --disable-web-audio CXXFLAGS='-std=gnu++11'">
+    <branch repo="webkit.org" module="webkitgtk-2.4.8.tar.xz" version="2.4.8">
+      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-126324-clang-check.patch"
+             strip="1"/>
+      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-140167-disable-netscape-api.patch"
+             strip="1"/>
+      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-133293-cfi-clang-failure.patch"
+             strip="1"/>
+      <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/webkit-126433-check-platform-gtk.patch"
+             strip="1"/>
+    </branch>
+    <dependencies>
+      <dep package="libwebp"/>
+      <dep package="enchant"/>
+      <dep package="icu"/>
+      <dep package="libsoup"/>
+      <dep package="meta-gtk-osx-freetype"/>
+    </dependencies>
+    <after>
+      <dep package="meta-gtk-osx-gtk3"/>
+      <dep package="meta-gstreamer-1.0"/>
+    </after>
   </autotools>
 </moduleset>

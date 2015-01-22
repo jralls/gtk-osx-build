@@ -39,6 +39,17 @@ Webkit:		webkit-1.10-no-x11.patch
 			See also https://bugs.webkit.org/show_bug.cgi?id=58737
 		webkit-1.10-pango-includes.patch
 
+webkit1gtk:	webkit-126324-clang-check.patch
+			https://bugs.webkit.org/show_bug.cgi?id=126324
+		webkit-140167-disable-netscape-api.patch
+			There's no configure option to disable this. Work around by
+			modifying the variable directly.
+			https://bugs.webkit.org/show_bug.cgi?id=140167
+		webkit-133293-cfi-clang-failure.patch
+			Workaround for https://bugs.webkit.org/show_bug.cgi?id=133293
+		webkit-126433-check-platform-gtk.patch
+			https://bugs.webkit.org/show_bug.cgi?id=126433
+
 GConf:		GConf-characters.patch Bug 161209. Unlikely ever to be fixed.
 
 Glade:		Glade-3-8-Bug-663492-Update-Mac-integration-bindings-to-.patch

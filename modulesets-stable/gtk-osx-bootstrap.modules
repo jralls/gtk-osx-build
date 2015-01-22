@@ -25,6 +25,8 @@
   <repository type="tarball" name="cups"
 	      href="http://ftp.easysw.com/pub/"/>
   <repository type="tarball" name="itstool" href="http://files.itstool.org/"/>
+  <repository type="tarball" name="icu"
+              href="http://download.icu-project.org/files/"/>
 
   <autotools id='readline' autogen-sh="configure">
     <branch repo="ftp.gnu.org" module="readline/readline-6.3.tar.gz"
@@ -125,14 +127,21 @@
     </dependencies>
   </autotools>
 
+  <autotools id="icu" autogen-sh="source/configure"
+             makeargs='CFLAGS="$CFLAGS -DU_CHARSET_IS_UTF8=1 -DU_USING_ICU_NAMESPACE=0"'>
+    <branch repo="icu" version="54.1" checkoutdir="icu"
+            module="icu4c/54.1/icu4c-54_1-src.tgz"/>
+  </autotools>
+
   <autotools id="harfbuzz" autogen-sh="configure"
-             autogenargs="--with-coretext --with-freetype">
+             autogenargs="--with-coretext --with-freetype --with-icu">
     <branch repo="harfbuzz" module="harfbuzz-0.9.35.tar.bz2" version="0.9.35">
        <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/harfbuzz-kCTTypesetterOptionForcedEmbeddingLevel-Leopard.patch" strip="1"/>
     </branch>
     <dependencies>
       <dep package="freetype-no-harfbuzz"/>
       <dep package="glib"/>
+      <dep package="icu"/>
     </dependencies>
   </autotools>
 
