@@ -188,6 +188,7 @@
     </dependencies>
     <after>
       <dep package="meta-gtk-osx-core"/>
+      <dep package="meta-gstreamer-1.0"/>
     </after>
   </autotools>
 </moduleset>
