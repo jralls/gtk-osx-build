@@ -39,7 +39,8 @@ else
 fi
 
 echo "Installing jhbuild..."
-(cd $SOURCE/jhbuild && make -f Makefile.plain DISABLE_GETTEXT=1 install >/dev/null)
+sed -i.bak -e 's/env python2/env python/' $SOURCE/jhbuild/scripts/jhbuild.in
+(cd $SOURCE/jhbuild && ./autogen.sh >/dev/null && make -f Makefile.plain DISABLE_GETTEXT=1 install >/dev/null)
 
 echo "Installing jhbuild configuration..."
 ln -sfh `pwd`/jhbuildrc-gtk-osx $HOME/.jhbuildrc
@@ -51,6 +52,7 @@ if [ ! -f $HOME/.jhbuildrc-custom ]; then
 fi
 
 echo "Setting up modulesets..."
+ln -sfh `pwd`/modulesets-stable/bootstrap.modules $SOURCE/jhbuild/modulesets/
 cd modulesets
 for f in `ls *modules`; do
     ln -sfh `pwd`/$f $SOURCE/jhbuild/modulesets/
