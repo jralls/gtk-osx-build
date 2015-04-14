@@ -170,8 +170,7 @@
   <autotools id="gettext-runtime" autogen-sh="configure"
 	     autogenargs="--without-emacs --disable-java --disable-native-java --disable-libasprintf --disable-csharp">
     <branch repo="ftp.gnu.org" source-subdir="gettext-runtime"
-            module="gettext/gettext-0.19.3.tar.gz" version="0.19.3"
-            size="17414357" md5sum="c365029ffc866fc4e485d9e5ca60b260"/>
+            module="gettext/gettext-0.19.4.tar.gz" version="0.19.4"/>
   </autotools>
 
    <metamodule id="meta-gtk-osx-bootstrap">
