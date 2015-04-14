@@ -24,14 +24,11 @@ if test ! -d $SOURCE; then
     do_exit "The directory $SOURCE does not exist, please create it and try again."
 fi
 
-#JHBUILD_REVISION=`cat $SOURCE/gtk-osx-build/jhbuild-revision 2>/dev/null`
-#if test x"$JHBUILD_REVISION" = x; then
-#    do_exit "Could not find jhbuild revision to use."
-#fi
-#
-#JHBUILD_REVISION_OPTION="-r$JHBUILD_REVISION"
-#
-echo "Checking out jhbuild ($JHBUILD_REVISION) from git..."
+# This will use jhbuild from git master, but note that jhbuild depends on
+# pkg-config. If you use this, you'll either need to have installed pkg-config
+# already with gtk-osx-build, or you'll need to build pkg-config with Homebrew.
+
+echo "Checking out jhbuild from git..."
 if ! test -d $SOURCE/jhbuild; then
     (cd $SOURCE ; git clone git://git.gnome.org/jhbuild )
 else
