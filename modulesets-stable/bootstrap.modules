@@ -105,6 +105,11 @@
             module="automake/automake-1.14.1.tar.xz"/>
   </autotools>
 
+  <autotools id="automake" autogen-sh="configure">
+    <branch repo="ftp.gnu.org" version="1.15"
+            module="automake/automake-1.15.tar.gz"/>
+  </autotools>
+
   <autotools id="pkg-config" autogen-sh="configure"
              autogenargs="--with-internal-glib">
     <branch repo="pkgconfig"
@@ -191,6 +196,7 @@
       <dep package="automake-1.12" />
       <dep package="automake-1.13" />
       <dep package="automake-1.14"/>
+      <dep package="automake"/>
       <dep package="pkg-config" />
       <dep package="bison"/>
       <dep package="flex"/>
