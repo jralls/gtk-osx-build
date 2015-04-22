@@ -24,14 +24,11 @@ if test ! -d $SOURCE; then
     do_exit "The directory $SOURCE does not exist, please create it and try again."
 fi
 
-#JHBUILD_REVISION=`cat $SOURCE/gtk-osx-build/jhbuild-revision 2>/dev/null`
-#if test x"$JHBUILD_REVISION" = x; then
-#    do_exit "Could not find jhbuild revision to use."
-#fi
-#
-#JHBUILD_REVISION_OPTION="-r$JHBUILD_REVISION"
-#
-echo "Checking out jhbuild ($JHBUILD_REVISION) from git..."
+# This will use jhbuild from git master, but note that jhbuild depends on
+# pkg-config. If you use this, you'll either need to have installed pkg-config
+# already with gtk-osx-build, or you'll need to build pkg-config with Homebrew.
+
+echo "Checking out jhbuild from git..."
 if ! test -d $SOURCE/jhbuild; then
     (cd $SOURCE ; git clone git://git.gnome.org/jhbuild )
 else
@@ -39,7 +36,8 @@ else
 fi
 
 echo "Installing jhbuild..."
-(cd $SOURCE/jhbuild && make -f Makefile.plain DISABLE_GETTEXT=1 install >/dev/null)
+sed -i.bak -e 's/env python2/env python/' $SOURCE/jhbuild/scripts/jhbuild.in
+(cd $SOURCE/jhbuild && ./autogen.sh >/dev/null && make -f Makefile.plain DISABLE_GETTEXT=1 install >/dev/null)
 
 echo "Installing jhbuild configuration..."
 ln -sfh `pwd`/jhbuildrc-gtk-osx $HOME/.jhbuildrc
@@ -51,6 +49,7 @@ if [ ! -f $HOME/.jhbuildrc-custom ]; then
 fi
 
 echo "Setting up modulesets..."
+ln -sfh `pwd`/modulesets-stable/bootstrap.modules $SOURCE/jhbuild/modulesets/
 cd modulesets
 for f in `ls *modules`; do
     ln -sfh `pwd`/$f $SOURCE/jhbuild/modulesets/
