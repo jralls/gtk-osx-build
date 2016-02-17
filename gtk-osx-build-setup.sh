@@ -80,7 +80,6 @@ else
 	do_exit "Update of jhbuild failed";
     mv modulesets/bootstrap.modules modulesets/bootstrap.modules.dist;
 fi
-curl -ks https://git.gnome.org/browse/gtk-osx/plain/patches/0001-Bug-700557-autoreconf-i-fails-in-cases-of-ltmain.sh-.patch | git am
 
 echo "Installing jhbuild..."
 if [ -e "$SOURCE/jhbuild/autogen.sh" ]; then
