@@ -1,6 +1,6 @@
-
---- a/lib/test/test_grammar.py	Sun Jun 29 19:05:34 2014
-+++ b/lib/test/test_grammar.py	Fri Dec 12 10:30:26 2014
+diff --git a/Lib/test/test_grammar.py b/Lib/test/test_grammar.py
+--- a/Lib/test/test_grammar.py
++++ b/Lib/test/test_grammar.py
 @@ -77,8 +77,8 @@
  
      def test_float_exponent_tokenization(self):
@@ -12,5 +12,3 @@
          self.assertRaises(SyntaxError, eval, "0 if 1Else 0")
  
      def testStringLiterals(self):
-
-Diff finished.  Fri Dec 12 12:40:15 2014
