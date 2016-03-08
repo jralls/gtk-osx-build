@@ -164,8 +164,8 @@
 
   <autotools id="gtk+" autogen-sh="autoreconf"
              autogenargs="--with-gdktarget=quartz --enable-quartz-relocation --disable-introspection">
-    <branch module="gtk+/2.24/gtk+-2.24.29.tar.xz" version="2.24.29"
-            hash="sha256:0741c59600d3d810a223866453dc2bbb18ce4723828681ba24aa6519c37631b8">
+    <branch module="gtk+/2.24/gtk+-2.24.30.tar.xz" version="2.24.30"
+            hash="sha256:0d15cec3b6d55c60eac205b1f3ba81a1ed4eadd9d0f8e7c508bc7065d0c4ca50">
       <!--patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/0004-Bug-571582-GtkSelection-implementation-for-quartz.patch" strip="1"/-->
       <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/0008-Implement-GtkDragSourceOwner-pasteboardChangedOwner.patch" strip="1"/>
       <patch file="http://git.gnome.org/browse/gtk-osx/plain/patches/0006-Bug-658722-Drag-and-Drop-sometimes-stops-working.patch" strip="1"/>
