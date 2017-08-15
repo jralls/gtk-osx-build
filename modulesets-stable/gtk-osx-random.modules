@@ -173,6 +173,7 @@ Libglade itself is deprecated. This is the last release. -->
   </autotools>
 
   <autotools id="shared-mime-info"  autogen-sh="configure"
+             autogenargs="--disable-default-make-check"
              supports-non-srcdir-builds="no" >
     <branch module="shared-mime-info-1.7.tar.xz" version="1.7"
             repo="hadess">
