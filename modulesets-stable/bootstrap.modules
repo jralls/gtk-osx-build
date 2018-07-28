@@ -11,8 +11,6 @@
               href="http://www.python.org/ftp/python/"/>
   <repository type="tarball" name="sourceforge"
               href="http://downloads.sourceforge.net/sourceforge/"/>
-  <repository type="tarball" name="apache.org"
-              href="http://archive.apache.org/dist/"/>
   <repository type="tarball" name="tukaani.org"
               href="http://tukaani.org/"/>
   <repository type="tarball" name="cmake"
@@ -27,17 +25,10 @@
     </branch>
   </autotools>
 
-  <autotools id='bash' autogen-sh="configure"  autogenargs="--with-installed-readline">
-    <branch repo="ftp.gnu.org" module="bash/bash-4.3.30.tar.gz"
-            version="4.3.30"/>
-    <dependencies>
-      <dep package="readline"/>
-    </dependencies>
-  </autotools>
-
   <autotools id="xz" autogen-sh="configure" bootstrap="true">
     <branch repo="tukaani.org" module="xz/xz-5.2.3.tar.bz2" version="5.2.3"/>
   </autotools>
+
 
   <!-- gnu make 4.xx, needed to unbreak parallel builds for the webkit -->
   <autotools id="gnumake" autogen-sh="configure"
@@ -46,19 +37,6 @@
             module="make/make-4.2.1.tar.bz2" version="4.2.1" hash="sha256:d6e262bf3601b42d2b1e4ef8310029e1dcf20083c5446b4b7aa67081fdffc589">
     </branch>
   </autotools>
-
-  <autotools id="apr">
-    <branch repo="apache.org" module="apr/apr-1.5.2.tar.bz2" version="1.5.2"/>
-  </autotools>
-
-  <autotools id="apr-util" autogenargs="--with-apr=$PREFIX/bin/apr-1-config">
-    <branch repo="apache.org" module="apr/apr-util-1.5.4.bz2"
-            version="1.5.4" />
-      <dependencies>
-      <dep package="apr"/>
-    </dependencies>
-  </autotools>
-
   <autotools id="gettext-tools" autogen-sh="configure"
              autogenargs="--without-emacs --disable-java --disable-native-java --disable-libasprintf --disable-csharp --with-included-glib">
     <branch repo="ftp.gnu.org" source-subdir="gettext-tools"
@@ -71,7 +49,7 @@
   <!-- cmakes ./configure is picky about invalid flags so we manually set it -->
   <autotools id="cmake" autogen-sh="bootstrap"
              autogen-template="%(srcdir)s/%(autogen-sh)s --prefix=%(prefix)s">
-    <branch repo="cmake" module="v3.10/cmake-3.10.0.tar.gz" version="3.10.0">
+    <branch repo="cmake" module="v3.12/cmake-3.12.0.tar.gz" version="3.12.0">
     </branch>
   </autotools>
 
@@ -85,8 +63,8 @@
 
   <autotools id="autoconf-archive" autogen-sh="configure">
     <branch repo="ftp.gnu.org"
-            module="autoconf-archive/autoconf-archive-2017.03.21.tar.xz"
-            version="2017-03-21"/>
+            module="autoconf-archive/autoconf-archive-2018.03.13.tar.xz"
+            version="2018-03-13"/>
   </autotools>
 
   <autotools id="libtool" autogen-sh="configure" bootstrap="true">
@@ -94,50 +72,10 @@
             module="libtool/libtool-2.4.6.tar.gz" version="2.4.6"/>
   </autotools>
 
-  <autotools id="automake-1.10" autogen-sh="configure" bootstrap="true">
-    <branch repo="ftp.gnu.org"
-            module="automake/automake-1.10.3.tar.bz2" version="1.10.3"
-            size="957505" md5sum="b8e67fb458da396bc35555af7ef2b49f" />
-    <dependencies>
-      <dep package="autoconf"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="automake-1.11" autogen-sh="configure" bootstrap="true">
-    <branch repo="ftp.gnu.org"
-            module="automake/automake-1.11.6.tar.xz" version="1.11.6"/>
-    <dependencies>
-      <dep package="autoconf"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="automake-1.12" autogen-sh="configure" bootstrap="true">
-    <branch repo="ftp.gnu.org"
-            module="automake/automake-1.12.6.tar.xz" version="1.12.6"/>
-    <dependencies>
-      <dep package="autoconf"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="automake-1.13" autogen-sh="configure" bootstrap="true">
-    <branch repo="ftp.gnu.org"
-            module="automake/automake-1.13.4.tar.xz" version="1.13.4"/>
-    <dependencies>
-      <dep package="autoconf"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="automake-1.14" autogen-sh="configure" bootstrap="true">
-    <branch repo="ftp.gnu.org" version="1.14.1"
-            module="automake/automake-1.14.1.tar.xz"/>
-    <dependencies>
-      <dep package="autoconf"/>
-    </dependencies>
-  </autotools>
 
   <autotools id="automake" autogen-sh="configure" bootstrap="true">
-    <branch repo="ftp.gnu.org" version="1.15"
-            module="automake/automake-1.15.tar.gz"/>
+    <branch repo="ftp.gnu.org" version="1.16"
+            module="automake/automake-1.16.1.tar.xz"/>
     <dependencies>
       <dep package="autoconf"/>
     </dependencies>
@@ -170,34 +108,16 @@
   </autotools>
   
   <autotools id="expat" autogen-sh="configure">
-    <branch module="expat/expat-2.2.0.tar.bz2" version="2.2.0"
+    <branch module="expat/expat-2.2.5.tar.bz2" version="2.2.5"
             repo="sourceforge"/>
   </autotools>
-
-  <perl id="perl-xml-parser" makeargs="EXPATLIBPATH=${prefix}/lib EXPATINCPATH=${prefix}/include">
-    <branch repo="cpan"
-            module="authors/id/T/TO/TODDR/XML-Parser-2.44.tar.gz"
-            version="2.44"/>
-    <dependencies>
-      <dep package="expat"/>
-    </dependencies>
-  </perl>
-
-  <perl id="perl-xml-simple">
-    <branch repo="cpan"
-	    module="authors/id/G/GR/GRANTM/XML-Simple-2.22.tar.gz"
-	    version="2.22"
-            size="77937" md5sum="0914abddfce749453ed89b54029f2643"/>
-    <dependencies>
-      <dep package="perl-xml-parser"/>
-    </dependencies>
-  </perl>
 
   <!-- Needed for building Gnome apps from the repository -->
   <autotools id="gnome-common">
     <branch module="gnome-common/3.18/gnome-common-3.18.0.tar.xz" version="3.18.0"
             hash="sha256:22569e370ae755e04527b76328befc4c73b62bfd4a572499fde116b8318af8cf"/>
   </autotools>
+
   <!-- This is generated by tarring up the needed docbook stylesheets
        for gtk-doc to work. If someone wants to work on a setup that
        uses the real docbook source from upstream, feel free to do so,
@@ -215,34 +135,24 @@
     <branch repo="intltool" module="0.51.0/+download/intltool-0.51.0.tar.gz"
             version="0.51.0"
             hash="md5:12e517cac2b57a0121cda351570f1e63"/>
-    <dependencies>
+    <!--dependencies>
       <dep package="gnome-common"/>
       <dep package="perl-xml-parser"/>
-    </dependencies>
+    </dependencies-->
   </autotools>
 
   <metamodule id="meta-bootstrap">
     <dependencies>
       <dep package="xz"/>
       <dep package="gettext-tools" /> <!-- Needed for 64-bit -->
-      <dep package="readline" />
-      <dep package="bash" />  <!-- Needed for El Cap and later to work around SIP. -->
       <dep package="cmake"/>
       <dep package="autoconf" />
       <dep package="autoconf-archive" />
       <dep package="libtool" />
-      <dep package="automake-1.10" />
-      <dep package="automake-1.11" />
-      <dep package="automake-1.12" />
-      <dep package="automake-1.13" />
-      <dep package="automake-1.14"/>
       <dep package="automake"/>
       <dep package="pkg-config" />
       <dep package="bison"/>
       <dep package="flex"/>
-      <dep package="expat"/>
-      <dep package="perl-xml-parser"/>
-      <dep package="perl-xml-simple"/>
       <dep package="gtk-osx-docbook"/>
       <dep package="gnome-common"/>
       <dep package="intltool"/>
