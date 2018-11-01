@@ -4,6 +4,8 @@
 <moduleset>
   <repository type="git" name="git.gnome.org" default="yes" 
               href="https://gitlab.gnome.org/GNOME"/>
+  <repository type="git" name="archive.gnome.org" default="yes" 
+              href="https://gitlab.gnome.org/Archive"/>
   <repository type="git" name="freedesktop.org"
               href="git://anongit.freedesktop.org/"/>
   <repository type="git" name="github.com" href="git://github.com/"/>
@@ -47,7 +49,7 @@
   </autotools>
 
   <autotools id="adwaita-icon-theme">
-    <branch revision="gnome-3-24"/>
+    <branch revision="gnome-3-30"/>
     <dependencies>
       <dep package="librsvg"/>
       <dep package="hicolor-icon-theme"/>
@@ -55,8 +57,8 @@
     </dependencies>
   </autotools>
 
-  <autotools id="gnome-themes-standard" autogenargs="--disable-gtk2-engine">
-    <branch revision="gnome-3-22"/> 
+  <autotools id="gnome-themes-extra">
+    <branch revision="gnome-3-28"/> 
     <dependencies>
       <dep package="librsvg"/>
       <dep package="adwaita-icon-theme"/>
@@ -64,7 +66,7 @@
   </autotools>
 
   <autotools id="gtk-engines">
-    <branch revision="gtk-engines-2-22"/>
+    <branch revision="gtk-engines-2-22" repo="archive.gnome.org"/>
     <after>
       <dep package="meta-gtk-osx-core"/>
     </after>
@@ -92,20 +94,6 @@
 
   <autotools id="libcroco" autogenargs="--disable-Bsymbolic">
     <branch/>
-  </autotools>
-
-  <autotools id="libcss" autogenargs="--disable-examples">
-    <branch module="ccss" repo="freedesktop.org" tag="ccss-0.5.0"/>
-    <dependencies>
-      <dep package="libcroco"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="gtk-css-engine">
-    <branch />
-    <after>
-      <dep package="meta-gtk-osx-core"/>
-    </after>
   </autotools>
 
 </moduleset>

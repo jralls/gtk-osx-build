@@ -108,14 +108,14 @@
     </dependencies>
   </autotools>
 
-  <autotools id="gtk-doc">
+  <meson id="gtk-doc">
     <branch repo="git.gnome.org"/>
     <dependencies>
       <dep package="libxml2"/>
       <dep package="itstool"/>
       <dep package="yelp-tools"/>
     </dependencies>
-  </autotools>
+  </meson>
 
   <autotools id="icu" autogen-sh="source/configure" autogenargs="--enable-rpath"
              makeargs='CFLAGS="$CFLAGS -DU_CHARSET_IS_UTF8=1 -DU_USING_ICU_NAMESPACE=0"'>

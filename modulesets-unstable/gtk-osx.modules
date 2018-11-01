@@ -78,7 +78,7 @@
     <branch module="atgreen/libffi" repo="github"/>
   </autotools>
 
-  <autotools id="gobject-introspection">
+  <meson id="gobject-introspection">
     <branch/>
     <dependencies>
       <dep package="glib"/>
@@ -87,17 +87,16 @@
     <after>
       <dep package='python'/>
     </after>
-  </autotools>
+  </meson>
 
-      <!-- c2man is required only for documentation. There used to be a -\-disable-docs flag but it was removed. This will of course fail, so shell in and do 'git revert 095d885' and then rerun configuration. -->
-  <autotools id="fribidi" autogenargs="--disable-docs">
+  <meson id="fribidi" mesonargs="-Ddocs=false">
     <branch module="fribidi/fribidi" repo="github"/>
     <dependencies>
       <!--dep package="c2man"/ -->
     </dependencies>
-  </autotools>
+  </meson>
 
-  <autotools id="pango">
+  <meson id="pango">
     <branch />
     <dependencies>
       <dep package="cairo"/>
@@ -109,9 +108,9 @@
       <dep package="meta-gtk-osx-bootstrap"/>
       <dep package="meta-gtk-osx-freetype"/>
     </after>
-  </autotools>
+  </meson>
 
- <autotools id="atk" supports-non-srcdir-builds="no">
+ <meson id="atk">
     <branch />
     <dependencies>
     </dependencies>
@@ -120,26 +119,26 @@
       <dep package="gobject-introspection"/>
       <dep package="meta-gtk-osx-bootstrap"/>
     </after>
-  </autotools>
+ </meson>
 
-  <autotools id="gdk-pixbuf">
+  <meson id="gdk-pixbuf" mesonargs="-Dx11=false">
     <branch />
     <after>
       <dep package="pango"/>
       <dep package="gobject-introspection"/>
     </after>
-  </autotools>
+  </meson>
 
   <autotools id="xorg-util-macros">
     <branch repo="freedesktop" module="xorg/util/macros"/>
   </autotools>
 
-  <autotools id="libepoxy">
+  <meson id="libepoxy">
     <branch repo="github" module="anholt/libepoxy"/>
     <dependencies>
       <dep package="xorg-util-macros"/>
     </dependencies>
-  </autotools>
+  </meson>
 
   <autotools id="graphene">
     <branch module="ebassi/graphene" repo="github" checkoutdir="graphene"/>
@@ -165,9 +164,9 @@
   </autotools>
   
 
-  <autotools id="gtk+-3.0"
-             autogenargs="--enable-quartz-backend --enable-quartz-relocation --disable-colord">
-    <branch module="gtk+" checkoutdir="gtk+-3.0" revision="gtk-3-22"/>
+  <meson id="gtk+-3.0"
+             mesonargs="-Dquartz-backend=true -Dx11-backend=false -Dmedia=none">
+    <branch module="gtk+" checkoutdir="gtk+-3.0" revision="gtk-3-24"/>
     <dependencies>
       <dep package="glib"/>
       <dep package="pango"/>
@@ -179,10 +178,10 @@
     <after>
       <dep package="meta-gtk-osx-bootstrap"/>
     </after>
-  </autotools>
+  </meson>
 
-  <autotools id="gtk+-4.0"
-             autogenargs="--enable-quartz-backend --enable-quartz-relocation --disable-colord">
+  <meson id="gtk+-4.0"
+             mesonargs="-Dquartz-backend=true -Dx11-backend=false -Dmedia=none">
     <branch module="gtk+" checkoutdir="gtk+-4.0"/>
     <dependencies>
       <dep package="glib"/>
@@ -195,7 +194,7 @@
     <after>
       <dep package="meta-gtk-osx-bootstrap"/>
     </after>
-  </autotools>
+  </meson>
 
   <autotools id="pixman" autogenargs="--disable-gtk --disable-mmx">
     <branch repo="freedesktop" module="pixman" />

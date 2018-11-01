@@ -5,6 +5,8 @@
   <repository type="git" name="git.gnome.org" default="yes" 
               href="https://gitlab.gnome.org/GNOME"/>
   <repository type="git" name="freedesktop.org"
+  <repository type="git" name="archive.gnome.org" default="yes" 
+              href="https://gitlab.gnome.org/Archive"/>
               href="git://anongit.freedesktop.org/"/>
   <repository type="git" name="github.com" href="git://github.com/"/>
 
@@ -55,11 +57,11 @@ cgit    <after>
     </dependencies>
   </autotools>
 
-  <autotools id="gnome-themes-standard" autogenargs='--disable-gtk2-engine'>
+  <autotools id="gnome-themes-extra">
     <branch />
     <dependencies>
       <dep package="librsvg"/>
-      <dep package="adwaita-icon-theme"/>
+
     </dependencies>
   </autotools>
 
@@ -70,7 +72,7 @@ cgit    <after>
        is the last one before that change and has actually gotten a
        maintenance change. -->
   <autotools id="gtk-engines">
-    <branch revision="gtk-engines-2-22"/>
+    <branch revision="gtk-engines-2-22" repo="archive.gnome.org"/>
     <after>
       <dep package="meta-gtk-osx-core"/>
     </after>
@@ -96,21 +98,6 @@ cgit    <after>
 
   <autotools id="libcroco" autogenargs="--disable-Bsymbolic">
     <branch/>
-  </autotools>
-
-  <!-- Unmaintained since September 2009. -->
-  <autotools id="libcss" autogenargs="--disable-examples">
-    <branch module="ccss" repo="freedesktop.org" />
-    <dependencies>
-      <dep package="libcroco"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="gtk-css-engine">
-    <branch />
-    <after>
-      <dep package="meta-gtk-osx-core"/>
-    </after>
   </autotools>
 
 </moduleset>
