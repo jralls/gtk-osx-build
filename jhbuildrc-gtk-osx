@@ -529,9 +529,9 @@ if not _ran_recursively and _gtk_osx_prompt_prefix:
 #inside prefix. Note that we need the installed python's version to
 #get the right directory name.
 
-if (not "python" in modules and not 'python3' in modules and
-    not os.path.exists(os.path.join(prefix, 'bin', 'python2'))):
-    _python_ver = 'python' + '.'.join([str(_x) for _x in sys.version_info[0:2]])
+if (not "python" in modules and not 'python3' in modules):
+    _python_sitelib = _popen('python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())"')
+    _python_ver = os.path.basename(os.path.dirname(_python_sitelib))
     _python_install_path = os.path.join(prefix, 'lib',
                                        _python_ver, 'site-packages')
     append_autogenargs('libxml2',
