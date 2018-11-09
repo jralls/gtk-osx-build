@@ -152,7 +152,7 @@ export PYENV_ROOT=$PYENV_ROOT
 export CFLAGS="-I$(xcrun --show-sdk-path)/usr/include"
 export PYTHON_CONFIGURE_OPTS="--enable-shared"
 
-exec pipenv run jhbuild '$@'
+exec pipenv run jhbuild \$@
 EOF
 fi
 if test ! -d $DEVPREFIX/libexec ; then
