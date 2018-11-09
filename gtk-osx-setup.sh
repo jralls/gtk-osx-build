@@ -129,7 +129,7 @@ meson = "*"
 jhbuild = "$DEVPREFIX/libexec/run_jhbuild.py"
 
 [requires]
-python_version = "3.7"
+python_version = "3.6"
 EOF
     cat <<EOF > $DEVPREFIX/etc/pipenv-env
 export DEVROOT=$HOME
