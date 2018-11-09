@@ -117,7 +117,7 @@
     </dependencies>
   </autotools>
 
-  <meson id="gtk-doc">
+  <autotools id="gtk-doc">
     <branch version="1.29" module="gtk-doc/1.29/gtk-doc-1.29.tar.xz"
             hash="sha256:14578e002496567276d310a62c9ffd6c56ee8806ce5079ffb0b81c4111f586b1"/>
     <dependencies>
@@ -125,7 +125,7 @@
       <dep package="itstool"/>
       <dep package="yelp-tools"/>
     </dependencies>
-  </meson>
+  </autotools>
 
   <autotools id="icu" autogen-sh="source/configure" autogenargs="--enable-rpath"
              makeargs='CFLAGS="$CFLAGS -DU_CHARSET_IS_UTF8=1 -DU_USING_ICU_NAMESPACE=0"'>

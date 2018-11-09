@@ -158,7 +158,7 @@
     </after>
   </meson>
 
-  <meson id="gdk-pixbuf">
+  <meson id="gdk-pixbuf" mesonargs="-Dx11=false">
     <branch module="gdk-pixbuf/2.38/gdk-pixbuf-2.38.0.tar.xz" version="2.38.0"
             hash="sha256:dd50973c7757bcde15de6bcd3a6d462a445efd552604ae6435a0532fbbadae47"/>
     <after>

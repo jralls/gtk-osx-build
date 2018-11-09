@@ -124,7 +124,7 @@
     </after>
   </meson>
 
-  <meson id="gdk-pixbuf">
+  <meson id="gdk-pixbuf" mesonargs="-Dx11=false">
     <!--gdk-pixbuf is releasing from master-->
     <branch/>
     <dependencies>
