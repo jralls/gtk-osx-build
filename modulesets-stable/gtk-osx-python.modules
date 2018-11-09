@@ -77,7 +77,7 @@
   </autotools>
 
   <autotools id="python" autogenargs="--enable-shared"
-	     supports-non-srcdir-builds="no">
+	     supports-non-srcdir-builds="no" autogen-sh="autoreconf">
     <branch repo="python"
            module="2.7.15/Python-2.7.15.tar.xz" version="2.7.15"
            hash="sha256:22d9b1ac5b26135ad2b8c2901a9413537e08749a753356ee913c84dbd2df5574">
@@ -94,7 +94,7 @@
     </after>
   </autotools>
 
-  <autotools id="python3" autogenargs="--enable-shared" autogen-sh="configure">
+  <autotools id="python3" autogenargs="--enable-shared" autogen-sh="autoreconf">
     <branch repo="python" module="3.6.4/Python-3.6.4.tar.xz" version="3.6.4">
       <patch file="https://gitlab.gnome.org/GNOME/gtk-osx/raw/master/patches/Python3.4-stack_size-flag.patch" strip="1"/>
     </branch>
