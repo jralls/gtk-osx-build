@@ -148,6 +148,7 @@ if test ! -f $DEVPREFIX/bin/jhbuild ; then
 export PYTHONPATH=$PYTHONPATH
 export PIPENV_DOTENV_LOCATION=$DEVPREFIX/etc/pipenv-env
 export PIPENV_PIPFILE=$DEVPREFIX/etc/Pipfile
+export PYENV_ROOT=$PYENV_ROOT
 export CFLAGS="-I$(xcrun --show-sdk-path)/usr/include"
 export PYTHON_CONFIGURE_OPTS="--enable-shared"
 
