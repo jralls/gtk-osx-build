@@ -538,6 +538,10 @@ if not "python" in modules and not 'python3' in modules:
                                        _python_ver, 'site-packages')
     append_autogenargs('libxml2',
                        '--with-python-install-dir=' + _python_install_path)
+    _pyconfig = os.path.join(os.environ['PYENV_ROOT'], 'shims', 'python-config')
+    _py_prefix = _popen(_pyconfig + ' --prefix')
+    environ_append('PKG_CONFIG_PATH',
+                   os.path.join(_py_prefix, 'lib', 'pkgconfig'))
 
 # Unset this so we don't mess with the check for not starting
 # recursively.
