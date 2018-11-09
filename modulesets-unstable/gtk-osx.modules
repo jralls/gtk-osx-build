@@ -129,6 +129,16 @@
     </after>
   </meson>
 
+  <meson id="gtk-doc">
+    <branch repo="git.gnome.org"/>
+    <dependencies>
+      <dep package="libxml2"/>
+      <dep package="itstool"/>
+      <dep package="yelp-tools"/>
+      <dep package="glib"/>
+    </dependencies>
+  </meson>
+
   <autotools id="xorg-util-macros">
     <branch repo="freedesktop" module="xorg/util/macros"/>
   </autotools>
