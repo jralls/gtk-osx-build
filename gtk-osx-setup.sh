@@ -149,8 +149,6 @@ export PYTHONPATH=$PYTHONPATH
 export PIPENV_DOTENV_LOCATION=$DEVPREFIX/etc/pipenv-env
 export PIPENV_PIPFILE=$DEVPREFIX/etc/Pipfile
 export PYENV_ROOT=$PYENV_ROOT
-export CFLAGS="-I$(xcrun --show-sdk-path)/usr/include"
-export PYTHON_CONFIGURE_OPTS="--enable-shared"
 
 exec pipenv run jhbuild \$@
 EOF
@@ -193,9 +191,13 @@ fi
 # with Py3 so remove it.
 pip uninstall --yes enum34
 
+SDKROOT=`xcrun --show-sdk-path`
+
 export PIPENV_DOTENV_LOCATION=$DEVPREFIX/etc/pipenv-env
 export PIPENV_PIPFILE=$DEVPREFIX/etc/Pipfile
 export PATH=$PYENV_ROOT/shims:$PATH
+export CFLAGS="-isysroot $SDKROOT -I$SDKROOT/usr/include"
+export PYTHON_CONFIGURE_OPTS="--enable-shared"
 
 pipenv install
 
