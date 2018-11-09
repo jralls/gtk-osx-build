@@ -146,7 +146,7 @@
   </autotools>
 
   <autotools id="gtk+" autogenargs="--with-gdktarget=quartz --enable-introspection=no --enable-quartz-relocation">
-    <branch revision="gtk-2-24"/>
+    <branch module="gtk" revision="gtk-2-24"/>
     <dependencies>
       <dep package="glib"/>
       <dep package="pango"/>
@@ -159,9 +159,9 @@
     </after>
   </autotools>
 
-  <meson id="gtk+-3.0"
-         mesonargs="-Dquartz-backend=true -Dx11-backend=false -Dmedia=none">
-    <branch module="gtk+" checkoutdir="gtk+-3.0" revision="gtk-3-24"/>
+  <autotools id="gtk+-3.0"
+         autogenargs="--enable-quartz-backend --enable-quartz-relocation --disable-colord">
+    <branch module="gtk" checkoutdir="gtk+-3.0" revision="gtk-3-24"/>
     <dependencies>
       <dep package="glib"/>
       <dep package="pango"/>
@@ -173,7 +173,7 @@
     <after>
       <dep package="meta-gtk-osx-bootstrap"/>
     </after>
-  </meson>
+  </autotools>
 
   <autotools id="pixman" autogenargs="--disable-gtk --disable-mmx">
     <branch repo="freedesktop" module="pixman" revision="0.34"/>

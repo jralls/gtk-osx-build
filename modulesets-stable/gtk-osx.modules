@@ -231,8 +231,8 @@
     </after>
   </autotools>
 
-  <meson id="gtk+-3.0"
-         mesonargs="-Dquartz-backend=true -Dx11-backend=false -Dmedia=none">
+  <autotools id="gtk+-3.0"
+         autogenargs="--enable-quartz-backend --enable-quartz-relocation">
     <branch module="gtk+/3.24/gtk+-3.24.1.tar.xz" version="3.24.1"
             hash="sha256:68387be307b99aadcdc653561d7a2a7f0113b93561fb18ded7075ec9ced5b02f">
       <patch file="https://gitlab.gnome.org/GNOME/gtk-osx/raw/master/patches/Gtk3-24-1-quartz-do-not-cache-the-screen-in-the-gdkmonitor.patch" strip="1"/>
@@ -251,7 +251,7 @@
     <after>
       <dep package="meta-gtk-osx-bootstrap"/>
     </after>
-  </meson>
+  </autotools>
 
   <autotools id="pixman" autogenargs="--disable-gtk --disable-mmx"
              autogen-sh="configure">
