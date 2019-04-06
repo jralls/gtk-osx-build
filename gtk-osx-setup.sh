@@ -32,7 +32,7 @@ envvar ()
         eval "export $_varname"'="'"$2"'"'
     fi
     if test ! -d "`eval echo '"$'"$_varname"'"'`"; then
-        eval "mkdir -p $_varname"
+        mkdir -p "${!_varname}"
     fi
 }
 # Environment variable defaults:
