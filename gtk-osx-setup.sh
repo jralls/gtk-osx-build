@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
  ####################################################################
- # new-setup.sh gtk-osx setup with python virtual environments.     #
+ # gtk-osx-setup.sh gtk-osx setup with python virtual environments. #
  #                                                                  #
  # Copyright 2018 John Ralls <jralls@ceridwen.us>                   #
  #                                                                  #
@@ -22,7 +22,7 @@
  # Boston, MA  02110-1301,  USA       gnu@gnu.org                   #
  ####################################################################
 
-# Function envvardir. Tests environment variable, sets default value if unset,
+# Function envvar. Tests environment variable, sets default value if unset,
 # and creates the specified directory if it doesn't already exist. This
 # will barf if the name indicates a file that isn't a directory.
 envvar ()
@@ -195,7 +195,7 @@ SDKROOT=`xcrun --show-sdk-path`
 
 export PIPENV_DOTENV_LOCATION=$DEVPREFIX/etc/pipenv-env
 export PIPENV_PIPFILE=$DEVPREFIX/etc/Pipfile
-export PATH=$PYENV_ROOT/shims:$PATH
+export PATH=$PYENV_ROOT/shims:$DEVPREFIX/bin:$PATH
 export CFLAGS="-isysroot $SDKROOT -I$SDKROOT/usr/include"
 export PYTHON_CONFIGURE_OPTS="--enable-shared"
 
