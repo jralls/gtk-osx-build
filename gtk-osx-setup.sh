@@ -222,8 +222,8 @@ elif test -d "$HOME/.config" ; then
     config_dir="$HOME/.config"
 else
     config_dir="$HOME/.config"
-    if test ! -d $configdir; then
-        mkdir -p $configdir
+    if test ! -d $config_dir; then
+        mkdir -p $config_dir
     fi
 fi
 
