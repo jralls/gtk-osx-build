@@ -220,6 +220,11 @@ if test -d "$XDG_CONFIG_HOME" ; then
     config_dir="$XDG_CONFIG_HOME"
 elif test -d "$HOME/.config" ; then
     config_dir="$HOME/.config"
+else
+    config_dir="$HOME/.config"
+    if test ! -d $configdir; then
+        mkdir -p $configdir
+    fi
 fi
 
 jhbuildrc_file=""
@@ -230,10 +235,7 @@ elif test -e "$HOME/.jhbuildrc" ; then
 fi
 
 if test -z "$jhbuildrc_file" ; then
-    echo "Installing jhbuild configuration..."
-    if test ! -d $configdir; then
-        mkdir -p $configdir
-    fi
+    echo "Installing jhbuild configuration in $config_dir"
     curl -ks $BASEURL/jhbuildrc-gtk-osx -o "$config_dir/jhbuildrc"
 fi
 
@@ -242,7 +244,8 @@ if test -z "$JHBUILDRC_CUSTOM"; then
 fi
 
 if test ! -e "$JHBUILDRC_CUSTOM" -a ! -e "$HOME/.jhbuildrc-custom"; then
-    $JHBUILDRC_CUSTOM_DIR = `dirname $JHBUILDRC_CUSTOM`
+    JHBUILDRC_CUSTOM_DIR=`dirname $JHBUILDRC_CUSTOM`
+    echo "Installing jhbuild custom configuration in $JHBUILDRC_CUSTOM_DIR"
     if test ! -d $JHBUILDRC_CUSTOM_DIR; then
         mkdir -p $JHBUILDRC_CUSTOM_DIR
     fi
