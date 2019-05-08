@@ -57,8 +57,8 @@ GITLAB="https://gitlab.gnome.org/GNOME"
 GITHUB="https://github.com"
 
 # We need to have a local copy of bash when compiling to prevent SIP problems.
-if test ! -x $DEVPREFIX/bin/bash; then
-    cp /bin/bash $DEVPREFIX/bin
+if test ! -x "$DEVPREFIX/bin/bash"; then
+    cp /bin/bash "$DEVPREFIX/bin"
 fi
 
 # Setup pyenv
@@ -79,8 +79,8 @@ fi
 # $PYTHONUSERBASE/lib/python/site-packages.
 
 if test ! -f "`eval echo $PIP_CONFIG_FILE`" ; then
-    export PIP_CONFIG_FILE=$PIP_CONFIG_DIR/pip.conf
-    mkdir -p $PIP_CONFIG_DIR
+    export PIP_CONFIG_FILE="$PIP_CONFIG_DIR/pip.conf"
+    mkdir -p "$PIP_CONFIG_DIR"
 fi
 PIP=`which pip`
 if test ! -x "`eval echo $PIP`" ; then
@@ -209,45 +209,39 @@ if test -d "$SDKROOT"; then
     export CFLAGS="-isysroot $SDKROOT -I$SDKROOT/usr/include"
 fi
 export PYTHON_CONFIGURE_OPTS="--enable-shared"
-export WORKON_HOME=$DEVPREFIX/share/venv
+export WORKON_HOME="$DEVPREFIX/share/venv"
 
 $PIPENV install
 
 BASEURL="https://raw.githubusercontent.com/jralls/gtk-osx-build/pipenv"
 
 config_dir=""
-if test -d "$XDG_CONFIG_HOME" ; then
-    config_dir="$XDG_CONFIG_HOME"
-elif test -d "$HOME/.config" ; then
-    config_dir="$HOME/.config"
+if test -e "$HOME/.jhbuildrc"; then
+    JHBUILDRC="$HOME/.jhbuildrc"
+    JHBUILDRC_CUSTOM="$HOME/.jhbuildrc-custom"
 else
-    config_dir="$HOME/.config"
-    if test ! -d $config_dir; then
-        mkdir -p $config_dir
+    if test -n "$XDG_CONFIG_HOME"; then
+       config_dir="$XDG_CONFIG_HOME"
+    else
+       config_dir="$HOME/.config"
     fi
+    if test ! -d "$config_dir"; then
+        mkdir -p "$config_dir"
+    fi
+    JHBUILDRC="$config_dir/jhbuildrc"
 fi
-
-jhbuildrc_file=""
-if test -e "$config_dir/jhbuildrc" ; then
-    jhbuildrc_file="$config_dir/jhbuildrc"
-elif test -e "$HOME/.jhbuildrc" ; then
-    jhbuildrc_file="$HOME/.jhbuildrc"
-fi
-
-if test -z "$jhbuildrc_file" ; then
-    echo "Installing jhbuild configuration in $config_dir"
-    curl -ks $BASEURL/jhbuildrc-gtk-osx -o "$config_dir/jhbuildrc"
-fi
+echo "Installing jhbuild configuration at $JHBUILDRC"
+curl -ks $BASEURL/jhbuildrc-gtk-osx -o "$JHBUILDRC"
 
 if test -z "$JHBUILDRC_CUSTOM"; then
     JHBUILDRC_CUSTOM="$config_dir/jhbuildrc-custom"
 fi
 
-if test ! -e "$JHBUILDRC_CUSTOM" -a ! -e "$HOME/.jhbuildrc-custom"; then
+if test ! -e "$JHBUILDRC_CUSTOM"; then
     JHBUILDRC_CUSTOM_DIR=`dirname $JHBUILDRC_CUSTOM`
-    echo "Installing jhbuild custom configuration in $JHBUILDRC_CUSTOM_DIR"
-    if test ! -d $JHBUILDRC_CUSTOM_DIR; then
-        mkdir -p $JHBUILDRC_CUSTOM_DIR
+    echo "Installing jhbuild custom configuration at $JHBUILDRC_CUSTOM"
+    if test ! -d "$JHBUILDRC_CUSTOM_DIR"; then
+        mkdir -p "$JHBUILDRC_CUSTOM_DIR"
     fi
-    curl -ks $BASEURL/jhbuildrc-gtk-osx-custom-example -o $JHBUILDRC_CUSTOM
+    curl -ks $BASEURL/jhbuildrc-gtk-osx-custom-example -o "$JHBUILDRC_CUSTOM"
 fi
