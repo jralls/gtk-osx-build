@@ -216,18 +216,18 @@ $PIPENV install
 BASEURL="https://raw.githubusercontent.com/jralls/gtk-osx-build/pipenv"
 
 config_dir=""
+if test -n "$XDG_CONFIG_HOME"; then
+   config_dir="$XDG_CONFIG_HOME"
+else
+   config_dir="$HOME/.config"
+fi
+if test ! -d "$config_dir"; then
+    mkdir -p "$config_dir"
+fi
+
 if test -e "$HOME/.jhbuildrc"; then
     JHBUILDRC="$HOME/.jhbuildrc"
-    JHBUILDRC_CUSTOM="$HOME/.jhbuildrc-custom"
 else
-    if test -n "$XDG_CONFIG_HOME"; then
-       config_dir="$XDG_CONFIG_HOME"
-    else
-       config_dir="$HOME/.config"
-    fi
-    if test ! -d "$config_dir"; then
-        mkdir -p "$config_dir"
-    fi
     JHBUILDRC="$config_dir/jhbuildrc"
 fi
 echo "Installing jhbuild configuration at $JHBUILDRC"
@@ -236,8 +236,7 @@ curl -ks $BASEURL/jhbuildrc-gtk-osx -o "$JHBUILDRC"
 if test -z "$JHBUILDRC_CUSTOM"; then
     JHBUILDRC_CUSTOM="$config_dir/jhbuildrc-custom"
 fi
-
-if test ! -e "$JHBUILDRC_CUSTOM"; then
+if test ! -e "$JHBUILDRC_CUSTOM" -a ! -e "$HOME/.jhbuildrc-custom"; then
     JHBUILDRC_CUSTOM_DIR=`dirname $JHBUILDRC_CUSTOM`
     echo "Installing jhbuild custom configuration at $JHBUILDRC_CUSTOM"
     if test ! -d "$JHBUILDRC_CUSTOM_DIR"; then
