@@ -232,14 +232,18 @@ Libglade itself is deprecated. This is the last release. -->
 	    repo="github-tarball" checkoutdir="hunspell-1.6.1"/>
   </autotools>
 
-  <autotools id="enchant" autogen-sh="configure"
-             autogenargs="--with-myspell-dir=/Library/Dictionaries">
-    <branch module="1.6.0/enchant-1.6.0.tar.gz" version="1.6.0"
-            repo="abisource/enchant">
+<!-- Builds native Apple spellchecker by default; enable myspell or ispell by deleting disable switches below -->
+  <autotools id="enchant" 
+        supports-non-srcdir-builds="no"
+        autogen-sh="autogen.sh"
+        autogenargs="--disable-myspell --disable-ispell --with-myspell-dir=/Library/Dictionaries">
+    <branch module="1.6.0/enchant-1.6.0.tar.gz" version="1.6.0" repo="abisource/enchant">
       <patch file="https://gitlab.gnome.org/GNOME/gtk-osx/raw/master/patches/enchant-gsize.patch"
              strip="1"/>
       <patch file="https://gitlab.gnome.org/GNOME/gtk-osx/raw/master/patches/enchant-env.patch"
              strip="1"/>
+      <patch file="https://gitlab.gnome.org/GNOME/gtk-osx/raw/master/patches/enchant-applespell.patch"
+              strip="1"/>
     </branch>
     <dependencies>
       <dep package="glib"/>
