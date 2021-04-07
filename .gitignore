@@ -1,3 +1,4 @@
 *~
 tmp-jhbuild-revision
 !*.patch
+.DS_Store
