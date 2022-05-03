@@ -64,8 +64,8 @@
   </autotools>
 
   <cmake id="zlib">
-    <branch repo="sourceforge" version="1.2.12"
-            module="libpng/zlib-1.2.12.tar.xz"
+    <branch repo="zlib" version="1.2.12"
+            module="zlib-1.2.12.tar.xz"
             hash="sha256:7db46b8d7726232a621befaab4a1c870f00a90805511c0e0090441dac57def18"/>
   </cmake>
 
