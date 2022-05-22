@@ -1,0 +1,10 @@
+--- a/lib/parser_aux.c	2021-05-13 08:59:58.000000000 -0700
++++ b/lib/parser_aux.c	2021-08-03 10:25:36.000000000 -0700
+@@ -20,8 +20,9 @@
+  */
+
+ #include <limits.h> // WORD_BIT
++#define _GL_EXTERN_INLINE_STDHEADER_BUG
+
+ #include "int.h"
+ #include "parser_aux.h"

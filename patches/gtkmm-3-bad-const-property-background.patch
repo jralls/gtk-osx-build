@@ -1,0 +1,13 @@
+--- a/tests/builder/main.cc	2021-02-23 01:07:04.000000000 -0800
++++ b/tests/builder/main.cc	2021-04-03 10:28:40.000000000 -0700
+@@ -120,7 +120,7 @@
+     }
+   }
+ 
+-  Glib::PropertyProxy_ReadOnly<Glib::ustring> property_background() const { return m_property_background.get_proxy(); }
++  //Glib::PropertyProxy_ReadOnly<Glib::ustring> property_background() const { return m_property_background.get_proxy(); }
+   Glib::PropertyProxy         <Glib::ustring> property_background()       { return m_property_background.get_proxy(); }
+   Glib::ustring get_background() const { return m_property_background.get_value(); }
+   void set_background(const Glib::ustring& background){ m_property_background.set_value(background); }
+
+Diff finished.  Sat Apr  3 10:38:41 2021

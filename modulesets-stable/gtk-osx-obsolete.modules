@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE moduleset SYSTEM "moduleset.dtd">
+<?xml-stylesheet type="text/xsl" href="moduleset.xsl"?>
+<moduleset>
+  <repository type="tarball" name="ftp.gnome.org" default="yes"
+              href="http://download.gnome.org/sources/"/>
+  <repository type="tarball" name="tango.freedesktop.org"
+              href="http://tango.freedesktop.org/releases/"/>
+  <repository type="tarball" name="icon-theme.freedesktop.org"
+	      href="http://icon-theme.freedesktop.org/releases"/>
+
+  <!--
+      OBSOLETE PACKAGES
+
+      The following packages are no longer maintained and are provided
+      solely to support projects that have failed to
+      modernize. Developers/packagers using these modules are advised
+      to copy this moduleset into their project because this file
+      along with all of these modules will be removed at the next
+      regular update.
+
+      These modules successfully built on macOS at one point, but they
+      are no longer tested and may or may not build on newer macOS
+      versions or with newer compilers. If you use them you're on your
+      own for working out patches needed to keep building them in your
+      environment.
+  -->
+
+  <!-- Builds last version of WebKitGTK that supported GTK 2.x -->
+  <metamodule id="meta-gtk-osx-webkit-gtk2">
+    <dependencies>
+      <dep package="meta-gtk-osx-gtk2"/>
+      <dep package="webkit1gtk2"/>
+    </dependencies>
+  </metamodule>
+
+  <autotools id="icu55" autogen-sh="source/configure"
+             autogenargs="--enable-rpath"
+             makeargs='CFLAGS="$CFLAGS -DU_CHARSET_IS_UTF8=1 -DU_USING_ICU_NAMESPACE=0"'>
+    <branch repo="github-tarball" version="55.2" checkoutdir="icu"
+            module="unicode-org/icu/releases/download/release-55-2/icu4c-55_2-src.tgz"
+            hash="sha256:eda2aa9f9c787748a2e2d310590720ca8bcc6252adf6b4cfb03b65bef9d66759"/>
+  </autotools>
+
+  <!-- This is WebKitGTK 2.4.x, the last version that had the WebKit1 API.
+    disable-webkit2: Requires both GTK2 and 3. Currently not supported.
+    disable-credential-storage: Requires libsecret. No module for this yet.
+    disable-geolocation: Requires geoclue 1 or 2. No module for this yet.
+    disable-video, disable-web-audio: Requires gstreamer. If you want video and
+      audio, add this to your .jhbuildrc:
+      append_autogenargs('WebKit', '&#45;-enable-video')
+      append_autogenargs('WebKit', '&#45;-enable-web-audio')
+      -j1: Workaround for https://bugs.webkit.org/show_bug.cgi?id=140171
+
+   It has some issues with ICU 58 so we keep it on ICU55. Note that
+   you can't install both, so if you need to build this webkit add icu
+   to your skip-list.
+  -->
+  <autotools id="webkit1gtk2" autogen-sh="autoreconf"
+             autogenargs="--enable-quartz-target --with-gtk=2.0 --disable-webkit2 --disable-credential-storage --disable-geolocation --disable-video --disable-web-audio CXXFLAGS='-stdlib=libc++'">
+
+    <branch repo="webkit.org" module="webkitgtk-2.4.11.tar.xz" version="2.4.11"
+            hash="sha256:588aea051bfbacced27fdfe0335a957dca839ebe36aa548df39c7bbafdb65bf7">
+      <patch file="webkit-140167-disable-netscape-api.patch" strip="1"/>
+      <!-- This patch can be commented out for XCode >= 6.3, but does no harm if
+      it's left in -->
+      <patch file="webkit-133293-cfi-clang-failure.patch" strip="1"/>
+      <patch file="WebKit-2.4.11-fixups.patch" strip="1"/>
+    </branch>
+    <dependencies>
+      <dep package="libwebp"/>
+      <dep package="enchant"/>
+      <dep package="icu55"/>
+      <dep package="libsoup"/>
+    </dependencies>
+    <after>
+      <dep package="meta-gtk-osx-gtk2
+"/>
+      <dep package="meta-gstreamer"/>
+    </after>
+  </autotools>
+  <autotools id="libunique" autogen-sh="configure"
+             autogenargs="--without-x --disable-dbus">
+    <branch module="libunique/3.0/libunique-3.0.2.tar.bz2" version="3.0.2"
+            hash="sha256:a8f02ce073e2b920cca8ac45d418e7cb64438ad0814780c5912c6d63f8a4e038">
+      <patch file="libunique-663913-sockaddr-un.patch" strip="1"/>
+    </branch>
+    <dependencies>
+      <dep package="gtk+-2.0"/>
+    </dependencies>
+  </autotools>
+
+<!-- PyGObject 2.28 is the last series for Gtk+-2; for co-installation
+     with later versions it installs as pygobject2 and PyGObject 3
+     installs as pygobject3. Introspection is disabled here, because
+     gir-scanner isn't smart enough to co-install them. -->
+  <autotools id="pygobject2" autogen-sh="configure"
+	     autogenargs="--disable-introspection"
+	     supports-non-srcdir-builds="no">
+    <branch version="2.28.7" module="pygobject/2.28/pygobject-2.28.7.tar.xz"
+            hash="sha256:bb9d25a3442ca7511385a7c01b057492095c263784ef31231ffe589d83a96a5a">
+      <!-- remove all references to the missing gdestktopappinfo -->
+      <patch file="pygobject-gdesktopappinfo-missing.patch"
+                     strip="1"/>
+    </branch>
+    <dependencies>
+      <dep package="meta-gtk-osx-gtk2"/>
+    </dependencies>
+    <after>
+      <dep package="python2"/>
+    </after>
+  </autotools>
+
+<!-- Libglade's functions are now part of Gtk+ with different names and
+Libglade itself is deprecated. This is the last release. It's required by pygtk, another obsolete package.-->
+  <autotools id="libglade" autogen-sh='autoreconf'>
+    <branch module="libglade/2.6/libglade-2.6.4.tar.bz2" version="2.6.4"
+            hash="sha256:64361e7647839d36ed8336d992fd210d3e8139882269bed47dc4674980165dec">
+      <patch file="libglade-gmodule.patch" strip="1"/>
+    </branch>
+    <after>
+      <dep package="meta-gtk-osx-bootstrap"/>
+      <dep package="meta-gtk-osx-gtk2"/>
+    </after>
+  </autotools>
+
+<!-- Pygtk is discontinued, this is the last release -->
+ <autotools id="pygtk" autogen-sh="configure"
+	     autogenargs="CFLAGS=&quot;$CFLAGS -xobjective-c&quot; lt_cv_sys_global_symbol_pipe=&quot;'sed -n -e '\''s/^.*[ ]\([BCDEGRST][BCDEGRST]*\)[ ][ ]*_\([_A-Za-z][_A-Za-z0-9]*\)$/\1 _\2 \2/p'\'' | sed '\''/ __gnu_lto/d'\'''&quot;">
+    <branch version="2.24.0" module="pygtk/2.24/pygtk-2.24.0.tar.bz2"
+            hash="sha256:cd1c1ea265bd63ff669e92a2d3c2a88eb26bcd9e5363e0f82c896e649f206912">
+      <patch file="pygtk-libtool.patch" strip="1"/>
+      <patch file="pygtk-pango1.4x.patch" strip="1"/>
+      <patch file="pygtk-pango-decls.patch" strip="1"/>
+    </branch>
+    <dependencies>
+      <dep package="pygobject"/>
+      <dep package="meta-gtk-osx-gtk2"/>
+      <dep package="pycairo"/>
+    </dependencies>
+    <after>
+      <dep package="libglade"/>
+    </after>
+  </autotools>
+
+<!-- This is, I think, the last Gtk+2 version -->
+  <autotools id="devhelp" autogen-sh="autogen.sh">
+    <branch module="devhelp/2.32/devhelp-2.32.0.tar.bz2" version="2.32.0"
+            hash="sha256:61b342cbaf27379be9baa5df1f34c9464916601ec4378fa7e1c76fcc686553e4">
+      <patch file="devhelp-663789-gtkosxapplication.patch" strip="1"/>
+      <patch file="devhelp-646962-variable-name.patch" strip="1"/>
+    </branch>
+    <after>
+      <dep package="meta-gtk-osx-bootstrap"/>
+      <dep package="meta-gtk-osx-themes"/>
+      <dep package="meta-gtk-osx-gtk2"/>
+    </after>
+    <dependencies>
+      <dep package="webkit1gtk2"/>
+      <dep package="libunique"/>
+    </dependencies>
+  </autotools>
+
+<!-- Glade 3.8 is the last stable series for Gtk+-2 -->
+  <autotools id="glade3" autogen-sh="configure"
+	     autogenargs="--disable-scrollkeeper">
+    <branch module="glade3/3.8/glade3-3.8.5.tar.xz" version="3.8.5"
+            hash="sha256:58a5f6e4df4028230ddecc74c564808b7ec4471b1925058e29304f778b6b2735">
+      <patch file="Glade-3-8-Mac-Integration-Fix-up-menu-accelerators-for-Mac.patch" strip="1"/>
+    </branch>
+    <after>
+      <dep package="meta-gtk-osx-bootstrap"/>
+      <dep package="meta-gtk-osx-themes"/>
+      <dep package="meta-gtk-osx-gtk2"/>
+    </after>
+  </autotools>
+
+  <!-- gtksourceview-2.10.5 is the last version that supports Gtk+-2 -->
+  <autotools id="gtksourceview" autogen-sh="configure">
+    <branch module="gtksourceview/2.10/gtksourceview-2.10.5.tar.bz2"
+            version="2.10.5" hash="sha256:c585773743b1df8a04b1be7f7d90eecdf22681490d6810be54c81a7ae152191e">
+      <patch file="gtksourceview-664511-gtkosxapplication.patch" strip="1"/>
+    </branch>
+    <after>
+      <dep package="meta-gtk-osx-bootstrap"/>
+      <dep package="meta-gtk-osx-gtk2"/>
+    </after>
+  </autotools>
+
+<!-- Goocanvas-1 is for gtk+-2. -->
+  <autotools id="goocanvas" autogen-sh="configure">
+    <branch module="goocanvas/1.0/goocanvas-1.0.0.tar.bz2" version="1.0.0"
+	    hash="sha256:1c072ef88567cad241fb4addee26e9bd96741b1503ff736d1c152fa6d865711e"/>
+    <dependencies>
+      <dep package="gtk+-2.0"/>
+    </dependencies>
+  </autotools>
+
+<!-- Libart_lgpl is deprecated by gnome. This is probably the last release. -->
+  <autotools id="libart_lgpl">
+    <branch   module="libart_lgpl/2.3/libart_lgpl-2.3.21.tar.bz2"
+	      version="2.3.21" hash="sha256:fdc11e74c10fc9ffe4188537e2b370c0abacca7d89021d4d303afdf7fd7476fa"/>
+    <after>
+      <dep package="meta-gtk-osx-bootstrap"/>
+      <dep package="meta-gtk-osx-gtk2"/>
+    </after>
+  </autotools>
+
+  <autotools id="gtkspell" autogen-sh="configure">
+    <branch module="gtkspell/gtkspell-2.0.16.tar.gz" repo="sourceforge"
+	    version="2.0.16"/>
+    <dependencies>
+      <dep package="enchant"/>
+    </dependencies>
+  </autotools>
+
+    <metamodule id="meta-gtk-osx-themes">
+    <dependencies>
+      <dep package="tango-icon-theme"/>
+      <dep package="icon-naming-utils"/>
+      <dep package="gtk-engines"/>
+    </dependencies>
+  </metamodule>
+
+  <autotools id="icon-naming-utils" autogen-sh="configure">
+    <branch repo="tango.freedesktop.org"  version="0.8.90"
+            module="icon-naming-utils-0.8.90.tar.bz2"
+            hash="md5:dd8108b56130b9eedc4042df634efa66"/>
+    <after>
+      <dep package="meta-gtk-osx-bootstrap"/>
+    </after>
+  </autotools>
+
+  <autotools id="hicolor-icon-theme" autogen-sh="configure"
+	     supports-non-srcdir-builds="no">
+    <branch module="hicolor-icon-theme-0.17.tar.xz" repo="icon-theme"
+            version="0.17"/>
+  </autotools>
+
+  <autotools id="tango-icon-theme" autogenargs="--disable-icon-framing"
+             autogen-sh="configure">
+    <branch repo="tango.freedesktop.org" version="0.8.90"
+            module="tango-icon-theme-0.8.90.tar.gz"
+            hash="md5:0795895d2f20eddcbd2bffe94ed431a6"/>
+    <dependencies>
+      <dep package="icon-naming-utils"/>
+      <dep package="hicolor-icon-theme"/>
+    </dependencies>
+  </autotools>
+
+  <autotools id="gtk-engines" autogen-sh="configure">
+    <branch module="gtk-engines/2.20/gtk-engines-2.20.2.tar.bz2"
+            version="2.20.2" hash="sha256:15b680abca6c773ecb85253521fa100dd3b8549befeecc7595b10209d62d66b5"/>
+    <after>
+      <dep package="meta-gtk-osx-gtk2"/>
+    </after>
+  </autotools>
+
+  <autotools id="murrine-engine" autogen-sh="configure">
+    <branch module="murrine/0.98/murrine-0.98.1.1.tar.bz2" version="0.98.1.1"
+	    hash="sha256:e6a2af72674403d06c03e067d915004e8d9cdeec206f3350c7f3ee595b139912"/>
+  </autotools>
+
+</moduleset>

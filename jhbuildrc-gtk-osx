@@ -126,12 +126,16 @@ def osx_ver():
     exp = re.compile(r'(\d+\.\d+)\.\d+')
     vernum = exp.match(vstring)
     _osx_version = float(vernum.group(1)) - 4.0
-    _target = '10.%d' % int(_osx_version)
+    if _osx_version < 16:
+        _target = '10.%d' % int(_osx_version)
+    else:
+        _target = '%d' % (_osx_version - 5)
 
     _default_arch = _popen("uname -m")
 
 # Determine the XCode Version:
 def xcode_ver():
+   global conditions
    devdir = _popen("xcode-select -p")
    if devdir != "/Library/Developer/CommandLineTools":
        ver = _popen("xcodebuild -version")
@@ -141,6 +145,8 @@ def xcode_ver():
            _xcode_ver = float(vernum.group(1))
            if _xcode_ver < 5.0:
                raise EnvironmentError("Xcode Version %f is not supported; if you want to build with Xcode versions earlier than 5.0 checkout tag Last-Lion." % _xcode_ver)
+           if _xcode_ver < 10.0:
+               conditions.add('pre-Mavericks')
            return _xcode_ver
        else:
            raise EnvironmentError("No suitable Xcode found. Xcode 5.0 or later is required.")
@@ -236,11 +242,11 @@ osx_ver()
 
 def setup_sdk(target=_target, sdk_version=None, architectures=[_default_arch]):
 
-    global use_local_modulesets
+    global use_local_modulesets, conditions
     os.environ["MACOSX_DEPLOYMENT_TARGET"] = target
     sdkdir = None
     xcodepath = None
-    xcodeversion = None
+    xcodeversion = xcode_ver()
 
     sdkdir = _popen("xcrun --show-sdk-path")
 
@@ -281,6 +287,7 @@ def setup_sdk(target=_target, sdk_version=None, architectures=[_default_arch]):
         append_autogenargs("openssl", "darwin64-x86_64-cc #")
     elif architectures == ["arm64"]:
         conditions.add('64-bit')
+        conditions.add('arm64')
         append_autogenargs("glib", "ac_cv_c_bigendian=no")
         append_autogenargs("openssl", "darwin64-arm64-cc #") # Not a legal value
     elif len(set(architectures) - {"i386",  "x86_64", 'arm64'}) > 0:
@@ -396,7 +403,7 @@ modulesets_dir = ""
 # A list of the modules to build. You can override this in
 # .jhbuildrc-custom or on the command line.
 #
-modules = [ 'meta-gtk-osx-bootstrap', 'meta-gtk-osx-core' ]
+modules = [ 'meta-gtk-osx-bootstrap', 'meta-gtk-osx-gtk3' ]
 
 # A list of modules to skip.
 #
@@ -493,6 +500,7 @@ alwaysautogen = True
 module_cmakeargs["freetype"] = '-DCMAKE_INSTALL_NAME_DIR="' + os.path.join(prefix, 'lib') + '"'
 module_cmakeargs["freetype-no-harfbuzz"] = '-DCMAKE_INSTALL_NAME_DIR="' + os.path.join(prefix, 'lib') + '"'
 module_cmakeargs["webkit2gtk3"] = '-DCMAKE_INSTALL_NAME_DIR="' + os.path.join(prefix, 'lib') + '"'
+module_cmakeargs["zlib"] = '-DCMAKE_INSTALL_NAME_DIR="' + os.path.join(prefix, 'lib') + '"'
 
 # Check and warn if jhbuild is started from within jhbuild, since that
 # will mess up environment variables, especially if different build
@@ -608,7 +616,12 @@ if not _ran_recursively and _gtk_osx_prompt_prefix:
 # Note that this will break if there's an undetected python3 build and
 # the built python is a different major + minor version from the
 # virtenv one.
-if 'python3' in modules or 'meta-gtk-osx-python3' in modules:
+
+# Note that PYENV_VERSION sets the version of python that pyenv uses,
+# not pyenv's own version. It's defined by pyenv and can't be changed.
+
+if ('python3' in modules or 'meta-gtk-osx-python3' in modules or
+    'pygments' in modules):
     os.environ['PYTHON'] = os.path.join(prefix, 'bin', 'python3')
     module_extra_env['pkg-config'] = {'PYTHON':sys.executable}
 else:
@@ -618,8 +631,14 @@ else:
     append_autogenargs('libxml2',
                        '--with-python-install-dir=' + _python_install_path)
     environ_append('PYTHONPATH', _python_install_path, ':')
+    _python_library_path = os.path.join(os.environ['PYENV_ROOT'], 'versions',
+                                       os.environ['PYENV_VERSION'], 'lib')
+    environ_append('LDFLAGS', '-L' + _python_library_path)
     os.environ['PYTHON'] = sys.executable
 
+module_extra_env["pygtk"] = {'PYTHON':os.path.join(prefix, 'bin', 'python2')}
+module_extra_env["pygobject2"] = {'PYTHON':os.path.join(prefix, 'bin', 'python2')}
+module_extra_env["spidermonkey"] = {'AUTOCONF':'autoconf'}
 # Unset this so we don't mess with the check for not starting
 # recursively.
 os.unsetenv("JHB")

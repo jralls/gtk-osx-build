@@ -4,73 +4,70 @@
 <moduleset>
   <repository type="git" name="git.gnome.org" default="yes" 
               href="https://gitlab.gnome.org/GNOME"/>
-  <repository type="svn" name="doxygen" 
-              href="http://doxygen.svn.sourceforge.net/svnroot/"/>
   <repository type="git" name="cairographics" 
-              href="git://anongit.freedesktop.org/git/"/>
-
-  <metamodule id="meta-gtk-osx-gtkmm">
-    <dependencies>
-      <dep package="gtkmm"/>
-    </dependencies>
-  </metamodule>
+              href="https://gitlab.freedesktop.org/cairo/"/>
+  <repository type="git" name="github"
+              href="https://github.com"/>
 
 <!-- mm-common is C++ glue code needed only to build from git. -->
-  <autotools id="mm-common">
+  <meson id="mm-common">
     <branch module="mm-common"/>
-  </autotools>
+  </meson>
 
-  <autotools id="cairomm3" >
+  <!-- Libsigc++ was rewritten to use C++17 variadic templates for version 3, and adopting that has created substantial API breaks for the whole "mm" stack. gtkmm2 and gtkmm3 use the older versions, gtkmm4 the new ones.
+       Note that C++17 is supported only on macOS-10.13 and later.
+  -->
+  <meson id="cairomm3" >
     <branch module="cairomm"  revision="cairomm-1-14"
             repo="cairographics" />
     <dependencies>
       <dep package="cairo"/>
     </dependencies>
-  </autotools>
+  </meson>
 
-  <autotools id="cairomm" >
+  <meson id="cairomm" >
     <branch module="cairomm"  
             repo="cairographics" />
     <dependencies>
       <dep package="cairo"/>
     </dependencies>
-  </autotools>
+  </meson>
 
-  <autotools id="glibmm3" >
-    <branch module="glibmm" revision="glibmm-2-50"/>
+  <meson id="glibmm3" >
+    <branch module="glibmm" revision="glibmm-2-60"/>
     <dependencies>
       <dep package="glib"/>
       <dep package="libsigc++2"/>
     </dependencies>
-  </autotools>
+  </meson>
 
-  <autotools id="glibmm" >
+  <meson id="glibmm" >
     <branch />
     <dependencies>
       <dep package="glib"/>
       <dep package="libsigc++3"/>
     </dependencies>
-  </autotools>
+  </meson>
 
-  <autotools id="pangomm3" >
-     <branch module="pangomm" revision="pangomm-2-40"/>
+  <meson id="pangomm3" >
+     <branch module="pangomm" revision="pangomm-2-42"/>
     <dependencies>
       <dep package="glibmm3"/>
       <dep package="cairomm3"/>
       <dep package="pango"/>
     </dependencies>
-  </autotools>
+  </meson>
 
-  <autotools id="pangomm" >
+  <meson id="pangomm" >
      <branch />
     <dependencies>
       <dep package="glibmm"/>
       <dep package="cairomm"/>
       <dep package="pango"/>
     </dependencies>
-  </autotools>
+  </meson>
 
-  <autotools id="atkmm3">
+  <meson id="atkmm3">
     <branch module="atkmm" revision="atkmm-2-24"/>
     <dependencies>
       <dep package="glibmm3"/>
@@ -78,9 +75,9 @@
       <dep package="pangomm3"/>
       <dep package="atk"/>
     </dependencies>
-  </autotools>
+  </meson>
 
-  <autotools id="atkmm">
+  <meson id="atkmm">
     <branch/>
     <dependencies>
       <dep package="glibmm"/>
@@ -88,42 +85,32 @@
       <dep package="pangomm"/>
       <dep package="atk"/>
     </dependencies>
-  </autotools>
+  </meson>
   
 <!-- libsigc++ depends on doxygen for documentation, but doxygen
      doesn't build correctly under gtk-osx. It builds fine on its own,
      of course, and there are OSX binaries available on their
      website. If you want the docs, install it separately and renable
      documentation in your jhbuildrc-custom. -->
-  <autotools id="libsigc++2" autogen-args="--disable-documentation">
-     <branch module="libsigcplusplus" revision="libsigc++-2-10"/>
+  <meson id="libsigc++2" autogen-args="--disable-documentation">
+    <branch repo="github" module="libsigcplusplus/libsigcplusplus"
+            revision="libsigc++-2-10"/>
     <dependencies>
       <dep package="mm-common"/>
       <!-- dep package="doxygen"/ -->
     </dependencies>
-  </autotools>
+  </meson>
 
-  <autotools id="libsigc++3" autogen-args="--disable-documentation">
-     <branch module="libsigcplusplus"/>
+  <meson id="libsigc++3">
+     <branch repo="github" module="libsigcplusplus/libsigcplusplus"/>
     <dependencies>
       <dep package="mm-common"/>
       <!-- dep package="doxygen"/ -->
     </dependencies>
-  </autotools>
+  </meson>
 
-  <autotools id="gtkmm" >
-    <branch revision="gtkmm-2-24"/>
-    <dependencies>
-      <dep package="glibmm3"/>
-      <dep package="cairomm3"/>
-      <dep package="pangomm3"/>
-      <dep package="atkmm"/>
-      <dep package="gtk+"/>
-    </dependencies>
-  </autotools>
-
-  <autotools id="gtkmm3">
-    <branch module="gtkmm" revision="gtkmm-3-22"/>
+  <meson id="gtkmm3">
+    <branch module="gtkmm" revision="gtkmm-3-24"/>
     <dependencies>
       <dep package="glibmm3"/>
       <dep package="cairomm3"/>
@@ -131,9 +118,9 @@
       <dep package="atkmm3"/>
       <dep package="gtk+-3.0"/>
     </dependencies>
-  </autotools>
+  </meson>
 
-  <autotools id="gtkmm4" >
+  <meson id="gtkmm4" >
     <branch module="gtkmm"/>
     <dependencies>
       <dep package="glibmm"/>
@@ -142,6 +129,6 @@
       <dep package="atkmm"/>
       <dep package="gtk+-4.0"/>
     </dependencies>
-  </autotools>
+  </meson>
 
 </moduleset>

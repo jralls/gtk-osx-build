@@ -1,0 +1,12 @@
+--- a/pango.override	2011-04-01 03:37:25.000000000 -0700
++++ b/pango.override	2021-04-02 11:54:31.000000000 -0700
+@@ -31,6 +31,9 @@
+     PyObject *func, *data;
+ } PyGtkCustomNotify;
+ 
++extern PangoFontMetrics* pango_font_metrics_new(void);
++extern const char* pango_font_map_get_shape_engine_type(PangoFontMap*);
++
+ #ifndef PANGO_TYPE_LAYOUT_LINE
+ # define PANGO_TYPE_LAYOUT_LINE pypango_layout_line_get_type()
+ 

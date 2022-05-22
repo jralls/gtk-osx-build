@@ -1,0 +1,11 @@
+diff -u /Users/john/Development/Gramps-Build/gramps-master-git-10.12-x86_64/src/gtkspell3-3.0.10/build/install-sh\~ /Users/john/Development/Gramps-Build/gramps-master-git-10.12-x86_64/src/gtkspell3-3.0.10/build/install-sh
+--- a/build/install-sh	2018-09-19 13:27:56.000000000 -0700
++++ b/build/install-sh	2021-04-10 17:42:24.000000000 -0700
+@@ -1,4 +1,4 @@
+-#!/usr/bin/sh
++#!/bin/sh
+ # install - install a program, script, or datafile
+ 
+ scriptversion=2018-03-11.20; # UTC
+
+Diff finished.  Sat Apr 10 17:42:32 2021

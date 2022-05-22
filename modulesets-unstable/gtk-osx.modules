@@ -4,13 +4,15 @@
 <moduleset>
   <repository type="git" name="git.gnome.org" default="yes"
               href="https://gitlab.gnome.org/GNOME"/>
-  <repository type="git" name="github" href="git://github.com/"/>
+  <repository type="git" name="github" href="https://github.com/"/>
   <repository type="git" name="freedesktop"
               href="https://gitlab.freedesktop.org/"/>
-  <repository type="git" name="freedesktop-jralls"
-              href="https://gitlab.freedesktop.org/jralls/"/>
   <repository type="git" name="nongnu"
-	      href="git://git.sv.nongnu.org/"/>
+	      href="https://git.savannah.nongnu.org/git/"/>
+  <repository type="tarball" name="hicolor"
+              href="https://icon-theme.freedesktop.org/releases/"/>
+  <repository type="tarball" name="sourceforge"
+              href="http://downloads.sourceforge.net/sourceforge/"/>
   <repository type="system" name="system"/>
 
   <!-- This module set works a bit differently than for example the
@@ -24,47 +26,28 @@
          make it easy to rebuild the whole core stack without redoing
          the bootstrap parts. They have a soft, "after", depencency.
 
-       The remaining modules are mostly for testing and might not work
-       all the time:
-
-       - gtk-osx-python.modules: self explaining.
-       - gtk-osx-gtkmm.modules: self explaining.
-       - gtk-osx-javascript.modules: GJS, associated tools, and the Mozilla JS
-         library it depends on.
-       - gtk-osx-gstreamer.modules: self explaining.
-       - gtk-osx-themes.modules: self explaining.
-       - gtk-osx-network.modules: The network/crypto stack and various
-         configurations of WebKit.
-
+       - gtk-osx-python.modules: Python bindings for Gtk.
+       - gtk-osx-gtkmm.modules: C++ wrappers for Gtk.
+       - gtk-osx-javascript.modules: GJS and its Mozilla JS (aka
+         spidermonkey) dependency.
+       - gtk-osx-gstreamer.modules: GStreamer library and modules.
+       - gtk-osx-network.modules: The network/crypto stack and WebKit.
        - gtk-osx-random.modules: "random stuff", has apps for testing GTK+.
-       - gtk-osx-unsupported.modules: more testing stuff, competely unsupported.
   -->
 
   <include href="gtk-osx-bootstrap.modules"/>
-  <include href="gtk-osx-javascript.modules"/>
-  <include href="gtk-osx-python.modules"/>
   <include href="gtk-osx-gstreamer.modules"/>
   <include href="gtk-osx-gtkmm.modules"/>
+  <include href="gtk-osx-javascript.modules"/>
   <include href="gtk-osx-network.modules"/>
-  <include href="gtk-osx-themes.modules"/>
+  <include href="gtk-osx-python.modules"/>
   <include href="gtk-osx-random.modules"/>
-  <include href="gtk-osx-unsupported.modules"/>
 
   <!-- Dummy meson module to shut up a jhbuild warning. -->
   <systemmodule id="meson">
     <branch repo="system"/>
   </systemmodule>
   
-  <metamodule id="meta-gtk-osx-core">
-    <dependencies>
-      <dep package="gtk+"/>
-      <dep package="gtk-mac-integration"/>
-    </dependencies>
-    <after>
-      <dep package="meta-gtk-osx-bootstrap"/>
-    </after>
-  </metamodule>
-
   <metamodule id="meta-gtk-osx-gtk3">
     <dependencies>
       <dep package="gtk+-3.0"/>
@@ -81,9 +64,17 @@
     <branch module="atgreen/libffi" repo="github"/>
   </autotools>
 
-  <meson id="glib" mesonargs="-Dinternal_pcre=true -Dlibmount=disabled">
-    <branch/>
+  <autotools id="libpcre" autogen-sh="configure"
+             autogenargs="--enable-unicode-properties --enable-newline-is-any --enable-jit">
+    <branch repo="sourceforge" version="8.45"
+            module="pcre/pcre-8.45.tar.bz2"
+            hash="sha256:4dae6fdcd2bb0bb6c37b5f97c33c2be954da743985369cddac3546e3218bffb8"/>
+  </autotools>
+  
+  <meson id="glib" mesonargs="-Dlibmount=disabled">
+    <branch revision='main'/>
     <dependencies>
+      <dep package="libpcre"/>
       <dep package="libffi"/>
     </dependencies>
   </meson>
@@ -100,15 +91,12 @@
   </cmake>
 
   <meson id="harfbuzz-no-cairo" mesonargs="-Dcoretext=enabled -Ddocs=disabled -Dbenchmark=disabled">
-    <branch repo="github" module="harfbuzz/harfbuzz"/>
+    <branch revision="main" repo="github" module="harfbuzz/harfbuzz"/>
     <dependencies>
       <dep package="glib"/>
       <dep package="freetype-no-harfbuzz"/>
-    </dependencies>
-    <after>
       <dep package="icu"/>
-      <dep package="icu55"/>
-    </after>
+    </dependencies>
   </meson>
   
   <cmake id="freetype" cmakeargs="-DCMAKE_DISABLE_FIND_PACKAGE_BZip2=TRUE -D BUILD_SHARED_LIBS=TRUE -D CMAKE_BUILD_TYPE=Release">
@@ -119,15 +107,15 @@
     </dependencies>
   </cmake>
 
-  <autotools id="fontconfig" autogen-sh="configure"
+  <autotools id="fontconfig"
              autogenargs="--disable-docs --with-default-fonts=/System/Library/Fonts --with-add-fonts=/Library/Fonts --with-cache-dir=home">
-    <branch repo="freedesktop" module="fontconfig/fontconfig"/>
+    <branch revision="main" repo="freedesktop" module="fontconfig/fontconfig"/>
     <dependencies>
       <dep package="freetype"/>
     </dependencies>
   </autotools>
 
-  <autotools id="pixman" autogenargs="--disable-gtk --disable-mmx">
+  <autotools id="pixman" autogenargs="--disable-gtk --disable-mmx --disable-arm-a64-neon">
     <branch repo="freedesktop" module="pixman/pixman" />
     <after>
       <dep package="meta-gtk-osx-bootstrap"/>
@@ -137,9 +125,8 @@
   <!-- cairo doesn't really need fontconfig, but if Pango finds
        freetype it insists that it has to have fontconfig too and that
        they are both built into cairo. -->
-  <autotools id="cairo"
-             autogenargs="--enable-pdf --enable-quartz --disable-xlib --without-x">
-    <branch repo="freedesktop-jralls" module="cairo" />
+  <meson id="cairo">
+    <branch repo="freedesktop" module="cairo/cairo" />
     <dependencies>
       <dep package="pixman"/>
       <dep package="meta-gtk-osx-bootstrap"/>
@@ -147,7 +134,7 @@
     </dependencies>
     <after>
     </after>
-  </autotools>
+  </meson>
 
   <meson id="gobject-introspection">
     <branch/>
@@ -164,7 +151,7 @@
        to use introspection it requires harfbuzz to have
        introspection, and gobject-introspection needs cairo. -->
   <meson id="harfbuzz" mesonargs="-Dcoretext=enabled -Ddocs=disabled -Dbenchmark=disabled">
-    <branch repo="github" module="harfbuzz/harfbuzz"/>
+    <branch revision="main" repo="github" module="harfbuzz/harfbuzz"/>
     <dependencies>
       <dep package="gobject-introspection"/>
       <dep package="cairo"/>
@@ -180,7 +167,7 @@
   </meson>
 
   <meson id="pango">
-    <branch />
+    <branch revision="main" />
     <dependencies>
       <dep package="glib"/>
       <dep package="cairo"/>
@@ -204,7 +191,7 @@
     </after>
  </meson>
 
-  <meson id="gdk-pixbuf" mesonargs="-Dx11=false -Dman=false">
+  <meson id="gdk-pixbuf" mesonargs="-Drelocatable=true -Dman=false">
     <branch />
     <after>
       <dep package="pango"/>
@@ -231,24 +218,12 @@
     </dependencies>
   </meson>
  
-  <autotools id="gtk+"
-	     autogenargs="--with-gdktarget=quartz --enable-introspection=no --enable-quartz-relocation --disable-visibility">
-    <branch module="gtk" revision="gtk-2-24" checkoutdir="gtk+-2.0"/>
-    <dependencies>
-      <dep package="glib"/>
-      <dep package="pango"/>
-      <dep package="atk"/>
-      <dep package="gdk-pixbuf"/>
-      <dep package="gobject-introspection"/>
-    </dependencies>
-    <after>
-      <dep package="meta-gtk-osx-bootstrap"/>
-    </after>
+  <autotools id="hicolor-icon-theme">
+    <branch module="hicolor-icon-theme-0.17.tar.xz" version="0.17"
+            repo="hicolor"/>
   </autotools>
-  
 
-  <meson id="gtk+-3.0"
-        mesonargs="-Dquartz-backend=true -Dx11-backend=false -Dmedia=none">
+  <meson id="gtk+-3.0" mesonargs="-Dx11_backend=false">
     <branch module="gtk" checkoutdir="gtk+-3.0" revision="gtk-3-24"/>
     <dependencies>
       <dep package="glib"/>
@@ -257,22 +232,37 @@
       <dep package="atk"/>
       <dep package="gobject-introspection"/>
       <dep package="libepoxy"/>
+      <dep package="hicolor-icon-theme"/>
     </dependencies>
     <after>
       <dep package="meta-gtk-osx-bootstrap"/>
     </after>
   </meson>
+  
+  <meson id="graphene" mesonargs="-Dtests=false">
+    <branch repo="github" revision="1.10.4" module="ebassi/graphene"/>
+    <dependencies>
+      <dep package="glib"/>
+      <dep package="gobject-introspection"/>
+    </dependencies>
+  </meson>
+
+  <autotools id="libsass" autogen-sh="autoreconf"
+             autogenargs="--disable-tests --disable-static">
+    <branch repo="github" revision="3.6.4" module="sass/libsass"/>
+  </autotools>
 
   <meson id="gtk+-4.0"
-             mesonargs="-Dquartz-backend=true -Dx11-backend=false -Dmedia=none">
-    <branch module="gtk" checkoutdir="gtk+-4.0"/>
+             mesonargs="-Dquartz-backend=true -Dx11-backend=false -Dmedia-gstreamer=disabled">
+    <branch module="gtk" checkoutdir="gtk-4.0"/>
     <dependencies>
       <dep package="glib"/>
       <dep package="pango"/>
-      <dep package="gdk-pixbuf"/>
       <dep package="atk"/>
-      <dep package="gobject-introspection"/>
+      <dep package="gdk-pixbuf"/>
       <dep package="graphene"/>
+      <dep package="libsass"/>
+      <dep package="libepoxy"/>
     </dependencies>
     <after>
       <dep package="meta-gtk-osx-bootstrap"/>
@@ -282,7 +272,6 @@
   <autotools id="gtk-mac-integration" autogenargs="--disable-python">
     <branch/>
     <after>
-      <dep package="gtk+"/>
       <dep package="gtk+-3.0"/>
     </after>
   </autotools>
@@ -291,18 +280,15 @@
     <branch/>
   </autotools>
 
-  <!-- librsvg is converting to the Rust language. This requires
-       substantial infrastructure that's resistant to installing with
-       jhbuild, so we'll freeze at the 2.40 branch. -->
   <autotools id="librsvg" autogenargs="--disable-Bsymbolic">
-    <branch module="librsvg" tag="librsvg-2-40"/>
+    <branch module="librsvg" revision="main"/>
     <dependencies>
       <dep package="libcroco"/>
       <dep package="freetype"/>
     </dependencies>
     <after>
-      <dep package="gtk+"/>
       <dep package="gtk+-3.0"/>
+      <dep package="gtk-4"/>
     </after>
   </autotools>
 

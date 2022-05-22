@@ -1,0 +1,21 @@
+diff -u /Users/john/Development/gtk-build/gtk-stable-10.13-x86_64/src/gjs-1.68.0/gjs/coverage.cpp\~ /Users/john/Development/gtk-build/gtk-stable-10.13-x86_64/src/gjs-1.68.0/gjs/coverage.cpp
+--- a/gjs/coverage.cpp	2021-03-20 09:28:52.000000000 -0700
++++ b/gjs/coverage.cpp	2021-04-12 11:51:39.000000000 -0700
+@@ -19,7 +19,6 @@
+ #include <js/TypeDecls.h>
+ #include <js/Utility.h>  // for UniqueChars
+ #include <js/Value.h>
+-#include <js/experimental/CodeCoverage.h>  // for EnableCodeCoverage
+ #include <jsapi.h>        // for JSAutoRealm, JS_SetPropertyById
+ #include <jsfriendapi.h>  // for GetCodeCoverageSummary
+ 
+@@ -496,6 +495,5 @@
+  * Since: 1.66
+  */
+ void gjs_coverage_enable() {
+-    js::EnableCodeCoverage();
+-    s_coverage_enabled = true;
++    s_coverage_enabled = false;
+ }
+
+Diff finished.  Mon Apr 12 11:53:49 2021

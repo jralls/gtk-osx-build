@@ -327,3 +327,22 @@ index aebc6fca..08e27e92 100644
  #include <gio/gunixinputstream.h>
  #include <gio/gunixmounts.h>
  #include <gio/gunixoutputstream.h>
+--- a/gio/unix.c	2021-04-01 18:13:18.000000000 -0700
++++ b/gio/unix.c	2021-04-01 18:20:45.000000000 -0700
+@@ -648,6 +648,7 @@
+ static PyObject *
+ _wrap_g_desktop_app_info_set_desktop_env(PyObject *self, PyObject *args, PyObject *kwargs)
+ {
++#ifndef __APPLE__
+     static char *kwlist[] = { "desktop_env", NULL };
+     char *desktop_env;
+ 
+@@ -655,7 +656,7 @@
+         return NULL;
+     
+     g_desktop_app_info_set_desktop_env(desktop_env);
+-    
++#endif
+     Py_INCREF(Py_None);
+     return Py_None;
+ }

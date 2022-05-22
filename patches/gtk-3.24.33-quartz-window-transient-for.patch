@@ -1,0 +1,46 @@
+From f42f7adc531da47b5c34a05da84ac873618f55ed Mon Sep 17 00:00:00 2001
+From: John Ralls <jralls@ceridwen.us>
+Date: Mon, 28 Mar 2022 11:26:41 -0700
+Subject: [PATCH] [quartz-window]Always ensure that transient_for isn't
+ destroyed before using it.
+
+Fixes crash when destroying a dialog whose transient_for parent is
+already destroyed.
+---
+ gdk/quartz/gdkwindow-quartz.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/gdk/quartz/gdkwindow-quartz.c b/gdk/quartz/gdkwindow-quartz.c
+index aa85318e0b..15cde981a0 100644
+--- a/gdk/quartz/gdkwindow-quartz.c
++++ b/gdk/quartz/gdkwindow-quartz.c
+@@ -788,7 +788,7 @@ _gdk_quartz_window_did_become_main (GdkWindow *window)
+   if (window->window_type != GDK_WINDOW_TEMP)
+     main_window_stack = g_slist_prepend (main_window_stack, window);
+ 
+-  if (impl->transient_for)
++  if (impl->transient_for && !GDK_WINDOW_DESTROYED (impl->transient_for))
+     raise_transient (impl);
+ 
+   clear_toplevel_order ();
+@@ -1176,6 +1176,8 @@ _gdk_quartz_window_detach_from_parent (GdkWindow *window)
+       parent_impl = GDK_WINDOW_IMPL_QUARTZ (impl->transient_for->impl);
+       [parent_impl->toplevel removeChildWindow:impl->toplevel];
+       clear_toplevel_order ();
++      g_object_unref (impl->transient_for);
++      impl->transient_for = NULL;
+     }
+ }
+ 
+@@ -1557,7 +1559,7 @@ gdk_window_quartz_raise (GdkWindow *window)
+ 
+       impl = GDK_WINDOW_IMPL_QUARTZ (window->impl);
+ 
+-      if (impl->transient_for)
++      if (impl->transient_for && !GDK_WINDOW_DESTROYED (impl->transient_for))
+         raise_transient (impl);
+       else
+         [impl->toplevel orderFront:impl->toplevel];
+-- 
+2.32.0 (Apple Git-132)
+

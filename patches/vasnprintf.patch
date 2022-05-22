@@ -1,5 +1,5 @@
---- bison-3.0.4-orig/lib/vasnprintf.c	2017-09-29 11:10:29.000000000 +0200
-+++ bison-3.0.4/lib/vasnprintf.c	2017-09-29 11:15:06.000000000 +0200
+--- a/lib/vasnprintf.c	2017-09-29 11:10:29.000000000 +0200
++++ b/lib/vasnprintf.c	2017-09-29 11:15:06.000000000 +0200
 @@ -4858,7 +4858,7 @@
  #endif
                    *fbp = dp->conversion;

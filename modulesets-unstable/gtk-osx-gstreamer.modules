@@ -3,72 +3,82 @@
 <?xml-stylesheet type="text/xsl" href="moduleset.xsl"?>
 <moduleset>
  <repository type="git" name="gstreamer" default="yes"
-              href="git://gitlab.freedesktop.org/gstreamer/"/>
+              href="https://gitlab.freedesktop.org/gstreamer/"/>
   <repository type="tarball" name="sourceforge"
               href="http://iweb.dl.sf.net/project/"/>
-  <repository type="tarball" name="liboil"
-              href="http://liboil.freedesktop.org/download/"/>
+  <repository type="tarball" name="ffmpeg"
+              href="https://ffmpeg.org/releases/"/>
+  <repository type="tarball" name="nasm"
+              href="https://www.nasm.us/pub/nasm/releasebuilds/"/>
 
   <!-- The GStreamer project maintains its own moduleset at
        git://anongit.freedesktop.org/gstreamer/jhbuild/. The modules
        are unversioned and haven't been tested for gtk-osx
        compatibility, but there are more of them. -->
 
-  <autotools id="liborc">
+  <meson id="liborc" mesonargs="-Dgtk_doc=disabled -Dbenchmarks=disabled -Dexamples=disabled -Dtests=disabled">
     <branch repo="gstreamer" module="orc"/>
-  </autotools>
+  </meson>
 
   <autotools id="faad2" autogen-sh="autoreconf"
              autogenargs="-without-bmp --without-xmms --without-drm --without-mpeg4ip">
-    <branch repo="sourceforge" version="2.7"
-            module="faac/faad2-src/faad2-2.7/faad2-2.7.tar.bz2">
-      <patch file="https://gitlab.gnome.org/GNOME/gtk-osx/raw/master/patches/faad2-2.7-ac-config-headers.patch" strip="1"/>
+    <branch repo="sourceforge" version="2.8.6"
+            module="faac/faad2-src/faad2-2.8.0/faad2-2.8.6.tar.gz"
+            hash="sha256:654977adbf62eb81f4fca00152aca58ce3b6dd157181b9edd7bed687a7c73f21">
     </branch>
   </autotools>
 
-  <autotools id="gstreamer" autogenargs="--disable-tests"
-             supports-non-srcdir-builds="no"
-    makeargs="ERROR_CFLAGS=" >
+  <autotools id="nasm" autogen-sh="configure">
+    <branch repo="nasm" version="2.15.05"
+            module="2.15.05/nasm-2.15.05.tar.xz"
+            hash="sha256:3caf6729c1073bf96629b57cee31eeb54f4f8129b01902c73428836550b30a3f"/>
+  </autotools>
+
+  <autotools id="ffmpeg" autogen-sh="configure"
+             autogenargs="--enable-gpl --enable-version3 --enable-shared --disable-static --disable-runtime-cpudetect --disable-programs --disable-ffplay --disable-ffprobe --disable-doc"
+             autogen-template="%(srcdir)s/%(autogen-sh)s --prefix=%(prefix)s %(autogenargs)s"
+>
+    <branch repo="ffmpeg" version="4.3.2"
+            module="ffmpeg-4.3.2.tar.xz"
+            hash="sha256:46e4e64f1dd0233cbc0934b9f1c0da676008cad34725113fb7f802cfa84ccddb"/>
+    <dependencies>
+      <dep package="nasm"/>
+    </dependencies>
+  </autotools>
+
+  <meson id="gstreamer" >
     <branch/>
     <after>
       <dep package="glib"/>
       <dep package="libxml2"/>
     </after>
-  </autotools>
+  </meson>
 
-  <autotools id="gst-plugins-base" supports-non-srcdir-builds="no"
-             autogenargs="--disable-tests --disable-x --disable-xvideo"
-             makeargs="ERROR_CFLAGS=" >
+  <meson id="gst-plugins-base" mesonargs="-Dexamples=disabled -Ddoc=disabled">
     <branch />
     <dependencies>
       <dep package="gstreamer"/>
       <dep package="liborc"/>
     </dependencies>
-  </autotools>
+  </meson>
 
-  <autotools id="gst-plugins-good" supports-non-srcdir-builds="no"
-             autogenargs="--disable-tests --disable-x --disable-xvideo --disable-osx-video"
-             makeargs="ERROR_CFLAGS=" >
+  <meson id="gst-plugins-good">
     <branch />
     <dependencies>
       <dep package="gstreamer"/>
       <dep package="gst-plugins-base"/>
     </dependencies>
-  </autotools>
+  </meson>
 
-  <autotools id="gst-plugins-ugly" autogenargs="--disable-tests"
-             supports-non-srcdir-builds="no"
-    makeargs="ERROR_CFLAGS=" >
+  <meson id="gst-plugins-ugly">
     <branch/>
     <dependencies>
       <dep package="gstreamer"/>
       <dep package="gst-plugins-base"/>
     </dependencies>
-  </autotools>
+  </meson>
 
-  <autotools id="gst-plugins-bad" supports-non-srcdir-builds="no"
-             autogenargs="--disable-tests --disable-x --disable-xvid"
-    makeargs="ERROR_CFLAGS=" >
+  <meson id="gst-plugins-bad">
     <branch/>
     <dependencies>
       <dep package="gstreamer"/>
@@ -76,18 +86,15 @@
       <dep package="faad2"/>
       <dep package='openssl'/>
     </dependencies>
-  </autotools>
+  </meson>
 
-  <!-- disable-yasm: gst-libav's version of libav requires yasm 0.8.0 or nasm
-  2.0.3; OSX 10.9 has nasm 0.98.40 -->
-  <autotools id="gst-libav" supports-non-srcdir-builds="no"
-             autogenargs="--disable-tests --disable-mmx --with-libav-extra-configure='--disable-yasm'">
+  <meson id="gst-libav">
     <branch module="gst-libav"/>
     <dependencies>
       <dep package="gstreamer-1.0"/>
       <dep package="gst-plugins-base-1.0"/>
     </dependencies>
-  </autotools>
+  </meson>
 
   <metamodule id="meta-gstreamer">
     <dependencies>

@@ -3,70 +3,60 @@
 <?xml-stylesheet type="text/xsl" href="moduleset.xsl"?>
 <moduleset>
 
-  <repository type="tarball" name="ftp.gnome.org" default="yes"
-              href="http://download.gnome.org/sources/"/>
+  <repository type="git" name="git.gnome.org"  default="yes"
+              href="https://gitlab.gnome.org/GNOME"/>
   <repository type="tarball" name="ftp.gnu.org" href="https://ftp.gnu.org/gnu/"/>
   <repository type="tarball" name="sourceforge"
-	      href="http://downloads.sourceforge.net/sourceforge/"/>
-  <repository type="git" name="nongnu"
-	      href="git://git.sv.nongnu.org/"/>
+              href="http://downloads.sourceforge.net/sourceforge/"/>
   <repository type="tarball" name="jpeg"
-	      href="http://www.ijg.org/files/"/>
+              href="http://www.ijg.org/files/"/>
   <repository type="tarball" name="libtiff"
 	      href="http://download.osgeo.org/"/>
-  <repository type="git" name="freedesktop"
-	      href="https://gitlab.freedesktop.org/"/>
   <repository type="tarball" name="icon-theme"
-              href="http://icon-theme.freedesktop.org/releases/"/>
+	      href="http://icon-theme.freedesktop.org/releases/"/>
   <repository type="tarball" name="xmlsoft.org"
 	      href="ftp://xmlsoft.org/libxml2/"/>
-  <repository type="git" name="git.gnome.org"
-              href="https://gitlab.gnome.org/GNOME"/>
-  <repository type="tarball" name="itstool" href="http://files.itstool.org/"/>
-  <repository type="git" name="github" href="https://github.com/"/>
+ <repository type="tarball" name="itstool" href="http://files.itstool.org/"/>
   <repository type="tarball" name="github-tarball" href="https://github.com/"/>
-  <repository type="tarball" name="pypi"
-              href="https://pypi.python.org/packages/source/"/>
-  <repository type="tarball" name="ragel"
-              href="http://www.colm.net/files/ragel/"/>
-
-  <autotools id='readline' autogen-sh="configure">
-    <branch repo="ftp.gnu.org" module="readline/readline-7.0.tar.gz"
-	    version="7.0">
-    </branch>
-  </autotools>
 
   <autotools id="libpng" autogenargs="--enable-shared" autogen-sh="configure">
-    <branch version="1.6.29" module="libpng/libpng-1.6.29.tar.xz"
+    <branch version="1.6.37" module="libpng/libpng-1.6.37.tar.xz"
+            hash="sha256:505e70834d35383537b6491e7ae8641f1a4bed1876dbfe361201fc80868d88ca"
             repo="sourceforge"/>
+    <dependencies>
+      <dep package="zlib"/>
+    </dependencies>
   </autotools>
 
-  <autotools id="libjpeg">
-    <branch module="jpegsrc.v9c.tar.gz" version="9b"
-            repo="jpeg"
-            checkoutdir="jpeg-9c">
+  <autotools id="libjpeg" autogen-sh="configure">
+    <branch module="jpegsrc.v9e.tar.gz" version="9e"
+            repo="jpeg" checkoutdir="jpeg-9e">
     </branch>
   </autotools>
 
   <autotools id="libtiff" autogen-sh="configure" autogenargs="--without-x">
-    <branch version="4.1.0" module="libtiff/tiff-4.1.0.tar.gz"
-	    repo="libtiff"/>
+    <branch version="4.2.0" module="libtiff/tiff-4.2.0.tar.gz"
+            repo="libtiff"
+            hash="sha256:eb0484e568ead8fa23b513e9b0041df7e327f4ee2d22db5a533929dfc19633cb">
+	<patch file="tiff-nohtml.patch" strip="1" />
+    </branch>
     <dependencies>
       <dep package="libjpeg"/>
     </dependencies>
   </autotools>
 
-<!-- The python package is in gtk-osx-python.modules. If you're
-     building "native" you can safely add python to the skip list, but
-     otherwise the links in the SDKs are messed up and libxml's python
-     module won't link. In case you're wondering, itstool
-     needs libxml2's python module. -->
-  <autotools id="libxml2" autogenargs='--libdir="$JHBUILD_LIBDIR" --with-python'>
+  <!-- The python package is in gtk-osx-python.modules. If you're
+       building "native" you can safely add python to the skip list, but
+       otherwise the links in the SDKs are messed up and libxml's python
+       module won't link. In case you're wondering, itstool
+       needs libxml2's python module. -->
+
+  <autotools id="libxml2"
+             autogenargs='--libdir="$JHBUILD_LIBDIR" --with-python'>
     <branch repo="git.gnome.org"/>
-    <after>
-      <dep package="python"/>
+    <dependencies>
       <dep package="python3"/>
-    </after>
+    </dependencies>
   </autotools>
 
   <autotools id="libxslt">
@@ -76,65 +66,42 @@
     </dependencies>
   </autotools>
 
-  <autotools id="itstool">
-    <branch module="itstool/itstool-2.0.6.tar.bz2" version="2.0.6"
-            repo="itstool">
+  <autotools id="itstool" autogen-sh="configure">
+    <branch module="itstool/itstool-2.0.6.tar.bz2" version="2.0.6n"
+            repo="itstool"
+            hash="sha256:6233cc22726a9a5a83664bf67d1af79549a298c23185d926c3677afa917b92a9">
+      <patch file="itstool-config-python.patch" strip="1"/>
     </branch>
-    <!--branch repo="github" module="itstool/itstool"/-->
     <dependencies>
       <dep package="libxml2"/>
     </dependencies>
   </autotools>
 
-  <autotools id="yelp-xsl">
-    <branch repo="git.gnome.org" revision="gnome-3-20"/>
+  <meson id="gtk-doc" mesonargs="-Dyelp_manual=false -Dtests=false">
+    <branch />
     <dependencies>
       <dep package="libxml2"/>
       <dep package="libxslt"/>
       <dep package="itstool"/>
     </dependencies>
-  </autotools>
-
-  <!-- Yelp tools is releasing from the master branch. -->
-  <autotools id="yelp-tools">
-    <branch repo="git.gnome.org"/>
-    <dependencies>
-      <dep package="libxml2"/>
-      <dep package="libxslt"/>
-      <dep package="itstool"/>
-      <dep package="yelp-xsl"/>
-    </dependencies>
-  </autotools>
+    <after>
+      <dep package="python3"/>
+      <dep package="pygments"/>
+    </after>
+  </meson>
 
   <autotools id="icu" autogen-sh="source/configure" autogenargs="--enable-rpath"
              makeargs='CFLAGS="$CFLAGS -DU_CHARSET_IS_UTF8=1 -DU_USING_ICU_NAMESPACE=0"'>
-    <branch repo="github-tarball" version="66.1" checkoutdir="icu"
-            module="unicode-org/icu/releases/download/release-66-1/icu4c-66_1-src.tgz"
-            hash="sha256:52a3f2209ab95559c1cf0a14f24338001f389615bf00e2585ef3dbc43ecf0a2e"/>
+    <branch repo="github-tarball" version="68.2" checkoutdir="icu"
+            module="unicode-org/icu/releases/download/release-68-2/icu4c-68_2-src.tgz"
+            hash="sha256:c79193dee3907a2199b8296a93b52c5cb74332c26f3d167269487680d479d625"/>
   </autotools>
 
-
-  <autotools id="hicolor-icon-theme" autogen-sh="configure" supports-non-srcdir-builds="no">
-    <branch module="hicolor-icon-theme-0.13.tar.gz" repo="icon-theme"
-            version="0.13"/>
-  </autotools>
-
-  <meson id="gtk-doc">
-    <branch repo="git.gnome.org"/>
-    <dependencies>
-      <dep package="libxml2"/>
-      <dep package="itstool"/>
-      <dep package="yelp-tools"/>
-      <dep package="glib"/>
-    </dependencies>
-  </meson>
-
-   <metamodule id="meta-gtk-osx-bootstrap">
+  <metamodule id="meta-gtk-osx-bootstrap">
     <dependencies>
       <dep package="libpng"/>
       <dep package="libjpeg"/>
       <dep package="libtiff"/>
-      <dep package="hicolor-icon-theme"/>
       <dep package="gtk-doc"/>
     </dependencies>
   </metamodule>

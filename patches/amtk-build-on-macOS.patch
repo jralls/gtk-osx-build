@@ -1,0 +1,15 @@
+diff -u /Users/john/Development/gtk-build/gtk-stable-10.13-x86_64/src/amtk-5.3.1/amtk/meson.build\~ /Users/john/Development/gtk-build/gtk-stable-10.13-x86_64/src/amtk-5.3.1/amtk/meson.build
+--- a/amtk/meson.build	2021-01-11 01:38:22.000000000 -0800
++++ b/amtk/meson.build	2021-04-09 10:30:46.000000000 -0700
+@@ -71,7 +71,8 @@
+ amtk_lib_link_args = []
+ amtk_lib_link_depends = []
+ 
+-if meson.get_compiler('c').get_argument_syntax() != 'msvc'
++if meson.get_compiler('c').get_argument_syntax() != 'msvc' and\
++   meson.get_compiler('c').get_linker_id() != 'ld64'
+   symbol_map = meson.current_source_dir() / 'symbol.map'
+   amtk_lib_link_args = '-Wl,--version-script,' + symbol_map
+   amtk_lib_link_depends = symbol_map
+
+Diff finished.  Fri Apr  9 14:41:36 2021
