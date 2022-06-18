@@ -59,7 +59,6 @@
       <patch file="libxml2-python-config.patch" strip="1"/>
     </branch>
     <after>
-      <dep package="python2"/>
       <dep package="python3"/>
     </after>
   </autotools>

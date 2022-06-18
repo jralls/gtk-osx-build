@@ -40,23 +40,6 @@
     </after>
   </meson>
 
-  <!-- PyGObject 3.36 is the last version of PyGObject that supports
-       Python2. It's provided here for those laggards who haven't yet
-       migrated their projects to Python3. Don't expect it to stay
-       forever, migrate now! -->
-
-   <meson id="pygobject3-2" >
-    <branch version="3.36.1" module="pygobject/3.36/pygobject-3.36.1.tar.xz"
-	    hash="sha256:d1bf42802d1cec113b5adaa0e7bf7f3745b44521dc2163588d276d5cd61d718f"/>
-    <dependencies>
-      <dep package="pycairo"/>
-    </dependencies>
-    <after>
-      <dep package="python2"/>
-      <dep package="python3"/>
-    </after>
-   </meson>
-
   <meson id="pygobject3">
     <branch tag="pygobject-3-40" module="pygobject" checkoutdir="pygobject3"/>
     <dependencies>

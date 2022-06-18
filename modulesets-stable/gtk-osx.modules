@@ -60,16 +60,6 @@
     <branch repo="system"/>
   </systemmodule>
 
-  <metamodule id="meta-gtk-osx-gtk2">
-    <dependencies>
-      <dep package="gtk+-2.0"/>
-      <dep package="gtk-mac-integration"/>
-    </dependencies>
-    <after>
-      <dep package="meta-gtk-osx-bootstrap"/>
-    </after>
-  </metamodule>
-
   <metamodule id="meta-gtk-osx-gtk3">
     <dependencies>
       <dep package="gtk+-3.0"/>
@@ -255,35 +245,6 @@
   <autotools id="hicolor-icon-theme">
     <branch module="hicolor-icon-theme-0.17.tar.xz" version="0.17"
             repo="hicolor"/>
-  </autotools>
-
-  <!-- gtk2 has reached its end-of-life as of December 2020 and 2.24.33 is the final release. -->
-  <autotools id="gtk+-2.0" autogen-sh="autoreconf"
-             autogenargs="--with-gdktarget=quartz --enable-quartz-relocation --disable-introspection --disable-visibility">
-    <branch module="gtk+/2.24/gtk+-2.24.33.tar.xz" version="2.24.33"
-            hash="sha256:ac2ac757f5942d318a311a54b0c80b5ef295f299c2a73c632f6bfb1ff49cc6da">
-      <!--patch file="0004-Bug-571582-GtkSelection-implementation-for-quartz.patch" strip="1"/-->
-      <patch file="0008-Implement-GtkDragSourceOwner-pasteboardChangedOwner.patch" strip="1"/>
-      <patch file="0006-Bug-658722-Drag-and-Drop-sometimes-stops-working.patch" strip="1"/>
-      <patch file="gtk+-2-m4-creation.patch" strip="1"/>
-      <!-- upstream bug https://bugzilla.gnome.org/show_bug.cgi?id=767091 -->
-      <patch file="gtk-gimp-dnd-bug767091.patch" strip="1"/>
-      <!-- upstream bug: https://gitlab.gnome.org/GNOME/gtk/issues/529 -->
-      <patch file="https://gitlab.gnome.org/GNOME/gtk/uploads/f0c19446b9cd1df467c4cc9050516d4b/0001-Bug-743717-Crashes-on-clipboard-operation-influence-.patch" strip="1"/>
-      <!-- upstream bug: https://gitlab.gnome.org/GNOME/gtk/issues/580 -->
-      <patch file="https://gitlab.gnome.org/GNOME/gtk/uploads/2a194d81de8e8346a81816870264b3bf/gdkimage.patch" strip="1"/>
-    </branch>
-    <dependencies>
-      <dep package="glib"/>
-      <dep package="pango"/>
-      <dep package="atk"/>
-      <dep package="gdk-pixbuf"/>
-      <dep package="gobject-introspection"/>
-      <dep package="hicolor-icon-theme"/>
-    </dependencies>
-    <after>
-      <dep package="meta-gtk-osx-bootstrap"/>
-    </after>
   </autotools>
 
   <autotools id="xorg-util-macros">

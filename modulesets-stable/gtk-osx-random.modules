@@ -39,12 +39,9 @@
             hash="sha256:1de26310db465aca525679d3b5a3c1d8db2e067c4cbc0e5ddd015cd938bac68b"/>
     <dependencies>
       <dep package="graphviz"/>
-    </dependencies>
-    <after>
       <dep package="meta-gtk-osx-bootstrap"/>
       <dep package="meta-gtk-osx-gtk3"/>
-      <dep package="meta-gtk-osx-gtk2"/>
-    </after>
+    </dependencies>
   </autotools>
 
   <autotools id="expat" autogen-sh="configure">

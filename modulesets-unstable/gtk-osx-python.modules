@@ -34,13 +34,9 @@
     <branch module="pygobject/pycairo" repo="github" />
     <dependencies>
       <dep package="cairo"/>
-    </dependencies>
-    <after>
       <dep package="python3"/>
-      <dep package="python"/>
-      <dep package="meta-gtk-osx-gtk2"/>
       <dep package="meta-gtk-osx-gtk3"/>
-    </after>
+    </dependencies>
  </meson>
 
   <meson id="pygobject3" >

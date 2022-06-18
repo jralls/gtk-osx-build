@@ -16,26 +16,6 @@
   <repository type="tarball" name="github-tarball"
               href="https://github.com"/>
 
-  <metamodule id="meta-gtk-osx-python2-gtk2">
-    <dependencies>
-      <dep package="pycairo"/>
-      <dep package="pygobject2"/>
-      <dep package="pygtk"/>
-      <dep package="gtk-mac-integration-python"/>
-    </dependencies>
-  </metamodule>
-
-  <metamodule id="meta-gtk-osx-python2-gtk3">
-    <dependencies>
-      <dep package="pycairo"/>
-      <dep package="pygobject3-2"/>
-      <dep package="gtk-mac-integration-python"/>
-    </dependencies>
-    <after>
-      <dep package="meta-gtk-osx-gtk3"/>
-    </after>
-  </metamodule>
-
   <metamodule id="meta-gtk-osx-python3-gtk3">
     <dependencies>
       <dep package="pycairo"/>
@@ -46,20 +26,6 @@
       <dep package="meta-gtk-osx-gtk3"/>
     </after>
   </metamodule>
-
-  <!-- Python 2 end-of-life was 31 December 2020 and 2.7.18 was the last release. -->
-  <autotools id="python2" autogenargs="--enable-shared"
-	     supports-non-srcdir-builds="no" autogen-sh="autoreconf">
-       <branch repo="python"
-               module="2.7.18/Python-2.7.18.tgz" version="2.7.18"
-               hash="sha256:da3080e3b488f648a3d7a4560ddee895284c3380b11d6de75edb986526b9a814">
-  <!-- related to https://bugs.python.org/issue11445 -->
-  <patch file="python-ldflags.patch" strip="1"/>
-    </branch>
-    <dependencies>
-      <dep package='readline'/>
-    </dependencies>
-  </autotools>
 
   <autotools id="python3" autogenargs="--enable-shared" autogen-sh="configure">
     <branch repo="python" module="3.10.2/Python-3.10.2.tar.xz" version="3.10.2"
@@ -77,48 +43,10 @@
 	    hash="sha256:5695a10cb7f9ae0d01f665b56602a845b0a8cb17e2123bfece10c2e58552468c"/>
     <dependencies>
       <dep package="cairo"/>
-    </dependencies>
-    <after>
       <dep package="python3"/>
-      <dep package="python2"/>
       <dep package="meta-gtk-osx-gtk3"/>
-      <dep package="meta-gtk-osx-gtk2"/>
-    </after>
+    </dependencies>
   </meson>
-
-  <!-- PyGObject 3.36 is the last version of PyGObject that supports
-       Python2. It's provided here for those laggards who haven't yet
-       migrated their projects to Python3. Don't expect it to stay
-       forever, migrate now! -->
-
-   <meson id="pygobject3-2" >
-    <branch version="3.36.1" module="pygobject/3.36/pygobject-3.36.1.tar.xz"
-	    hash="sha256:d1bf42802d1cec113b5adaa0e7bf7f3745b44521dc2163588d276d5cd61d718f"/>
-    <dependencies>
-      <dep package="pycairo"/>
-    </dependencies>
-    <after>
-      <dep package="python2"/>
-      <dep package="python3"/>
-    </after>
-   </meson>
-
-  <!-- PyGObject 3.36 is the last version of PyGObject that supports
-       Python2. It's provided here for those laggards who haven't yet
-       migrated their projects to Python3. Don't expect it to stay
-       forever, migrate now! -->
-
-   <meson id="pygobject3-2" >
-    <branch version="3.36.1" module="pygobject/3.36/pygobject-3.36.1.tar.xz"
-	    hash="sha256:d1bf42802d1cec113b5adaa0e7bf7f3745b44521dc2163588d276d5cd61d718f"/>
-    <dependencies>
-      <dep package="pycairo"/>
-    </dependencies>
-    <after>
-      <dep package="python2"/>
-      <dep package="python3"/>
-    </after>
-   </meson>
 
    <meson id="pygobject3" >
     <branch version="3.40.1" module="pygobject/3.40/pygobject-3.40.1.tar.xz"
