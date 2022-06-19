@@ -71,7 +71,7 @@
             hash="sha256:4dae6fdcd2bb0bb6c37b5f97c33c2be954da743985369cddac3546e3218bffb8"/>
   </autotools>
   
-  <meson id="glib" mesonargs"-Dlibmount=disabled">
+  <meson id="glib" mesonargs="-Dlibmount=disabled">
     <branch tag="glib-2-72"/>
     <dependencies>
       <dep package="libffi"/>
