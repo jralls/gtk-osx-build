@@ -45,7 +45,7 @@
              autogenargs="--disable-documentation --disable-assembler"
              autogen-sh="autoreconf">
     <branch repo="lysator" module="nettle/nettle.git"
-            tag="nettle_3.7.2_release_20210321"/>
+            tag="nettle_3.7.3_release_20210606"/>
     <dependencies>
       <dep package="gmp"/>
       <dep package="openssl"/>
