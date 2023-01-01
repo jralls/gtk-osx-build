@@ -168,7 +168,7 @@
 
   <autotools id="libwebp" autogen-sh="autoreconf"
              autogenargs="--enable-libwebpmux --enable-libwebpdecoder">
-    <branch repo="chromium" module="webm/libwebp" revision="1.2.0"/>
+    <branch repo="chromium" module="webm/libwebp" revision="1.2.2"/>
   </autotools>
 
   <!-- This is the stable release of WebKitGTK, for GTK 3.x. Use it if you need
