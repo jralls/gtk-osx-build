@@ -84,7 +84,7 @@
             module="pcre/pcre-8.45.tar.bz2"
             hash="sha256:4dae6fdcd2bb0bb6c37b5f97c33c2be954da743985369cddac3546e3218bffb8"/>
   </autotools>
-  
+
   <meson id="glib" mesonargs="-Dlibmount=disabled">
     <branch module="glib/2.72/glib-2.72.0.tar.xz"  version="2.72.0"
             hash="sha256:d7bef0d4c4e7a62e08efb8e5f252a01357007b9588a87ff2b463a3857011f79d">
@@ -129,7 +129,7 @@
     </dependencies>
   </cmake>
 
- <autotools id="fontconfig" autogen-sh="configure"
+  <autotools id="fontconfig" autogen-sh="configure"
              autogenargs="--disable-docs --with-default-fonts=/System/Library/Fonts --with-add-fonts=/Library/Fonts --with-cache-dir=home">
     <branch repo="fontconfig" version="2.13.1"
             module="fontconfig-2.13.1.tar.bz2"
@@ -218,7 +218,7 @@
       <dep package="meta-gtk-osx-bootstrap"/>
     </after>
   </meson>
-  
+
   <meson id="atk">
     <branch module="atk/2.36/atk-2.36.0.tar.xz" version="2.36.0"
             hash="sha256:fb76247e369402be23f1f5c65d38a9639c1164d934e40f6a9cf3c9e96b652788"/>
