@@ -35,9 +35,9 @@
   </autotools>
 
   <autotools id="libtiff" autogen-sh="configure" autogenargs="--without-x">
-    <branch version="4.2.0" module="libtiff/tiff-4.2.0.tar.gz"
+    <branch version="4.4.0" module="libtiff/tiff-4.4.0.tar.gz"
             repo="libtiff"
-            hash="sha256:eb0484e568ead8fa23b513e9b0041df7e327f4ee2d22db5a533929dfc19633cb">
+            hash="sha256:917223b37538959aca3b790d2d73aa6e626b688e02dcda272aec24c2f498abed">
 	<patch file="tiff-nohtml.patch" strip="1" />
     </branch>
     <dependencies>
