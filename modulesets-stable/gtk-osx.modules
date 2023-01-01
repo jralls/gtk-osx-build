@@ -122,6 +122,7 @@
 
   <cmake id="freetype" cmakeargs="-DCMAKE_DISABLE_FIND_PACKAGE_BZip2=TRUE -D BUILD_SHARED_LIBS=true -D CMAKE_BUILD_TYPE=Release">
     <branch module="freetype/freetype-2.11.1.tar.gz" version="2.11.1"
+            hash="sha256:f8db94d307e9c54961b39a1cc799a67d46681480696ed72ecf78d4473770f09b"/>
             repo="sourceforge"/>
     <dependencies>
       <dep package="harfbuzz-no-cairo"/>
@@ -183,8 +184,8 @@
 
   <meson id="harfbuzz" mesonargs="-Dcoretext=enabled -Dfreetype=enabled -Ddocs=disabled -Dbenchmark=disabled -Dintrospection=enabled">
     <branch repo="github-tarball" version="4.1.0"
-            module="harfbuzz/harfbuzz/releases/download/4.1.0/harfbuzz-4.1.0.tar.xz" 
->
+            module="harfbuzz/harfbuzz/releases/download/4.1.0/harfbuzz-4.1.0.tar.xz">
+            hash="sha256:f7984ff4241d4d135f318a93aa902d910a170a8265b7eaf93b5d9a504eed40c8">
     </branch>
     <dependencies>
       <dep package="gobject-introspection"/>
@@ -285,7 +286,7 @@
   <meson id="graphene" mesonargs="-Dtests=false">
     <branch repo="github-tarball" version="1.10.6"
             module="ebassi/graphene/releases/download/1.10.6/graphene-1.10.6.tar.xz"/>
-      <!--      hash="sha256:"/ -->
+            hash="sha256:80ae57723e4608e6875626a88aaa6f56dd25df75024bd16e9d77e718c3560b25"/>
     <dependencies>
       <dep package="glib"/>
       <dep package="gobject-introspection"/>
@@ -297,8 +298,8 @@
     <branch repo="github-tarball" version="3.6.5"
             module="sass/libsass/archive/refs/tags/3.6.5.tar.gz"
             rename-tarball="libsass-3.6.5.tar.gz"
-            checkoutdir="libsass-3.6.5"/>
-            <!--hash="sha256:"/ -->
+            checkoutdir="libsass-3.6.5"
+            hash="sha256:89d8f2c46ae2b1b826b58ce7dde966a176bac41975b82e84ad46b01a55080582"/>
   </autotools>
 
   <meson id="gtk-4" mesonargs="-Dx11-backend=false -Dmedia-gstreamer=disabled">
