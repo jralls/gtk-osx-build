@@ -3,8 +3,8 @@
 <?xml-stylesheet type="text/xsl" href="moduleset.xsl"?>
 <moduleset>
 
-  <repository type="tarball" name="ftp.gnome.org" default="yes"
-              href="http://download.gnome.org/sources/"/>
+  <repository type="tarball" name="download.gnome.org" default="yes"
+              href="https://download.gnome.org/sources/"/>
   <repository type="tarball" name="ftp.gnu.org" href="https://ftp.gnu.org/gnu/"/>
   <repository type="tarball" name="sourceforge"
               href="http://downloads.sourceforge.net/sourceforge/"/>

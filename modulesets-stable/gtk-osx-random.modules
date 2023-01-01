@@ -2,8 +2,8 @@
 <!DOCTYPE moduleset SYSTEM "moduleset.dtd">
 <?xml-stylesheet type="text/xsl" href="moduleset.xsl"?>
 <moduleset>
-  <repository type="tarball" name="ftp.gnome.org" default="yes"
-              href="http://download.gnome.org/sources/"/>
+  <repository type="tarball" name="download.gnome.org" default="yes"
+              href="https://download.gnome.org/sources/"/>
   <repository type="tarball" name="github-tarball" href="https://github.com/"/>
   <repository type="tarball" name="ftp.gnu.org" href="https://ftp.gnu.org/gnu/"/>
 
@@ -34,7 +34,7 @@
   </cmake>
 
   <autotools id="vala" autogen-sh="configure">
-    <branch repo="ftp.gnome.org" version="0.52.0"
+    <branch version="0.52.0"
             module="vala/0.52/vala-0.52.0.tar.xz"
             hash="sha256:1de26310db465aca525679d3b5a3c1d8db2e067c4cbc0e5ddd015cd938bac68b"/>
     <dependencies>

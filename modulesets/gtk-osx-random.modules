@@ -5,8 +5,8 @@
   <repository type="git" name="git.gnome.org" default="yes"
               href="https://gitlab.gnome.org/GNOME"/>
   <repository type="git" name="github" href="https://github.com/"/>
-  <repository type="tarball" name="ftp.gnome.org" 
-              href="http://download.gnome.org/sources/"/>
+  <repository type="tarball" name="download.gnome.org" default="yes"
+              href="https://download.gnome.org/sources/"/>
   <repository type="tarball" name="ftp.gnu.org" href="https://ftp.gnu.org/gnu/"/>
   <repository type="tarball" name="shared-mime-info"
               href="https://gitlab.freedesktop.org/xdg/shared-mime-info/uploads/"/>
@@ -24,7 +24,7 @@
 
    <cmake id="graphviz">
     <branch module="2.47.0/graphviz-2.47.0.tar.bz2" version="2.47.0"
-            repo="graphviz" 
+            repo="graphviz"
             hash="sha256:dade5b374ce483bf28f2e535baef02280ba8ab86fbe6e93252ab0de48396b714">
       <patch file="graphviz-remove-rpath.patch" strip="1"/>
     </branch>
@@ -35,7 +35,7 @@
   </cmake>
 
   <autotools id="vala" autogen-sh="configure">
-    <branch repo="ftp.gnome.org" version="0.52.0"
+    <branch repo="download.gnome.org" version="0.52.0"
             module="vala/0.52/vala-0.52.0.tar.xz"
             hash="sha256:1de26310db465aca525679d3b5a3c1d8db2e067c4cbc0e5ddd015cd938bac68b"/>
     <dependencies>
@@ -92,7 +92,7 @@
             module="pcre/pcre2-10.36.tar.bz2"
             hash="sha256:a9ef39278113542968c7c73a31cfcb81aca1faa64690f400b907e8ab6b4a665c"/>
   </autotools>
-  
+
  <meson id="gtksourceview4">
     <branch revision="5.0.0"/>
     <dependencies>
@@ -101,7 +101,7 @@
     </dependencies>
   </meson>
 
-<autotools id="getopt" autogen-sh="configure"
+  <autotools id="getopt" autogen-sh="configure"
              supports-non-srcdir-builds="no">
     <branch repo="fossies" version="1.1.6" module="getopt-1.1.6.tar.gz"
             hash="sha256:d0bf1dc642a993e7388a1cddfb9409bed375c21d5278056ccca3a0acd09dc5fe">
@@ -171,7 +171,6 @@
 
   <autotools id="enchant" autogenargs="--enable-relocatable"
              autogen-template="pushd %(srcdir)s &amp;&amp; ./%(autogen-sh)s &amp;&amp; popd &amp;&amp; %(srcdir)s/configure --prefix=%(prefix)s %(autogenargs)s">
-    
     <branch repo="github" module="AbiWord/enchant" tag="enchant-2-2-15"/>
     <dependencies>
       <dep package="glib"/>
@@ -210,5 +209,5 @@
     </branch>
   </autotools>
 
- 
+
 </moduleset>
