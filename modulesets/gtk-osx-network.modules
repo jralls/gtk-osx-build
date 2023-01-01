@@ -96,19 +96,19 @@
   <autotools id="libgpg-error" autogen-sh="autoreconf"
              autogenargs="--disable-doc">
     <branch repo="git.gnupg.org" module="libgpg-error"
-            revision="libgpg-error-1.42"/>
+            revision="libgpg-error-1.43"/>
   </autotools>
 
   <autotools id="libgcrypt" autogen-sh="autoreconf"
              autogenargs="--disable-asm --disable-doc">
-    <branch repo="git.gnupg.org" module="libgcrypt" revision="libgcrypt-1.9.2"/>
+    <branch repo="git.gnupg.org" module="libgcrypt" revision="libgcrypt-1.9.4"/>
     <dependencies>
       <dep package="libgpg-error" />
     </dependencies>
   </autotools>
 
   <autotools id="gpg">
-    <branch repo="git.gnupg.org" module="gnupg" revision="gnupg-2.2.27"/>
+    <branch repo="git.gnupg.org" module="gnupg" revision="gnupg-2.3.3"/>
     <dependencies>
       <dep package="libgpg-error"/>
       <dep package="libgcrypt"/>

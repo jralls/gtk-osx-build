@@ -109,24 +109,25 @@
 
   <autotools id="libgpg-error" autogen-sh="autoreconf"
              autogenargs="--disable-doc">
-    <branch repo="gnupg.org" version="1.42"
-            module="gcrypt/libgpg-error/libgpg-error-1.42.tar.bz2"
-            hash="sha256:fc07e70f6c615f8c4f590a8e37a9b8dd2e2ca1e9408f8e60459c67452b925e23">
+    <branch repo="gnupg.org" version="1.43"
+            module="gcrypt/libgpg-error/libgpg-error-1.43.tar.bz2"
+            hash="sha256:a9ab83ca7acc442a5bd846a75b920285ff79bdb4e3d34aa382be88ed2c3aebaf">
     </branch>
   </autotools>
 
  <autotools id="libgcrypt" autogen-sh="configure">
-    <branch repo="gnupg.org" version="1.9.2"
-            module="gcrypt/libgcrypt/libgcrypt-1.9.2.tar.bz2"
-            hash="sha256:b2c10d091513b271e47177274607b1ffba3d95b188bbfa8797f948aec9053c5a"/>
+    <branch repo="gnupg.org" version="1.9.4"
+            module="gcrypt/libgcrypt/libgcrypt-1.9.4.tar.bz2"
+            hash="sha256:ea849c83a72454e3ed4267697e8ca03390aee972ab421e7df69dfe42b65caaf7"/>
     <dependencies>
       <dep package="libgpg-error"/>
     </dependencies>
   </autotools>
 
   <autotools id="gpg" autogen-sh='configure'>
-    <branch repo="gnupg.org" version="2.2.27"
-            module="gcrypt/gnupg/gnupg-2.2.27.tar.bz2"
+    <branch repo="gnupg.org" version="2.3.3"
+            module="gcrypt/gnupg/gnupg-2.3.3.tar.bz2"
+            hash="sha256:5789b86da6a1a6752efb38598f16a77af51170a8494039c3842b085032e8e937"/>
             />
     <dependencies>
       <dep package="libgpg-error"/>
