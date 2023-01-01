@@ -19,7 +19,7 @@
   <repository type="tarball" name="sqlite" href="http://www.sqlite.org/"/>
   <repository type="tarball" name="fossies"
               href="https://fossies.org/linux/misc/"/>
-  <repository type="tarball" name="paguire" href="https://releases.pagure.org/"/> 
+  <repository type="tarball" name="paguire" href="https://releases.pagure.org/"/>
   <repository type="tarball" name="pcre" href="https://ftp.pcre.org/pub/"/>
 
    <cmake id="graphviz">

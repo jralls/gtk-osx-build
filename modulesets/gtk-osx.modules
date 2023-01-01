@@ -70,7 +70,7 @@
             module="pcre/pcre-8.45.tar.bz2"
             hash="sha256:4dae6fdcd2bb0bb6c37b5f97c33c2be954da743985369cddac3546e3218bffb8"/>
   </autotools>
-  
+
   <meson id="glib" mesonargs="-Dlibmount=disabled">
     <branch tag="glib-2-72"/>
     <dependencies>
@@ -248,7 +248,7 @@
              autogenargs="--disable-tests --disable-static">
     <branch repo="github" revision="3.6.4" module="sass/libsass"/>
   </autotools>
-     
+
   <meson id="gtk-4" mesonargs="-Dx11-backend=false -Dmedia-gstreamer=disabled">
     <branch module="gtk" checkoutdir="gtk-4.0" revision="gtk-4-6"/>
     <dependencies>
