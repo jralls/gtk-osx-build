@@ -133,7 +133,7 @@
       <dep package="libgcrypt"/>
     </dependencies>
   </autotools>
-  
+
   <meson id="libsecret" mesonargs="-Dvapi=disabled -Dgtk_doc=disabled">
     <branch version="0.20.4"
             module="libsecret/0.20/libsecret-0.20.4.tar.xz"
@@ -155,7 +155,7 @@
       <dep package="glib"/>
     </dependencies>
   </meson>
-  
+
   <autotools id="gnome-keyring"
              autogenargs="--disable-pam --without-root-certs">
     <branch module="gnome-keyring/40/gnome-keyring-40.0.tar.xz"
