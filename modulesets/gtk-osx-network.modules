@@ -151,7 +151,7 @@
   </meson>
 
   <autotools id="libpsl" autogen-sh='configure'>
-    <branch  repo="github" module="rockdaboot/libpsl" revision="libpsl-0.21.0"/>
+    <branch  repo="github" module="rockdaboot/libpsl" revision="libpsl-0.21.2"/>
   </autotools>
 
   <meson id="libsoup" mesonargs="-Dvapi=disabled">
