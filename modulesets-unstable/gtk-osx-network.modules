@@ -132,7 +132,7 @@
       <dep package="glib"/>
     </dependencies>
   </meson>
-  
+
   <autotools id="gnome-keyring"
              autogenargs="--disable-pam --without-root-certs">
     <branch module="gnome-keyring"/>
