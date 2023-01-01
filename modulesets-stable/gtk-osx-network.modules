@@ -94,7 +94,8 @@
     <autotools id="gnutls" autogen-sh="autoreconf"
                autogenargs="--disable-gtk-doc-html --with-included-unistring">
       <branch repo="gnupg.org" version="3.7.7"
-              module="gcrypt/gnutls/v3.7/gnutls-3.7.7.tar.xz">
+              module="gcrypt/gnutls/v3.7/gnutls-3.7.7.tar.xz"
+              hash="sha256:be9143d0d58eab64dba9b77114aaafac529b6c0d7e81de6bdf1c9b59027d2106">
       </branch>
       <dependencies>
         <dep package="libnettle"/>
