@@ -23,7 +23,7 @@
 
   <cmake id="graphviz">
     <branch module="2.47.0/graphviz-2.47.0.tar.bz2" version="2.47.0"
-            repo="graphviz" 
+            repo="graphviz"
             hash="sha256:dade5b374ce483bf28f2e535baef02280ba8ab86fbe6e93252ab0de48396b714">
       <patch file="graphviz-remove-rpath.patch" strip="1"/>
     </branch>
@@ -101,7 +101,7 @@
             module="pcre/pcre2-10.36.tar.bz2"
             hash="sha256:a9ef39278113542968c7c73a31cfcb81aca1faa64690f400b907e8ab6b4a665c"/>
   </autotools>
-  
+
   <meson id="gtksourceview4">
     <branch module="gtksourceview/5.0/gtksourceview-5.0.0.tar.xz"
             version="5.0.0"
@@ -189,7 +189,7 @@
 
   <autotools id="enchant" autogen-sh="configure"
              autogenargs="--enable-relocatable" >
-    <branch module="AbiWord/enchant/releases/download/v2.2.15/enchant-2.2.15.tar.gz" 
+    <branch module="AbiWord/enchant/releases/download/v2.2.15/enchant-2.2.15.tar.gz"
             repo="github-tarball" version="2.2.15"
             hash="sha256:3b0f2215578115f28e2a6aa549b35128600394304bd79d6f28b0d3b3d6f46c03">
     </branch>

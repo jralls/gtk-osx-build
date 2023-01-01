@@ -5,7 +5,7 @@
   <repository type="git" name="git.gnome.org" default="yes"
               href="https://gitlab.gnome.org/GNOME"/>
   <repository type="git" name="github" href="https://github.com/"/>
-  <repository type="tarball" name="ftp.gnome.org" 
+  <repository type="tarball" name="ftp.gnome.org"
               href="http://download.gnome.org/sources/"/>
   <repository type="tarball" name="ftp.gnu.org" href="https://ftp.gnu.org/gnu/"/>
   <repository type="tarball" name="shared-mime-info"
@@ -25,7 +25,7 @@
 
   <cmake id="graphviz">
     <branch module="2.47.0/graphviz-2.47.0.tar.bz2" version="2.47.0"
-            repo="graphviz" 
+            repo="graphviz"
             hash="sha256:dade5b374ce483bf28f2e535baef02280ba8ab86fbe6e93252ab0de48396b714">
       <patch file="graphviz-remove-rpath.patch" strip="1"/>
     </branch>
@@ -76,7 +76,7 @@
   <meson id="devhelp-gtk3">
     <branch>
       <patch file="devhelp-3-build-on-macOS.patch" strip="1"/>
-    </branch>      
+    </branch>
     <dependencies>
       <dep package="webkit2gtk3"/>
       <dep package="amtk"/>
@@ -106,7 +106,7 @@
             module="pcre/pcre2-10.36.tar.bz2"
             hash="sha256:4d95a96e8b80529893b4562be12648d798b957b1ba1aae39606bbc2ab956d270"/>
   </autotools>
-  
+
  <meson id="gtksourceview4">
     <branch />
     <dependencies>
