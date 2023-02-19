@@ -22,8 +22,10 @@
   </metamodule>
 
   <autotools id="python3" autogenargs="--enable-shared" autogen-sh="autoreconf">
-    <branch repo="python" module="3.10.2/Python-3.10.2.tar.xz" version="3.10.2"
-            hash="sha256:17de3ac7da9f2519aa9d64378c603a73a0e9ad58dffa8812e45160c086de64c7"/>
+    <branch module="3.10.10/Python-3.10.10.tar.xz"
+            version="3.10.10"
+            hash="sha256:0419e9085bf51b7a672009b3f50dbf1859acdf18ba725d0ec19aa5c8503f0ea3"
+            repo="python" />
     <dependencies>
       <dep package='readline'/>
       <dep package="openssl" /> <!-- For hashlib -->
