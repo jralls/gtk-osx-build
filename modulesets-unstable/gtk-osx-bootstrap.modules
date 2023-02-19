@@ -14,8 +14,6 @@
 	      href="http://download.osgeo.org/"/>
   <repository type="tarball" name="icon-theme"
 	      href="http://icon-theme.freedesktop.org/releases/"/>
-  <repository type="tarball" name="xmlsoft.org"
-	      href="ftp://xmlsoft.org/libxml2/"/>
  <repository type="tarball" name="itstool" href="http://files.itstool.org/"/>
   <repository type="tarball" name="github-tarball" href="https://github.com/"/>
 

@@ -14,8 +14,6 @@
 	      href="http://download.osgeo.org/"/>
   <repository type="tarball" name="icon-theme"
 	      href="http://icon-theme.freedesktop.org/releases/"/>
-  <repository type="tarball" name="xmlsoft.org"
-	      href="ftp://xmlsoft.org/libxml2/"/>
   <repository type="tarball" name="itstool" href="http://files.itstool.org/"/>
   <repository type="tarball" name="github-tarball" href="https://github.com/"/>
 
@@ -53,9 +51,9 @@
 
   <autotools id="libxml2" autogen-sh="autoreconf"
              autogenargs='--libdir="$JHBUILD_LIBDIR" --with-python'>
-    <branch version="2.9.12" module="libxml2-2.9.12.tar.gz"
-            repo="xmlsoft.org"
-            hash="sha256:c8d6681e38c56f172892c85ddc0852e1fd4b53b4209e7f4ebf17f7e2eae71d92">
+    <branch module="libxml2/2.10/libxml2-2.10.3.tar.xz"
+            version="2.10.3"
+            hash="sha256:5d2cc3d78bec3dbe212a9d7fa629ada25a7da928af432c93060ff5c17ee28a9c">
       <patch file="libxml2-python-config.patch" strip="1"/>
     </branch>
     <after>
@@ -64,9 +62,9 @@
   </autotools>
 
   <autotools id="libxslt" autogen-sh="configure">
-    <branch version="1.1.34" module="libxslt-1.1.34.tar.gz"
-            hash="sha256:98b1bd46d6792925ad2dfe9a87452ea2adebf69dcb9919ffd55bf926a7f93f7f"
-	    repo="xmlsoft.org"/>
+    <branch module="libxslt/1.1/libxslt-1.1.37.tar.xz"
+            version="1.1.37"
+            hash="sha256:3a4b27dc8027ccd6146725950336f1ec520928f320f144eb5fa7990ae6123ab4" />
     <dependencies>
       <dep package="libxml2"/>
     </dependencies>
