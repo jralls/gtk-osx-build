@@ -1,0 +1,164 @@
+From f60359c183cc24435521b3d3bbcfc4ebb2a79197 Mon Sep 17 00:00:00 2001
+From: John Ralls <jralls@ceridwen.us>
+Date: Thu, 19 Jan 2023 10:37:55 -0800
+Subject: [PATCH] [quartz] GdkWindow, GdkNSView frame and cairo surface same
+ size.
+
+The cairo surface must be padded to 4 pixels in order to
+transfer correctly to the GPU. The GdkWindow and GdkNSView's
+content frame must be the same width, otherwise there's a mismatch
+that causes either the GdkWindow to draw wider than the frame or the
+frame to be clipped narrower than the title bar.
+
+Fixes #5535.
+---
+ gdk/quartz/GdkQuartzNSWindow.c | 14 +++++++++++---
+ gdk/quartz/GdkQuartzView.c     | 15 ++++++++++-----
+ gdk/quartz/gdkprivate-quartz.h |  3 ++-
+ gdk/quartz/gdkwindow-quartz.c  | 10 ++++++++--
+ 4 files changed, 31 insertions(+), 11 deletions(-)
+
+diff --git a/gdk/quartz/GdkQuartzNSWindow.c b/gdk/quartz/GdkQuartzNSWindow.c
+index f0e57434f4..5a546891aa 100644
+--- a/gdk/quartz/GdkQuartzNSWindow.c
++++ b/gdk/quartz/GdkQuartzNSWindow.c
+@@ -229,6 +229,9 @@
+   GdkWindow *window = [[self contentView] gdkWindow];
+   GdkEvent *event;
+   gboolean maximized = gdk_window_get_state (window) & GDK_WINDOW_STATE_MAXIMIZED;
++  /* Alignment to 4 pixels is on scaled pixels and these are unscaled pixels so divide by scale to compensate. */
++  const gint scale = gdk_window_get_scale_factor (window);
++  const guint align = GDK_WINDOW_QUARTZ_ALIGNMENT / scale;
+ 
+   /* see same in windowDidMove */
+   if (maximized && !inMaximizeTransition && !NSEqualRects (lastMaximizedFrame, [self frame]))
+@@ -241,13 +244,18 @@
+   window->width = content_rect.size.width;
+   window->height = content_rect.size.height;
+ 
++  if(window->width % align)
++    content_rect.size.width += align - window->width % align;
++
++  content_rect.origin.x = 0;
++  content_rect.origin.y = 0;
++
++  [[self contentView] setFrame:content_rect];
++
+   /* Certain resize operations (e.g. going fullscreen), also move the
+    * origin of the window.
+    */
+   _gdk_quartz_window_update_position (window);
+-
+-  [[self contentView] setFrame:NSMakeRect (0, 0, window->width, window->height)];
+-
+   _gdk_window_update_size (window);
+ 
+   /* Synthesize a configure event */
+diff --git a/gdk/quartz/GdkQuartzView.c b/gdk/quartz/GdkQuartzView.c
+index bd34365a1e..81c2d32007 100644
+--- a/gdk/quartz/GdkQuartzView.c
++++ b/gdk/quartz/GdkQuartzView.c
+@@ -424,8 +424,7 @@ copy_rectangle_argb32 (cairo_surface_t *dest, cairo_surface_t *source,
+     return;
+ 
+   ++impl->in_paint_rect_count;
+-  cairo_rect_from_nsrect (&bounds_rect, &backing_bounds);
+-  bounds_region = cairo_region_create_rectangle (&bounds_rect);
++
+   if (impl->needs_display_region)
+     {
+       cairo_region_t *region = impl->needs_display_region;
+@@ -439,7 +438,7 @@ copy_rectangle_argb32 (cairo_surface_t *dest, cairo_surface_t *source,
+       cairo_region_t *region;
+ 
+       cairo_rect_from_nsrect (&bounds, &layer_bounds);
+-      region = cairo_region_create_rectangle (&bounds);
++      region = cairo_region_create_rectangle(&bounds);
+       _gdk_window_process_updates_recurse (gdk_window, region);
+       cairo_region_destroy (region);
+     }
+@@ -447,8 +446,6 @@ copy_rectangle_argb32 (cairo_surface_t *dest, cairo_surface_t *source,
+   if (!impl || !impl->cairo_surface)
+     return;
+ 
+-  impl_rect.width = cairo_image_surface_get_width (impl->cairo_surface);
+-  impl_rect.height = cairo_image_surface_get_height (impl->cairo_surface);
+   CVPixelBufferLockBaseAddress (pixels, 0);
+   cvpb_surface =
+     cairo_image_surface_create_for_data (CVPixelBufferGetBaseAddress (pixels),
+@@ -458,6 +455,12 @@ copy_rectangle_argb32 (cairo_surface_t *dest, cairo_surface_t *source,
+                                          (int)CVPixelBufferGetBytesPerRow (pixels));
+ 
+ 
++  cairo_rect_from_nsrect (&bounds_rect, &backing_bounds);
++  bounds_region = cairo_region_create_rectangle (&bounds_rect);
++
++  impl_rect.width = cairo_image_surface_get_width (impl->cairo_surface);
++  impl_rect.height = cairo_image_surface_get_height (impl->cairo_surface);
++
+   cairo_region_intersect_rectangle (bounds_region, &impl_rect);
+   copy_rectangle_argb32 (cvpb_surface, impl->cairo_surface, bounds_region);
+ 
+@@ -465,7 +468,9 @@ copy_rectangle_argb32 (cairo_surface_t *dest, cairo_surface_t *source,
+   cairo_region_destroy (bounds_region);
+   _gdk_quartz_unref_cairo_surface (gdk_window); // reffed in gdk_window_impl_quartz_begin_paint
+   CVPixelBufferUnlockBaseAddress (pixels, 0);
++
+   --impl->in_paint_rect_count;
++
+   self.layer.contents = NULL;
+   self.layer.contents = (id)CVPixelBufferGetIOSurface (pixels);
+ }
+diff --git a/gdk/quartz/gdkprivate-quartz.h b/gdk/quartz/gdkprivate-quartz.h
+index a6e644b870..6b7986cedd 100644
+--- a/gdk/quartz/gdkprivate-quartz.h
++++ b/gdk/quartz/gdkprivate-quartz.h
+@@ -27,7 +27,8 @@
+ #include "config.h"
+ 
+ #define GDK_WINDOW_IS_QUARTZ(win)        (GDK_IS_WINDOW_IMPL_QUARTZ (((GdkWindow *)win)->impl))
+-
++/* Cairo surface widths must be 4-pixel byte aligned so that the image will transfer to the CPU. */
++#define GDK_WINDOW_QUARTZ_ALIGNMENT 16
+ 
+ /* Display */
+ 
+diff --git a/gdk/quartz/gdkwindow-quartz.c b/gdk/quartz/gdkwindow-quartz.c
+index 9f8534e5c1..429f2bc0cf 100644
+--- a/gdk/quartz/gdkwindow-quartz.c
++++ b/gdk/quartz/gdkwindow-quartz.c
+@@ -306,9 +306,10 @@ gdk_quartz_ref_cairo_surface (GdkWindow *window)
+       gint height = gdk_window_get_height (impl->wrapper);
+       gint scale = gdk_window_get_scale_factor (impl->wrapper);
+       gint scaled_width = width * scale;
++      const gint align = GDK_WINDOW_QUARTZ_ALIGNMENT;
+ 
+-      if (scaled_width % 16)
+-          scaled_width += 16 - scaled_width % 16; // Surface widths must be 4-pixel aligned
++      if (scaled_width % align)
++          scaled_width += align - scaled_width % align; // Surface widths must be 4-pixel aligned
+ 
+       impl->cairo_surface = gdk_quartz_create_cairo_surface (impl,
+                                                              scaled_width,
+@@ -929,6 +930,8 @@ _gdk_quartz_display_create_window_impl (GdkDisplay    *display,
+         NSUInteger style_mask;
+         int nx, ny;
+         const char *title;
++        const gint scale = gdk_window_get_scale_factor (window);
++        const guint align = GDK_WINDOW_QUARTZ_ALIGNMENT / scale;
+ 
+         /* initWithContentRect will place on the mainScreen by default.
+          * We want to select the screen to place on ourselves.  We need
+@@ -942,6 +945,9 @@ _gdk_quartz_display_create_window_impl (GdkDisplay    *display,
+         nx -= screen_rect.origin.x;
+         ny -= screen_rect.origin.y;
+ 
++        if (window->width % align)
++          window->width += align - window->width % align;
++
+         content_rect = NSMakeRect (nx, ny - window->height,
+                                    window->width,
+                                    window->height);
+-- 
+2.37.1 (Apple Git-137.1)
+

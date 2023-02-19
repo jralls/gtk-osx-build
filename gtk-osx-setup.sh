@@ -152,7 +152,7 @@ if test -x "$RUSTUP"; then
 else
     envvar CARGO_HOME "$DEVPREFIX"
     envvar RUSTUP_HOME "$DEVPREFIX"
-    curl https://sh.rustup.rs -sSf | sh -s -- -y --profile minimal --no-modify-path 
+    curl https://sh.rustup.rs -sSf | sh -s -- -y --profile minimal --no-modify-path
 fi
 
 if test ! -d "$DEVPREFIX/etc" ; then

@@ -47,7 +47,7 @@
   <systemmodule id="meson">
     <branch repo="system"/>
   </systemmodule>
-  
+
   <metamodule id="meta-gtk-osx-gtk3">
     <dependencies>
       <dep package="gtk+-3.0"/>
@@ -69,7 +69,7 @@
     <branch repo="github"
             module="PCRE2Project/pcre2"/>
   </autotools>
-  
+
   <meson id="glib" mesonargs="-Dlibmount=disabled">
     <branch revision='main'/>
     <dependencies>
@@ -97,7 +97,7 @@
       <dep package="icu"/>
     </dependencies>
   </meson>
-  
+
   <cmake id="freetype" cmakeargs="-DCMAKE_DISABLE_FIND_PACKAGE_BZip2=TRUE -D BUILD_SHARED_LIBS=TRUE -D CMAKE_BUILD_TYPE=Release">
     <branch module="freetype/freetype2" repo="nongnu"/>
     <dependencies>
@@ -216,7 +216,7 @@
       <dep package="gobject-introspection"/>
     </dependencies>
   </meson>
- 
+
   <autotools id="hicolor-icon-theme">
     <branch module="hicolor-icon-theme-0.17.tar.xz" version="0.17"
             repo="hicolor"/>
@@ -237,7 +237,7 @@
       <dep package="meta-gtk-osx-bootstrap"/>
     </after>
   </meson>
-  
+
   <meson id="graphene" mesonargs="-Dtests=false">
     <branch repo="github" revision="1.10.4" module="ebassi/graphene"/>
     <dependencies>

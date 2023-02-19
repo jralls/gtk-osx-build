@@ -86,7 +86,7 @@
       <dep package="atk"/>
     </dependencies>
   </meson>
-  
+
 <!-- libsigc++ depends on doxygen for documentation, but doxygen
      doesn't build correctly under gtk-osx. It builds fine on its own,
      of course, and there are OSX binaries available on their

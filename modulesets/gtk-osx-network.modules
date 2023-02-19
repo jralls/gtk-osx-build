@@ -12,7 +12,8 @@
               href="https://ftp.gnu.org/gnu/"/>
   <repository name="sourceforge" type="tarball"
               href="http://downloads.sourceforge.net/sourceforge/"/>
-  <repository type='git' name='git.gnupg.org' href="https://git.gnupg.org/" />  
+  <repository name='git.gnupg.org' type='git'
+              href="https://git.gnupg.org/" />  
   <repository name='gnupg.org' type='tarball' href="https://gnupg.org/ftp/" />
   <repository name="chromium" type="git"
               href="https://chromium.googlesource.com/"/>
@@ -35,8 +36,8 @@
   <autotools id="openssl" autogen-sh="Configure" autogenargs="shared "
              autogen-template="%(srcdir)s/%(autogen-sh)s --prefix=%(prefix)s --openssldir=%(prefix)s/etc/ssl %(autogenargs)s"
              makeinstallargs="install_sw" supports-non-srcdir-builds="no">
-    <branch module="openssl-1.1.1n.tar.gz" version="1.1.1n" repo="openssl"
-            hash="sha256:40dceb51a4f6a5275bde0e6bf20ef4b91bfc32ed57c0552e2e8e15463372b17a"/>
+    <branch module="openssl-1.1.1s.tar.gz" version="1.1.1s" repo="openssl"
+            hash="sha256:c5ac01e760ee6ff0dab61d6b2bbd30146724d063eb322180c6f18a6f74e4b6aa"/>
   </autotools>
 
   <!-- Rudely demands TeX to build documentation -->
@@ -45,7 +46,7 @@
              autogenargs="--disable-documentation --disable-assembler"
              autogen-sh="autoreconf">
     <branch repo="lysator" module="nettle/nettle.git"
-            tag="nettle_3.7.2_release_20210321"/>
+            tag="nettle_3.7.3_release_20210606"/>
     <dependencies>
       <dep package="gmp"/>
       <dep package="openssl"/>
@@ -96,19 +97,19 @@
   <autotools id="libgpg-error" autogen-sh="autoreconf"
              autogenargs="--disable-doc">
     <branch repo="git.gnupg.org" module="libgpg-error"
-            revision="libgpg-error-1.42"/>
+            revision="libgpg-error-1.43"/>
   </autotools>
 
   <autotools id="libgcrypt" autogen-sh="autoreconf"
              autogenargs="--disable-asm --disable-doc">
-    <branch repo="git.gnupg.org" module="libgcrypt" revision="libgcrypt-1.9.2"/>
+    <branch repo="git.gnupg.org" module="libgcrypt" revision="libgcrypt-1.9.4"/>
     <dependencies>
       <dep package="libgpg-error" />
     </dependencies>
   </autotools>
 
   <autotools id="gpg">
-    <branch repo="git.gnupg.org" module="gnupg" revision="gnupg-2.2.27"/>
+    <branch repo="git.gnupg.org" module="gnupg" revision="gnupg-2.3.3"/>
     <dependencies>
       <dep package="libgpg-error"/>
       <dep package="libgcrypt"/>
@@ -151,7 +152,7 @@
   </meson>
 
   <autotools id="libpsl" autogen-sh='configure'>
-    <branch  repo="github" module="rockdaboot/libpsl" revision="libpsl-0.21.0"/>
+    <branch  repo="github" module="rockdaboot/libpsl" revision="libpsl-0.21.2"/>
   </autotools>
 
   <meson id="libsoup" mesonargs="-Dvapi=disabled">
@@ -168,7 +169,7 @@
 
   <autotools id="libwebp" autogen-sh="autoreconf"
              autogenargs="--enable-libwebpmux --enable-libwebpdecoder">
-    <branch repo="chromium" module="webm/libwebp" revision="1.2.0"/>
+    <branch repo="chromium" module="webm/libwebp" revision="1.2.2"/>
   </autotools>
 
   <!-- This is the stable release of WebKitGTK, for GTK 3.x. Use it if you need

@@ -1,0 +1,25 @@
+From 10689066e33eb07d5d2bbdd8cc12d15fe173db58 Mon Sep 17 00:00:00 2001
+From: John Ralls <jralls@ceridwen.us>
+Date: Fri, 6 Jan 2023 10:13:02 -0800
+Subject: [PATCH] [quartz] Fix typo to call function.
+
+---
+ gdk/quartz/gdkevents-quartz.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gdk/quartz/gdkevents-quartz.c b/gdk/quartz/gdkevents-quartz.c
+index 60e9eaf131..630be6e1c7 100644
+--- a/gdk/quartz/gdkevents-quartz.c
++++ b/gdk/quartz/gdkevents-quartz.c
+@@ -858,7 +858,7 @@ find_window_for_ns_event (NSEvent *nsevent,
+        * macOS versions. These trigger 4 pixels out from the window's
+        * frame so we obtain that rect and adjust it for hit testing.
+        */
+-      if (!nsevent.trackingArea && gdk_quartz_osx_version >= GDK_OSX_VENTURA)
++      if (!nsevent.trackingArea && gdk_quartz_osx_version() >= GDK_OSX_VENTURA)
+         {
+           static const int border_width = 4;
+           NSRect frame = nsevent.window.frame;
+-- 
+2.37.1 (Apple Git-137.1)
+

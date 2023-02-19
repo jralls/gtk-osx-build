@@ -12,7 +12,7 @@
               href="https://ftp.gnu.org/gnu/"/>
   <repository name="sourceforge" type="tarball"
               href="http://downloads.sourceforge.net/sourceforge/"/>
-  <repository type='git' name='git.gnupg.org' href="https://git.gnupg.org/" />  
+  <repository type='git' name='git.gnupg.org' href="https://dev.gnupg.org/source/" />  
   <repository name='gnupg.org' type='tarball' href="https://gnupg.org/ftp/" />
   <repository name="chromium" type="git"
               href="https://chromium.googlesource.com/"/>
@@ -37,8 +37,8 @@
   <autotools id="openssl" autogen-sh="Configure" autogenargs="shared "
              autogen-template="%(srcdir)s/%(autogen-sh)s --prefix=%(prefix)s --openssldir=%(prefix)s/etc/ssl %(autogenargs)s"
              makeinstallargs="install_sw" supports-non-srcdir-builds="no">
-    <branch module="openssl-1.1.1n.tar.gz" version="1.1.1n" repo="openssl"
-            hash="sha256:40dceb51a4f6a5275bde0e6bf20ef4b91bfc32ed57c0552e2e8e15463372b17a"/>
+    <branch module="openssl-1.1.1s.tar.gz" version="1.1.1s" repo="openssl"
+            hash="sha256:c5ac01e760ee6ff0dab61d6b2bbd30146724d063eb322180c6f18a6f74e4b6aa"/>
   </autotools>
 
   <!-- Rudely demands TeX to build documentation -->
@@ -96,19 +96,19 @@
 
   <autotools id="libgpg-error" autogen-sh="autoreconf"
              autogenargs="--disable-doc">
-    <branch repo="git.gnupg.org" module="libgpg-error"/>
+    <branch repo="git.gnupg.org" module="libgpg-error.git"/>
   </autotools>
 
   <autotools id="libgcrypt" autogen-sh="autoreconf"
              autogenargs="--disable-asm --disable-doc">
-    <branch repo="git.gnupg.org" module="libgcrypt"/>
+    <branch repo="git.gnupg.org" module="libgcrypt.git"/>
     <dependencies>
       <dep package="libgpg-error" />
     </dependencies>
   </autotools>
 
   <autotools id="gpg">
-    <branch repo="git.gnupg.org" module="gnupg"/>
+    <branch repo="git.gnupg.org" module="gnupg.git"/>
     <dependencies>
       <dep package="libgpg-error"/>
       <dep package="libgcrypt"/>
@@ -132,7 +132,7 @@
       <dep package="glib"/>
     </dependencies>
   </meson>
-  
+
   <autotools id="gnome-keyring"
              autogenargs="--disable-pam --without-root-certs">
     <branch module="gnome-keyring"/>
@@ -142,14 +142,20 @@
     </dependencies>
   </autotools>
 
-  <meson id="glib-networking" mesonargs="-Dopenssl=enabled">
+  <meson id="glib-networking" mesonargs="-Dopenssl=enabled -Dlibproxy=disabled -Dgnome_proxy=disabled">
     <branch/>
     <dependencies>
       <dep package="gnutls"/>
+      <dep package="libproxy"/>
     </dependencies>
   </meson>
 
-  <autotools id="libpsl" autogen-sh='configure'>
+  <autotools id="nghttp2" autogen-sh="autoreconf"
+             autogenargs="--enable-lib-only">
+    <branch repo="github" module="nghttp2/nghttp2"/>
+  </autotools>
+
+  <autotools id="libpsl" autogen-sh='autoreconf'>
     <branch repo="github" module="rockdaboot/libpsl"/>
   </autotools>
 
@@ -162,6 +168,7 @@
       <dep package="sqlite"/>
       <dep package="glib"/>
       <dep package="glib-networking"/>
+      <dep package="nghttp2"/>
     </dependencies>
   </meson>
 
@@ -214,8 +221,8 @@
        then start playing whack-a-mole until it builds and works.
   -->
   <cmake id="webkit2gtk3-git"
-         cmakeargs='-DPORT=GTK -DENABLE_X11_TARGET=OFF -DENABLE_QUARTZ_TARGET=ON -DENABLE_MINIBROWSER=ON -DENABLE_INTROSPECTION=ON  -DUSE_SYSTEMD=OFF -DENABLE_VIDEO=OFF -DENABLE_WEB_AUDIO=OFF -DENABLE_GEOLOCATION=OFF -DUSE_LIBNOTIFY=OFF -DUSE_LIBHYPHEN=OFF -DUSE_LIBSECRET=OFF -DENABLE_TOUCH_EVENTS=OFF  -DUSE_OPENJPEG=OFF -DUSE_WOFF2=OFF -DUSE_WPE_RENDERER=OFF -DENABLE_GRAPHICS_CONTEXT_GL=OFF -DENABLE_GAMEPAD=OFF -DUSE_APPLE_ICU=NO -DCMAKE_CXX_FLAGS="-stdlib=libc++" -DCMAKE_MACOSX_RPATH=OFF'>
-    <branch repo="webkit-git" module= "WebKit.git" />
+         cmakeargs='-DPORT=GTK -DENABLE_X11_TARGET=OFF -DENABLE_QUARTZ_TARGET=ON -DENABLE_MINIBROWSER=ON -DENABLE_INTROSPECTION=ON  -DUSE_SYSTEMD=OFF -DENABLE_VIDEO=OFF -DENABLE_WEB_AUDIO=OFF -DENABLE_GEOLOCATION=OFF -DUSE_LIBNOTIFY=OFF -DUSE_LIBHYPHEN=OFF -DUSE_LIBSECRET=OFF -DENABLE_TOUCH_EVENTS=OFF  -DUSE_OPENJPEG=OFF -DUSE_WOFF2=OFF -DUSE_WPE_RENDERER=OFF -DENABLE_GRAPHICS_CONTEXT_GL=OFF -DENABLE_GAMEPAD=OFF -DUSE_APPLE_ICU=NO -DCMAKE_CXX_FLAGS="-stdlib=libc++" -DCMAKE_MACOSX_RPATH=OFF  -DUSE_OPENGL_OR_ES=OFF -DUSE_GBM=OFF -DUSE_AVIF=OFF -DENABLE_JOURNALD_LOG=OFF -DENABLE_DOCUMENTATION=OFF -DUSE_LCMS=OFF -DENABLE_WEBGL=OFF -DENABLE_WEBGL2=OFF'>
+    <branch repo="github" module= "WebKit/WebKit.git" />
     <dependencies>
       <dep package="libwebp"/>
       <dep package="enchant"/>
