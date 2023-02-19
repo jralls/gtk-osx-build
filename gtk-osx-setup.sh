@@ -57,7 +57,7 @@ envvar DEV_SRC_ROOT "$DEVROOT/Source"
 envvar PYENV_INSTALL_ROOT "$DEV_SRC_ROOT/pyenv"
 envvar PYENV_ROOT "$DEVPREFIX/share/pyenv"
 envvar PIP_CONFIG_DIR "$HOME/.config/pip"
-envvar PYTHON_VERSION 3.10.2
+envvar PYTHON_VERSION 3.10.10
 
 export PYTHONWARNINGS=ignore:DEPRECATION::pip._internal.cli.base_command
 
