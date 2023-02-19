@@ -1,44 +1,57 @@
---- a/configure	2017-05-22 01:49:37.000000000 +0700
-+++ b/configure	2017-06-12 02:37:01.000000000 +0700
-@@ -20927,7 +20927,7 @@
- ac_config_headers="$ac_config_headers libtiff/tif_config.h libtiff/tiffconf.h"
+--- a/Makefile.in	2023-02-19 19:31:46.135333554 +0700
++++ b/Makefile.in	2023-02-19 19:32:28.379010562 +0700
+@@ -148,9 +148,9 @@
+ SOURCES =
+ DIST_SOURCES =
+ RECURSIVE_TARGETS = all-recursive check-recursive cscopelist-recursive \
+-	ctags-recursive dvi-recursive html-recursive info-recursive \
++	ctags-recursive dvi-recursive info-recursive \
+ 	install-data-recursive install-dvi-recursive \
+-	install-exec-recursive install-html-recursive \
++	install-exec-recursive \
+ 	install-info-recursive install-pdf-recursive \
+ 	install-ps-recursive install-recursive installcheck-recursive \
+ 	installdirs-recursive pdf-recursive ps-recursive \
+@@ -400,7 +400,6 @@
+ host_cpu = @host_cpu@
+ host_os = @host_os@
+ host_vendor = @host_vendor@
+-htmldir = @htmldir@
+ includedir = @includedir@
+ infodir = @infodir@
+ install_sh = @install_sh@
+@@ -908,10 +907,6 @@
  
+ dvi-am:
  
--ac_config_files="$ac_config_files Makefile build/Makefile contrib/Makefile contrib/addtiffo/Makefile contrib/dbs/Makefile contrib/dbs/xtiff/Makefile contrib/iptcutil/Makefile contrib/mfs/Makefile contrib/pds/Makefile contrib/ras/Makefile contrib/stream/Makefile contrib/tags/Makefile contrib/win_dib/Makefile html/Makefile html/images/Makefile html/man/Makefile libtiff-4.pc libtiff/Makefile man/Makefile port/Makefile test/Makefile tools/Makefile"
-+ac_config_files="$ac_config_files Makefile build/Makefile contrib/Makefile contrib/addtiffo/Makefile contrib/dbs/Makefile contrib/dbs/xtiff/Makefile contrib/iptcutil/Makefile contrib/mfs/Makefile contrib/pds/Makefile contrib/ras/Makefile contrib/stream/Makefile contrib/tags/Makefile contrib/win_dib/Makefile libtiff-4.pc libtiff/Makefile man/Makefile port/Makefile test/Makefile tools/Makefile"
+-html: html-recursive
+-
+-html-am:
+-
+ info: info-recursive
  
- cat >confcache <<\_ACEOF
- # This file is a shell script that caches the results of configure
-@@ -22095,9 +22095,6 @@
-     "contrib/stream/Makefile") CONFIG_FILES="$CONFIG_FILES contrib/stream/Makefile" ;;
-     "contrib/tags/Makefile") CONFIG_FILES="$CONFIG_FILES contrib/tags/Makefile" ;;
-     "contrib/win_dib/Makefile") CONFIG_FILES="$CONFIG_FILES contrib/win_dib/Makefile" ;;
--    "html/Makefile") CONFIG_FILES="$CONFIG_FILES html/Makefile" ;;
--    "html/images/Makefile") CONFIG_FILES="$CONFIG_FILES html/images/Makefile" ;;
--    "html/man/Makefile") CONFIG_FILES="$CONFIG_FILES html/man/Makefile" ;;
-     "libtiff-4.pc") CONFIG_FILES="$CONFIG_FILES libtiff-4.pc" ;;
-     "libtiff/Makefile") CONFIG_FILES="$CONFIG_FILES libtiff/Makefile" ;;
-     "man/Makefile") CONFIG_FILES="$CONFIG_FILES man/Makefile" ;;
---- a/Makefile.in	2017-05-22 01:49:35.000000000 +0700
-+++ b/Makefile.in	2017-06-12 02:47:22.000000000 +0700
-@@ -436,7 +436,7 @@
- 	nmake.opt
+ info-am:
+@@ -924,10 +919,6 @@
  
- dist_doc_DATA = $(docfiles)
--SUBDIRS = port libtiff tools build contrib test man html
-+SUBDIRS = port libtiff tools build contrib test man
- pkgconfigdir = $(libdir)/pkgconfig
- pkgconfig_DATA = libtiff-4.pc
+ install-exec-am:
  
---- a/Makefile.am	2015-09-07 02:30:46.000000000 +0700
-+++ b/Makefile.am	2017-06-12 02:46:47.000000000 +0700
-@@ -61,7 +61,7 @@
- 	rm -rf $(distdir)/_build/cmake
- 	rm -rf $(distdir)/_inst/cmake
+-install-html: install-html-recursive
+-
+-install-html-am:
+-
+ install-info: install-info-recursive
  
--SUBDIRS = port libtiff tools build contrib test man html
-+SUBDIRS = port libtiff tools build contrib test man
- 
- release:
- 	(rm -f $(top_srcdir)/RELEASE-DATE && echo $(LIBTIFF_RELEASE_DATE) > $(top_srcdir)/RELEASE-DATE)
-
+ install-info-am:
+@@ -972,10 +963,10 @@
+ 	dist-all dist-bzip2 dist-gzip dist-lzip dist-shar dist-tarZ \
+ 	dist-xz dist-zip distcheck distclean distclean-generic \
+ 	distclean-hdr distclean-libtool distclean-tags distcleancheck \
+-	distdir distuninstallcheck dvi dvi-am html html-am info \
++	distdir distuninstallcheck dvi dvi-am info \
+ 	info-am install install-am install-data install-data-am \
+ 	install-dist_docDATA install-dvi install-dvi-am install-exec \
+-	install-exec-am install-html install-html-am install-info \
++	install-exec-am install-info \
+ 	install-info-am install-man install-pdf install-pdf-am \
+ 	install-pkgconfigDATA install-ps install-ps-am install-strip \
+ 	installcheck installcheck-am installdirs installdirs-am \
