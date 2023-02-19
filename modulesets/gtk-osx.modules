@@ -163,7 +163,7 @@
   </meson>
 
   <meson id="fribidi" mesonargs="-Ddocs=false">
-    <branch module="fribidi/fribidi" repo="github" tag="v1.0.11"/>
+    <branch module="fribidi/fribidi" repo="github" tag="v1.0.12"/>
     <dependencies>
       <!--dep package="c2man"/ -->
     </dependencies>
