@@ -337,6 +337,8 @@
              strip="1" />
       <patch file="gtk-3-24-36-match-window-size.patch"
              strip="1" />
+      <patch file="gtk-3-24-36-quartz-cocoa-access-path.patch"
+             strip="1" />
     </branch>
     <dependencies>
       <dep package="glib" />
