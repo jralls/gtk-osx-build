@@ -94,9 +94,9 @@
   <autotools id="libffi"
              autogen-sh="configure"
              autogenargs="--disable-multi-os-directory">
-    <branch module="libffi/libffi/releases/download/v3.4.4/libffi-3.4.4.tar.gz"
-            version="3.4.4"
-            hash="sha256:d66c56ad259a82cf2a9dfc408b32bf5da52371500b84745f7fb8b645712df676"
+    <branch module="libffi/libffi/releases/download/v3.3/libffi-3.3.tar.gz"
+            version="3.3"
+            hash="sha256:72fba7922703ddfa7a028d513ac15a85c8d54c8d67f55fa5a4802885dc652056"
             repo="github-tarball" />
   </autotools>
   <!---->
