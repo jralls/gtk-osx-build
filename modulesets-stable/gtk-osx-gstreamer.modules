@@ -24,9 +24,9 @@
   <meson id="liborc"
          mesonargs="-Dgtk_doc=disabled -Dbenchmarks=disabled -Dexamples=disabled -Dtests=disabled">
 
-    <branch module="orc/orc-0.4.34.tar.xz"
-            version="0.4.34"
-            hash="sha256:8f47abb3f097171e44eb807adcdabd860fba2effd37d8d3c4fbd5f341cadd41f" />
+    <branch module="orc/orc-0.4.38.tar.xz"
+            version="0.4.38"
+            hash="sha256:a55a98d4772567aa3faed8fb84d540c3db77eaba16d3e2e10b044fbc9228668d" />
   </meson>
   <!---->
   <autotools id="faad2"
