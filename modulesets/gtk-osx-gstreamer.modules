@@ -20,6 +20,9 @@
   <repository name="nasm"
               href="https://www.nasm.us/pub/nasm/releasebuilds/"
               type="tarball" />
+  <repository name="github.com"
+              href="https://github.com/"
+              type="tarball" />
   <!---->
   <meson id="liborc"
          mesonargs="-Dgtk_doc=disabled -Dbenchmarks=disabled -Dexamples=disabled -Dtests=disabled">
@@ -32,11 +35,10 @@
   <autotools id="faad2"
              autogen-sh="autoreconf"
              autogenargs="-without-bmp --without-xmms --without-drm --without-mpeg4ip">
-
-    <branch module="faac/faad2-src/faad2-2.8.0/faad2-2.8.6.tar.gz"
-            version="2.8.6"
-            hash="sha256:654977adbf62eb81f4fca00152aca58ce3b6dd157181b9edd7bed687a7c73f21"
-            repo="sourceforge" />
+    <branch module="knik0/faad2/archive/refs/tags/2.11.0.tar.gz"
+            version="2.11.0"
+            hash="sha256:720c1dc404439e0a9117aa144dc7ead56f1658adf4badbb39f959d6ad8eed489"
+            repo="github.com" />
   </autotools>
   <!---->
   <autotools id="nasm"
