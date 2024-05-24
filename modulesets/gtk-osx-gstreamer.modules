@@ -67,7 +67,7 @@
   </autotools>
   <!---->
   <meson id="gstreamer">
-    <branch revision="1.22.5" />
+    <branch revision="1.24.3" />
     <after>
       <dep package="glib" />
       <dep package="libxml2" />
@@ -76,7 +76,7 @@
   <!---->
   <meson id="gst-plugins-base"
          mesonargs="-Dexamples=disabled -Ddoc=disabled">
-    <branch revision="1.22.5" />
+    <branch revision="1.24.3" />
     <dependencies>
       <dep package="gstreamer" />
       <dep package="liboil" />
@@ -85,7 +85,7 @@
   </meson>
   <!---->
   <meson id="gst-plugins-good">
-    <branch revision="1.22.5" />
+    <branch revision="1.24.3" />
     <dependencies>
       <dep package="gstreamer" />
       <dep package="gst-plugins-base" />
@@ -93,7 +93,7 @@
   </meson>
   <!---->
   <meson id="gst-plugins-ugly">
-    <branch revision="1.22.5" />
+    <branch revision="1.24.3" />
     <dependencies>
       <dep package="gstreamer" />
       <dep package="gst-plugins-base" />
@@ -101,7 +101,7 @@
   </meson>
   <!---->
   <meson id="gst-plugins-bad">
-    <branch revision="1.22.5" />
+    <branch revision="1.24.3" />
     <dependencies>
       <dep package="gstreamer" />
       <dep package="gst-plugins-base" />
@@ -111,7 +111,7 @@
   <!---->
   <meson id="gst-libav">
     <branch module="gst-libav"
-            revision="1.22.5" />
+            revision="1.24.3" />
     <dependencies>
       <dep package="gstreamer" />
       <dep package="gst-plugins-base" />
