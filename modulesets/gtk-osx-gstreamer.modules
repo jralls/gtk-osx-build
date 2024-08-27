@@ -19,7 +19,7 @@
          mesonargs="-Dgtk_doc=disabled -Dbenchmarks=disabled -Dexamples=disabled -Dtests=disabled">
     <branch module="orc"
             repo="gstreamer"
-            tag="orc-0.4.38" />
+            tag="orc-0.4.39" />
   </meson>
   <autotools id="faad2"
              autogen-sh="autoreconf"
@@ -42,7 +42,7 @@
     </dependencies>
   </autotools>
   <meson id="gstreamer">
-    <branch revision="1.24.4" />
+    <branch revision="1.24.7" />
     <after>
       <dep package="glib" />
       <dep package="libxml2" />
@@ -50,7 +50,7 @@
   </meson>
   <meson id="gst-plugins-base"
          mesonargs="-Dexamples=disabled -Ddoc=disabled">
-    <branch revision="1.24.4" />
+    <branch revision="1.24.7" />
     <dependencies>
       <dep package="gstreamer" />
       <dep package="liboil" />
@@ -58,21 +58,21 @@
     <after></after>
   </meson>
   <meson id="gst-plugins-good">
-    <branch revision="1.24.4" />
+    <branch revision="1.24.7" />
     <dependencies>
       <dep package="gstreamer" />
       <dep package="gst-plugins-base" />
     </dependencies>
   </meson>
   <meson id="gst-plugins-ugly">
-    <branch revision="1.24.4" />
+    <branch revision="1.24.7" />
     <dependencies>
       <dep package="gstreamer" />
       <dep package="gst-plugins-base" />
     </dependencies>
   </meson>
   <meson id="gst-plugins-bad">
-    <branch revision="1.24.4" />
+    <branch revision="1.24.7" />
     <dependencies>
       <dep package="gstreamer" />
       <dep package="gst-plugins-base" />
@@ -81,7 +81,7 @@
   </meson>
   <meson id="gst-libav">
     <branch module="gst-libav"
-            revision="1.24.4" />
+            revision="1.24.7" />
     <dependencies>
       <dep package="gstreamer" />
       <dep package="gst-plugins-base" />
@@ -89,7 +89,7 @@
   </meson>
   <meson id="gst-python">
     <branch module="gst-python"
-            revision="1.24.4" />
+            revision="1.24.7" />
     <dependencies>
       <dep package="gstreamer" />
       <dep package="gst-plugins-base" />
