@@ -91,9 +91,9 @@
   <autotools id="p11-kit"
              autogen-sh="configure"
              autogenargs="--without-trust-paths">
-    <branch module="p11-glue/p11-kit/releases/download/0.24.1/p11-kit-0.24.1.tar.xz"
+    <branch module="p11-glue/p11-kit/releases/download/0.25.3/p11-kit-0.25.3.tar.xz"
             version="0.25.3"
-            hash="sha256:d8be783efd5cd4ae534cee4132338e3f40f182c3205d23b200094ec85faaaef8"
+            hash="sha256:d8ddce1bb7e898986f9d250ccae7c09ce14d82f1009046d202a0eb1b428b2adc"
             repo="github-tarball">
       <patch file="p11-kit-libintl.patch"
              strip="1" />
@@ -143,7 +143,7 @@
   </autotools>
   <meson id="libsecret"
          mesonargs="-Dvapi=disabled -Dgtk_doc=disabled">
-    <branch module="libsecret/0.20/libsecret-0.20.5.tar.xz"
+    <branch module="libsecret/0.21/libsecret-0.21.4.tar.xz"
             version="0.21.4"
             hash="sha256:163d08d783be6d4ab9a979ceb5a4fecbc1d9660d3c34168c581301cd53912b20" />
     <dependencies>

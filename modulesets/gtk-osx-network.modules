@@ -101,7 +101,7 @@
   <autotools id="p11-kit"
              autogen-sh="autoreconf"
              autogenargs="--without-trust-paths">
-    <branch module="p11-glue/p11-kit/releases/download/0.24.1/p11-kit-0.24.1.tar.xz"
+    <branch module="p11-glue/p11-kit/releases/download/0.25.3/p11-kit-0.25.3.tar.xz"
             version="0.25.3"
             repo="github-tarball">
       <patch file="p11-kit-libintl.patch"
