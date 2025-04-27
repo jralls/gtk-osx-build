@@ -248,4 +248,58 @@
       <dep package="libxml2" />
     </dependencies>
   </autotools>
+  <meson id="libhandy"
+         mesonargs="-Dvapi=false">
+    <branch revision="1.8.3" />
+    <dependencies>
+      <dep package="gtk+-3.0" />
+    </dependencies>
+  </meson>
+  <meson id="libadwaita"
+         mesonargs="-Dvapi=false -Dintrospection=enabled">
+    <branch revision="1.6.5" />
+    <dependencies>
+      <dep package="gtk-4" />
+      <dep package="sassc" />
+      <dep package="appstream" />
+    </dependencies>
+  </meson>
+      <meson id="appstream"
+         mesonargs="-Dsystemd=false -Dstemming=false -Dapidocs=false -Dinstall-docs=false">
+    <branch revision="v1.0.4"
+            repo="github"
+            module="ximion/appstream" />
+    <dependencies>
+      <dep package="libcurl" />
+      <dep package="libxmlb" />
+      <dep package="libyaml" />
+      <dep package="libzstd" />
+      <dep package="itstool" />
+    </dependencies>
+  </meson>
+  <autotools id="libcurl"
+             autogen-sh="autoreconf"
+             autogenargs="--with-openssl">
+    <branch revision="curl-8_13_0"
+            repo="github"
+            module="curl/curl" />
+  </autotools>
+  <meson id="libxmlb">
+    <branch revision="0.3.22"
+            repo="github"
+            module="hughsie/libxmlb" />
+  </meson>
+  <autotools id="libyaml"
+             autogen-sh="autoreconf">
+    <branch revision="0.2.5"
+            repo="github"
+            module="yaml/libyaml" />
+  </autotools>
+  <autotools id="libzstd"
+             skip-autogen="true"
+             supports-non-srcdir-builds="no">
+    <branch revision="v1.5.7"
+            repo="github"
+            module="facebook/zstd" />
+  </autotools>
 </moduleset>
