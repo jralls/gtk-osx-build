@@ -131,9 +131,8 @@
   </autotools>
   <meson id="harfbuzz-no-cairo"
          mesonargs="-Dcoretext=enabled -Dfreetype=enabled -Ddocs=disabled -Dbenchmark=disabled -Dintrospection=disabled -Dtests=disabled">
-    <branch module="harfbuzz/harfbuzz/releases/download/10.2.0/harfbuzz-10.2.0.tar.xz"
-            version="10.2.0"
-
+    <branch module="harfbuzz/harfbuzz/releases/download/12.2.0/harfbuzz-12.2.0.tar.xz"
+            version="12.2.0"
             repo="github-tarball" />
     <dependencies>
       <dep package="glib-no-introspection" />
@@ -203,9 +202,9 @@
   </meson>
   <meson id="harfbuzz"
          mesonargs="-Dcoretext=enabled -Dfreetype=enabled -Ddocs=disabled -Dbenchmark=disabled -Dintrospection=enabled -Dtests=disabled">
-    <branch module="harfbuzz/harfbuzz/releases/download/10.2.0/harfbuzz-10.2.0.tar.xz"
-            version="10.2.0"
-
+    <branch module="harfbuzz/harfbuzz/releases/download/12.2.0/harfbuzz-12.2.0.tar.xz"
+            version="12.2.0"
+            hash="sha256:ecb603aa426a8b24665718667bda64a84c1504db7454ee4cadbd362eea64e545"
             repo="github-tarball" />
     <dependencies>
       <dep package="gobject-introspection" />

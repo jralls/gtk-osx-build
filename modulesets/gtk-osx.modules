@@ -113,7 +113,7 @@
          mesonargs="-Dcoretext=enabled -Dfreetype=enabled -Ddocs=disabled -Dbenchmark=disabled -Dintrospection=disabled -Dtests=disabled">
     <branch module="harfbuzz/harfbuzz"
             repo="github"
-            tag="10.2.0" />
+            tag="12.2.0" />
     <dependencies>
       <dep package="glib-no-introspection" />
       <dep package="freetype-no-harfbuzz" />
@@ -184,7 +184,7 @@
          mesonargs="-Dcoretext=enabled -Dfreetype=enabled -Ddocs=disabled -Dbenchmark=disabled">
     <branch module="harfbuzz/harfbuzz"
             repo="github"
-            tag="10.2.0" />
+            tag="12.2.0" />
     <dependencies>
       <dep package="gobject-introspection" />
       <dep package="cairo" />
