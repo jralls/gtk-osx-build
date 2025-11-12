@@ -42,9 +42,9 @@
              autogenargs="shared"
              makeinstallargs="install_sw"
              supports-non-srcdir-builds="no">
-    <branch module="openssl/openssl/releases/download/openssl-3.4.1/openssl-3.4.1.tar.gz"
-            version="3.4.1"
-            hash="sha256:002a2d6b30b58bf4bea46c43bdd96365aaf8daa6c428782aa4feee06da197df3"
+    <branch module="openssl/openssl/releases/download/openssl-3.5.4/openssl-3.5.4.tar.gz"
+            version="3.5.4"
+            hash="sha256:967311f84955316969bdb1d8d4b983718ef42338639c621ec4c34fddef355e99"
             repo="github-tarball" />
   </autotools>
   <if condition-set="arm64">
