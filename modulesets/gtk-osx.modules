@@ -321,7 +321,7 @@
   <meson id="librsvg"
          mesonargs="--buildtype=release -Dintrospection=disabled -Ddocs=disabled">
       <branch module="librsvg"
-              branch="librsvg-2.60" />
+              branch="librsvg-2.61" />
     <dependencies>
       <dep package="libxml2" />
       <dep package="cairo" />
