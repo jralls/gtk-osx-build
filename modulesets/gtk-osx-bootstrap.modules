@@ -54,9 +54,9 @@
   </cmake>
   <cmake id="libtiff"
          cmakeargs='-Dtiff-tests=off -Dtiff-docs=off -DCMAKE_MACOSX_RPATH=OFF -DCMAKE_INSTALL_NAME_DIR="${JHBUILD_PREFIX}/lib"'>
-    <branch module="libtiff/tiff-4.7.0.tar.xz"
-            version="4.7.0"
-            hash="sha256:273a0a73b1f0bed640afee4a5df0337357ced5b53d3d5d1c405b936501f71017"
+    <branch module="libtiff/tiff-4.7.1.tar.xz"
+            version="4.7.1"
+            hash="sha256:b92017489bdc1db3a4c97191aa4b75366673cb746de0dce5d7a749d5954681ba"
             repo="libtiff">
       <patch file="tiff-nohtml.patch"
              strip="1" />
