@@ -59,9 +59,9 @@
     </dependencies>
   </meson>
   <meson id="pygobject3">
-    <branch module="pygobject/3.51/pygobject-3.51.0.tar.xz"
-            version="3.51.0"
-            hash="sha256:5d8ec64b034a29a14c3739541436a07ea0de83c8a394c6e5ecaa9e2e5b7b4e72" />
+    <branch module="pygobject/3.54/pygobject-3.54.2.tar.gz"
+            version="3.54.2"
+            hash="sha256:03cffeb49d8a1879b621d8f606ac904218019a0ae699b1cd3780a8ee611e696b" />
     <dependencies>
       <dep package="pycairo" />
     </dependencies>
