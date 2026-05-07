@@ -96,10 +96,10 @@
   <autotools id="gnutls"
              autogen-sh="autoreconf"
              autogenargs="--disable-doc --with-included-unistring">
-    <branch module="gcrypt/gnutls/v3.8/gnutls-3.8.12.tar.xz"
-            version="3.8.12"
+    <branch module="gcrypt/gnutls/v3.8/gnutls-3.8.13.tar.xz"
+            version="3.8.13"
 
-            repo="gnupg.org">
+            repo="gnupg.org" hash="sha256:ffed8ec1bf09c2426d4f14aae377de4753b53e537d685e604e99a8b16ca9c97e">
       <patch file="gnutls-pkg-config-pc.patch"
              strip="1" />
       <patch file="gnutls-gnulib.patch"
