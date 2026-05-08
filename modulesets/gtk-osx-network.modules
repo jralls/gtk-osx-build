@@ -58,9 +58,9 @@
     <autotools id="libnettle"
                autogen-sh="configure"
                autogenargs="--disable-documentation --disable-assembler">
-      <branch module="nettle/nettle-3.10.2.tar.gz"
-              version="3.10.2"
-              hash="sah256:fe9ff51cb1f2abb5e65a6b8c10a92da0ab5ab6eaf26e7fc2b675c45f1fb519b5"
+      <branch module="nettle/nettle-4.0.tar.gz"
+              version="4.0"
+              hash="sha256:3addbc00da01846b232fb3bc453538ea5468da43033f21bb345cb1e9073f5094"
               repo="ftp.gnu.org" />
       <dependencies>
         <dep package="gmp" />
@@ -72,9 +72,9 @@
     <autotools id="libnettle"
                autogen-sh="configure"
                autogenargs="--disable-documentation">
-      <branch module="nettle/nettle-3.10.1.tar.gz"
-              version="3.10.2"
-              hash="sah256:fe9ff51cb1f2abb5e65a6b8c10a92da0ab5ab6eaf26e7fc2b675c45f1fb519b5"
+      <branch module="nettle/nettle-4.0.tar.gz"
+              version="4.0"
+              hash="sha256:3addbc00da01846b232fb3bc453538ea5468da43033f21bb345cb1e9073f5094"
               repo="ftp.gnu.org" />
       <dependencies>
         <dep package="gmp" />
@@ -119,9 +119,9 @@
   <autotools id="gnutls"
              autogen-sh="autoreconf"
              autogenargs="--disable-doc --with-included-unistring">
-    <branch module="gcrypt/gnutls/v3.8/gnutls-3.8.12.tar.xz"
-            version="3.8.12"
-            hash="sha256:a7b341421bfd459acf7a374ca4af3b9e06608dcd7bd792b2bf470bea012b8e51"
+    <branch module="gcrypt/gnutls/v3.8/gnutls-3.8.13.tar.xz"
+            version="3.8.13"
+            hash="sha256:ffed8ec1bf09c2426d4f14aae377de4753b53e537d685e604e99a8b16ca9c97e"
             repo="gnupg.org">
       <patch file="gnutls-pkg-config-pc.patch"
              strip="1" />
