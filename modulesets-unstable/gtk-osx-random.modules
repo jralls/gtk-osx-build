@@ -12,6 +12,9 @@
   <repository name="github"
               href="https://github.com/"
               type="git" />
+  <repository name="github-tarball"
+              href="https://github.com/"
+              type="tarball" />
   <repository name="download.gnome.org"
               href="http://download.gnome.org/sources/"
               type="tarball" />

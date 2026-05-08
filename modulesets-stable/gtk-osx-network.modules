@@ -143,7 +143,7 @@
     </dependencies>
   </autotools>
   <meson id="libsecret"
-         mesonargs="-Dvapi=disabled -Dgtk_doc=disabled">
+         mesonargs="-Dvapi=false -Dgtk_doc=false">
     <branch module="libsecret/0.21/libsecret-0.21.7.tar.xz"
             version="0.21.7"
             hash="sha256:6b452e4750590a2b5617adc40026f28d2f4903de15f1250e1d1c40bfd68ed55e" />
