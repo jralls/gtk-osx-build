@@ -21,11 +21,11 @@
   <autotools id="libpng"
              autogen-sh="configure"
              autogenargs="--enable-shared">
-    <branch module="netwide-assembler/nasm/archive/refs/tags/nasm-3.01.tar.gz"
-            checkoutdir="nasm-nasm-3.01"
-            version="3.01"
-            hssh="sha256:af2f241ecc061205d73ba4f781f075d025dabaeab020b676b7db144bf7015d6d"
-            repo="sourceforge" />
+    <branch module="pnggroup/libpng/archive/refs/tags/v1.6.58.tar.gz"
+	    checkoutdir="libpng-1.6.58"
+            version="1.6.58"
+            hash="sha256:a9d4df463d36a6e5f9c29bd6f4967312d17e996c1854f3511f833924eb1993cf"
+            repo="github-tarball" />
     <dependencies>
       <dep package="zlib" />
     </dependencies>
