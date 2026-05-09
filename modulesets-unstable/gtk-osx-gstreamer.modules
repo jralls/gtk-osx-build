@@ -62,6 +62,7 @@
     <dependencies>
       <dep package="gstreamer" />
       <dep package="gst-plugins-base" />
+      <dep package="libxml2" />
     </dependencies>
   </meson>
   <meson id="gst-plugins-ugly"
@@ -79,6 +80,7 @@
       <dep package="gst-plugins-base" />
       <dep package="faad2" />
       <dep package="openssl" />
+      <dep package="libxml2" />
     </dependencies>
   </meson>
   <meson id="gst-libav">
