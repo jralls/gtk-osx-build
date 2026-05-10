@@ -133,6 +133,8 @@
             version="2.5.1"
             hash="sha256:cd05c9589b9f86ecf044c10a2269822bc9eb001eced2582cfffd658b0a50c243"
             repo="pkgconf">
+      <patch file="pkgconf-o-directory.patch"
+             strip="0"/>
       <patch file="pkgconf-link-pkg-config.patch"
              strip="1" />
     </branch>

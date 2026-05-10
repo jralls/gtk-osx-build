@@ -1,0 +1,15 @@
+diff -u /Users/john/Development/gtk-stable-11.0-arm64/src/pkgconf-2.5.1/libpkgconf/pkg.c\~ /Users/john/Development/gtk-stable-11.0-arm64/src/pkgconf-2.5.1/libpkgconf/pkg.c
+--- libpkgconf/pkg.c	2025-06-24 15:49:00
++++ libpkgconf/pkg.c	2026-05-10 15:32:48
+@@ -18,6 +18,9 @@
+ #include <libpkgconf/libpkgconf.h>
+ 
+ #ifndef _WIN32
++#ifdef __APPLE__
++#define _DARWIN_C_SOURCE 1
++#endif
+ #include <fcntl.h>    // open
+ #include <libgen.h>   // basename/dirname
+ #include <sys/stat.h> // lstat, S_ISLNK
+
+Diff finished.  Sun May 10 15:33:03 2026
