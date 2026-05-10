@@ -20,12 +20,14 @@
   <repository name="github"
               href="https://github.com"
               type="tarball" />
+  <!-- WARNING! We need xz installed to be able to unpack tar.xz tarballs, so don't use that for this package.
+       Use only tar.gz or tar.bz2! -->
   <autotools id="xz"
              autogen-sh="configure"
              bootstrap="true">
-    <branch module="tukaani-project/xz/releases/download/v5.8.3/xz-5.8.3.tar.xz"
+    <branch module="tukaani-project/xz/releases/download/v5.8.3/xz-5.8.3.tar.gz"
             version="5.8.3"
-            hash="sha256:fff1ffcf2b0da84d308a14de513a1aa23d4e9aa3464d17e64b9714bfdd0bbfb6"
+            hash="sha256:3d3a1b973af218114f4f889bbaa2f4c037deaae0c8e815eec381c3d546b974a0"
             repo="github" />
   </autotools>
   <!-- gnu make 4.xx, needed to unbreak parallel builds for the webkit -->
