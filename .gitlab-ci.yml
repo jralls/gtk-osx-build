@@ -1,21 +1,10 @@
-workflow:
-  rules:
-    # run merge request pipelines
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    # do not run branch pipelines if corresponding merge requests exist...
-    # (this avoids duplicate pipelines)
-    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
-      when: never
-    # ...but otherwise run branch pipelines
-    - if: $CI_COMMIT_BRANCH
-
 variables:
   GIT_DEPTH: 1
 
 stages:
   - build
 
-build:
+.build:
   stage: build
   parallel:
     matrix:
@@ -24,10 +13,6 @@ build:
     - macos
     - arm64
   cache:
-    - key: packages-$GTK_VERSION
-      paths:
-        - pkgs
-      when: always
     - key: ccache-$GTK_VERSION
       paths:
         - ccache
@@ -35,9 +20,9 @@ build:
   variables:
     CCACHE_DIR: $CI_PROJECT_DIR/ccache
     CCACHE_MAXSIZE: "500Mi"
-    ORKA_RUNNER: sequoia-3
+    MODULESET: DUMMY_VALUE
+    ORKA_RUNNER: sequoia-7
     SDKROOT: /opt/sdks/MacOSX11.3.sdk
-    MODULESET: stable
   script:
     # init: set us up
     - export PATH=$HOME/.new_local/bin:$PATH
@@ -86,3 +71,33 @@ build:
           echo "invalid GTK version: $GTK_VERSION"
           ;;
       esac
+
+modulesets:stable:
+  extends: .build
+  rules:
+    # do not run for schedules
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    # run merge request pipelines
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    # do not run branch pipelines if corresponding merge requests exist...
+    # (this avoids duplicate pipelines)
+    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+      when: never
+    # ...but otherwise run branch pipelines
+    - if: $CI_COMMIT_BRANCH
+  cache:
+    - key: packages-$GTK_VERSION
+      paths:
+        - pkgs
+      when: always
+  variables:
+    MODULESET: stable
+
+modulesets:unstable:
+  extends: .build
+  rules:
+    # only run for schedules
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+  variables:
+    MODULESET: unstable
