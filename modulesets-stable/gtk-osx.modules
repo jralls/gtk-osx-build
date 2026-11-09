@@ -284,6 +284,7 @@
             version="3.24.52"
             hash="sha256:80931fa472a77b9a164f6740e3c0b444fac6770054632d35a7ff9d679e5e7b9f" >
       <patch file="gtk-3.24.52-undo-focus-breakage.patch" strip="1" />
+      <patch file="gtk-3-24-transparent-title-bar.patch" strip="1" />
     </branch>
     <dependencies>
       <dep package="glib" />

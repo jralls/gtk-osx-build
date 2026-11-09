@@ -1,0 +1,30 @@
+From d2c6b6d70a29d80db1e47c7df803e4b7923075b0 Mon Sep 17 00:00:00 2001
+From: John Ralls <jralls@ceridwen.us>
+Date: Sun, 8 Nov 2026 15:42:44 -0800
+Subject: [PATCH] Make GtkDialog use the system_visual unless using a drawn
+ header bar.
+
+Instead of the RGBA viaual set by GtkBuilder from the dialog's template.
+
+Fixes https://gitlab.gnome.org/GNOME/gtk/-/work_items/8544
+---
+ gtk/gtkdialog.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/gtk/gtkdialog.c b/gtk/gtkdialog.c
+index 0e58ac4a92..69335a56ce 100644
+--- a/gtk/gtkdialog.c
++++ b/gtk/gtkdialog.c
+@@ -497,6 +497,9 @@ gtk_dialog_constructed (GObject *object)
+     }
+   else
+     {
++      GdkScreen *screen = gtk_widget_get_screen (GTK_WIDGET (dialog));
++      GdkVisual *visual = gdk_screen_get_system_visual (screen);
++      gtk_widget_set_visual (GTK_WIDGET (dialog), visual);
+       gtk_window_set_titlebar (GTK_WINDOW (dialog), NULL);
+       priv->headerbar = NULL;
+     }
+-- 
+2.54.0 (Apple Git-157)
+
